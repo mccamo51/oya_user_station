@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:oya_porter/spec/colors.dart';
 
+import 'alerts.dart';
+
 class BuyTicketAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -20,11 +22,10 @@ class BuyTicketAppBar extends StatelessWidget {
             Icons.info_outline_rounded,
             color: Colors.red,
           ),
-          onPressed: () {}
-          //  iceAlert(
-          //   context,
-          //   "You may buy a ticket by completing this form, or enrol on a bus on the trips page with an existing ticket.",
-          // ),
+          onPressed: () => iceAlert(
+            context,
+            "You may buy a ticket by completing this form, or enrol on a bus on the trips page with an existing ticket.",
+          ),
         ),
       ],
       backgroundColor: PRIMARYCOLOR,

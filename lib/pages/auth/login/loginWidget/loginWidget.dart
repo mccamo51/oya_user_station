@@ -77,35 +77,35 @@ Widget loginWidget({
         ]),
       ),
     ),
-    bottomNavigationBar: Container(
-      height: 50,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                text: 'Don’t have an account? ',
-                style: TextStyle(color: BLACK),
-              ),
-              TextSpan(
-                  text: 'Sign Up',
-                  style: TextStyle(
-                    color: BLACK,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (BuildContext context) => Register()));
-                    }),
-            ]),
-          )
-        ],
-      ),
-    ),
+    // bottomNavigationBar: Container(
+    //   height: 50,
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: [
+    //       RichText(
+    //         text: TextSpan(children: [
+    //           TextSpan(
+    //             text: 'Don’t have an account? ',
+    //             style: TextStyle(color: BLACK),
+    //           ),
+    //           TextSpan(
+    //               text: 'Sign Up',
+    //               style: TextStyle(
+    //                 color: BLACK,
+    //                 decoration: TextDecoration.underline,
+    //                 fontWeight: FontWeight.bold,
+    //               ),
+    //               recognizer: TapGestureRecognizer()
+    //                 ..onTap = () {
+    //                   // Navigator.push(
+    //                   //     context,
+    //                   //     MaterialPageRoute(
+    //                   //         builder: (BuildContext context) => Register()));
+    //                 }),
+    //         ]),
+    //       )
+    //     ],
+    //   ),
+    // ),
   );
 }

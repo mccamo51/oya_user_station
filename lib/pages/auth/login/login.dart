@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:oya_porter/components/alerts.dart';
 
 import 'loginWidget/loginWidget.dart';
 
@@ -52,10 +53,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _onLogin() async {
     if (_phoneController.text.isEmpty && _passwordController.text.isEmpty) {
-      // wrongPasswordToast(
-      //     context: context,
-      //     msg: "Phone and Pin required",
-      //     title: "Fields Required");
+      wrongPasswordToast(
+          context: context,
+          msg: "Phone and Pin required",
+          title: "Fields Required");
     } else {
       loginApi(
           phone: _phoneController.text.trim(),
@@ -99,11 +100,11 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _isLoading = false;
             });
-            // wrongPasswordToast(
-            //     context: context,
-            //     title: "Login Successful",
-            //     msg: responseData['message']);
-            //     navigation(context: context, pageName: "home");
+            wrongPasswordToast(
+                context: context,
+                title: "Login Successful",
+                msg: responseData['message']);
+                // navigation(context: context, pageName: "home");
             // if(response["data"]["role"])
           } else {
             setState(() {
@@ -120,30 +121,30 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _isLoading = false;
         });
-        // Platform.isIOS
-            // ? iosexceptionAlert(
-            //     context: context,
-            //     title: "Connection TimeOut",
-            //     message: "Please check your connection and try again")
-            // : exceptionAlert(
-            //     context: context,
-            //     title: "Connection TimeOut",
-            //     message: "Please check your connection and try again");
+        Platform.isIOS
+        ? iosexceptionAlert(
+            context: context,
+            title: "Connection TimeOut",
+            message: "Please check your connection and try again")
+        : exceptionAlert(
+            context: context,
+            title: "Connection TimeOut",
+            message: "Please check your connection and try again");
       } on SocketException catch (_) {
         setState(() {
           _isLoading = false;
         });
-        // Platform.isIOS
-            // ? iosexceptionAlert(
-            //     context: context,
-            //     title: "No Internet connection",
-            //     message: "Please connection to internet and try again",
-            //   )
-            // : exceptionAlert(
-            //     context: context,
-            //     title: "No Internet connection",
-            //     message: "Please connection to internet and try again",
-            //   );
+        Platform.isIOS
+        ? iosexceptionAlert(
+            context: context,
+            title: "No Internet connection",
+            message: "Please connection to internet and try again",
+          )
+        : exceptionAlert(
+            context: context,
+            title: "No Internet connection",
+            message: "Please connection to internet and try again",
+          );
       } catch (f) {}
     }
   }

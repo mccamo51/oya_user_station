@@ -1,9 +1,3 @@
-const MAINLOGO = "assets/images/mainlogo.png";
-const ALTLOGO = "assets/images/carhubb_alt.png";
-const CAR = "assets/images/icons/car.png";
-const TICKETIMAGE = "assets/images/address-amico.png";
-const RENTALIMAGE = "assets/images/rentals.png";
-const RENTNAVIMAGE = "assets/images/rentabus_nav.png";
 const VERIFYIMAGE = "assets/images/verufy.png";
 const LOGOUTIMAGE = "assets/images/logout.png";
 const USERIMAGE = "assets/images/user.png";
@@ -21,5 +15,3 @@ const IMAGELINK =
 const FROMMAP = "assets/images/fromMap.png";
 const TOMAP = "assets/images/toMap.png";
 const LIVEMAP = "assets/images/liveMap.png";
-const INSURANCELINK =
-    "https://media.istockphoto.com/vectors/health-insurance-healthcare-concept-health-insurance-form-calculator-vector-id655820370?k=6&m=655820370&s=612x612&w=0&h=aQpajp5qP1tSqiSpRRNpiWDKVsZlSH2VdKGfOjCMgEY=";
