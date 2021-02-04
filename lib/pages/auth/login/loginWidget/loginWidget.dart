@@ -1,9 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/passwordField.dart';
 import 'package:oya_porter/components/textField.dart';
-import 'package:oya_porter/spec/colors.dart';
 
 Widget loginWidget({
   @required BuildContext context,

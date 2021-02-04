@@ -45,7 +45,7 @@ wrongPasswordToast(
                       SizedBox(
                         width: 4,
                       ),
-                      Image.asset("assets/images/error.png"),
+                      Image.asset("assets/icons/error.png"),
                       SizedBox(
                         width: 10,
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/spec/styles.dart';
 
 import 'busses/busses.dart';
@@ -123,5 +124,5 @@ navigateStaffs(BuildContext context) {
 }
 
 navigateBuss(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => Busses()));
+  navigation(context: context, pageName: "busses");
 }

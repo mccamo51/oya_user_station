@@ -25,7 +25,6 @@ dependencies:
     sdk: flutter
   flutter_feather_icons: ^1.0.3
   http: ^0.12.2
-
   fluttertoast: ^7.1.6
   rxdart: ^0.25.0
   connectivity: ^2.0.2
@@ -54,9 +53,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-     #admin
-    # - assets/images/admin/
+  assets:
+    - assets/images/admin/
+    - assets/icons/
 
 
   #   - images/a_dot_ham.jpeg
