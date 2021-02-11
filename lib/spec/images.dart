@@ -3,7 +3,7 @@ const LOGOUTIMAGE = "assets/images/logout.png";
 const USERIMAGE = "assets/images/user.png";
 const PEOPLEIMAGE = "assets/images/people.png";
 const EMAILIMAGE = "assets/images/email.png";
-const EMPTYBIG = "assets/images/empty-big.png";
+const EMPTYBIG = "assets/icons/empty.jpg";
 const MAINLOGO = "assets/images/admin/mainlogo.png";
 
 const EMAIL2IMAGE = "assets/images/email1.png";

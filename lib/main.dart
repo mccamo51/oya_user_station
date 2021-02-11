@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'pages/auth/authenticationPage.dart';
+import 'pages/porter/homePage/homePageWithNav.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
       ),
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: AuthenticationPage(),
+      // home: AuthenticationPage(),
+      home: PorterHomePage(),
     );
   }
 }
