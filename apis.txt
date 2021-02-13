@@ -1,0 +1,7 @@
+1. View All Stations Staffs [GET] https://api.oyaghana.dev/api/staffs/{station_id}  
+2. View All Stations Buses [GET] https://api.oyaghana.dev/api/stations/{station_id}/buses
+3. View All Stations Ratings [GET] https://api.oyaghana.dev/api/stations/{station_id}/ratings
+4. View All Stations Routes [GET] https://api.oyaghana.dev/api/stations/{station_id}/routes
+5. View All Stations Tickets [GET] https://api.oyaghana.dev/api/stations/{station_id}/tickets
+6. View All Routes [GET] https://api.oyaghana.dev/api/routes
+7. View All Stations Schedules [GET] https://api.oyaghana.dev/api/routes/{route}/schedules/{station_id}
