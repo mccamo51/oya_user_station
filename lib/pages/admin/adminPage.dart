@@ -10,6 +10,8 @@ import 'staffs/staffs.dart';
 import 'tickets/tickets.dart';
 
 class StationMasterPage extends StatelessWidget {
+  final id;
+  StationMasterPage({@required this.id});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
