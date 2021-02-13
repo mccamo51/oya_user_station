@@ -25,6 +25,7 @@ class MainHomePage extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => StationMasterPage(
                           id: x['account_type']['id'],
+                          stationID: x['station']['id'],
                         ),
                       ),
                     );
@@ -32,12 +33,12 @@ class MainHomePage extends StatelessWidget {
                   } else if (x['account_type']['id'] == 5) {
                   } else if (x['account_type']['id'] == 6) {
                   } else if (x['account_type']['id'] == 7) {
-                     Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PorterHomePage(
-                          // id: x['account_type']['id'],
-                        ),
+                            // id: x['account_type']['id'],
+                            ),
                       ),
                     );
                   }

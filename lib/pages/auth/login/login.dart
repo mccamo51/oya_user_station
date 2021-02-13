@@ -94,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
           if (responseData['status'] == 200) {
             if (responseData['data']['staffs'].length > 0) {
               setState(() {
+                accessToken = responseData["data"]["access_token"];
                 _isLoading = false;
               });
               Navigator.pushAndRemoveUntil(
@@ -118,7 +119,6 @@ class _LoginPageState extends State<LoginPage> {
             //   icePrimaryPhone = responseData["data"]["ice_primary_phone"];
             //   iceSecondaryPhone = responseData["data"]["ice_secondary_phone"];
             //   userRole = responseData["data"]["role"];
-            // accessToken = responseData["data"]["access_token"];
             // });
 
             // wrongPasswordToast(

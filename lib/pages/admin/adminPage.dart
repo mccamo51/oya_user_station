@@ -10,8 +10,9 @@ import 'staffs/staffs.dart';
 import 'tickets/tickets.dart';
 
 class StationMasterPage extends StatelessWidget {
-  final id;
-  StationMasterPage({@required this.id});
+  final id, stationID;
+
+  StationMasterPage({@required this.id, @required this.stationID});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +30,7 @@ class StationMasterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _cardWidget(
-                  onTap: () => navigateBuss(context),
+                  onTap: () => navigateBuss(context, stationID.toString()),
                   name: "Busses",
                   image: "assets/images/admin/longbus.png"),
               _cardWidget(
@@ -45,7 +46,7 @@ class StationMasterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _cardWidget(
-                  onTap: () => navigateStaffs(context),
+                  onTap: () => navigateStaffs(context, stationID.toString()),
                   name: "Staffs",
                   image: "assets/images/admin/staffs.png"),
               _cardWidget(
@@ -121,10 +122,16 @@ navigateSchedules(BuildContext context) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Schedules()));
 }
 
-navigateStaffs(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => Staffs()));
+navigateStaffs(BuildContext context, String id) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Staffs(
+                id: id,
+              )));
 }
 
-navigateBuss(BuildContext context) {
-  navigation(context: context, pageName: "busses");
+navigateBuss(BuildContext context, String id) {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Busses(stationId: id)));
 }
