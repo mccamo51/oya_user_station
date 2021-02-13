@@ -1,0 +1,12 @@
+$account_types = [
+            'Admin', //1
+            'General Manager', //2
+            'Station Master', //3
+            'Driver', //4
+            'Scheduler', //5
+            'Conductor', //6
+            'Porter', //7
+            'TicketMan', //8
+            'Special User',//9
+            'Normal User' //10
+        ];
