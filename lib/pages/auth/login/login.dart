@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
+import 'package:oya_porter/pages/mainHome.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 
 import 'loginWidget/loginWidget.dart';
@@ -91,7 +92,25 @@ class _LoginPageState extends State<LoginPage> {
           final responseData = json.decode(response.body);
           saveBoolShare(key: "auth", data: true);
           if (responseData['status'] == 200) {
-            saveStringShare(key: "userDetails", data: response.body);
+            if (responseData['data']['staffs'].length > 0) {
+              setState(() {
+                _isLoading = false;
+              });
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MainHomePage(data: responseData['data']['staffs'])),
+                  (route) => false);
+              print('=======================true');
+            } else {
+              setState(() {
+                print('=======================false');
+
+                _isLoading = false;
+              });
+            }
+            // saveStringShare(key: "userDetails", data: response.body);
             // setState(() {
             //   print("Success");
             //   userName = responseData["data"]["name"];
@@ -99,17 +118,14 @@ class _LoginPageState extends State<LoginPage> {
             //   icePrimaryPhone = responseData["data"]["ice_primary_phone"];
             //   iceSecondaryPhone = responseData["data"]["ice_secondary_phone"];
             //   userRole = responseData["data"]["role"];
-            accessToken = responseData["data"]["access_token"];
+            // accessToken = responseData["data"]["access_token"];
             // });
 
-            setState(() {
-              _isLoading = false;
-            });
-            wrongPasswordToast(
-                context: context,
-                title: "Login Successful",
-                msg: responseData['message']);
-            navigation(context: context, pageName: "home");
+            // wrongPasswordToast(
+            //     context: context,
+            //     title: "Login Successful",
+            //     msg: responseData['message']);
+            // navigation(context: context, pageName: "home");
             // if(response["data"]["role"])
           } else {
             setState(() {
