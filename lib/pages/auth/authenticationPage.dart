@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/navigation.dart';
+import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 
-class AuthenticationPage extends StatelessWidget {
+class AuthenticationPage extends StatefulWidget {
+  @override
+  _AuthenticationPageState createState() => _AuthenticationPageState();
+}
+
+class _AuthenticationPageState extends State<AuthenticationPage> {
+  @override
+  Future<void> initState() {
+
+    super.initState();
+    checkSession().then((status) {
+      if (status != null && status == "auth") {
+        navigation(context: context, pageName: "home");
+      } else {
+        print("Splash");
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoginPage()),
+          (Route<dynamic> route) => false);
+
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

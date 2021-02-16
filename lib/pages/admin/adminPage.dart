@@ -1,18 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:oya_porter/config/navigation.dart';
+import 'package:oya_porter/pages/admin/schedules/viewRoutes.dart';
 import 'package:oya_porter/spec/styles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'busses/busses.dart';
 import 'rating/rating.dart';
 import 'routes/routes.dart';
-import 'schedules/schedules.dart';
 import 'staffs/staffs.dart';
 import 'tickets/tickets.dart';
 
 class StationMasterPage extends StatelessWidget {
-  final id, stationID;
+  final stationID;
 
-  StationMasterPage({@required this.id, @required this.stationID});
+  StationMasterPage({@required this.stationID});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +37,7 @@ class StationMasterPage extends StatelessWidget {
                   name: "Busses",
                   image: "assets/images/admin/longbus.png"),
               _cardWidget(
-                  onTap: () => navigateSchedules(context),
+                  onTap: () => navigateSchedules(context, stationID.toString()),
                   name: "Schedules",
                   image: "assets/images/admin/bus.png"),
             ],
@@ -50,7 +53,7 @@ class StationMasterPage extends StatelessWidget {
                   name: "Staffs",
                   image: "assets/images/admin/staffs.png"),
               _cardWidget(
-                  onTap: () => _navigatePage(context),
+                  onTap: () => _navigatePage(context, stationID.toString()),
                   name: "Ticket Sale",
                   image: "assets/images/admin/ticket.png"),
             ],
@@ -62,11 +65,11 @@ class StationMasterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _cardWidget(
-                  onTap: () => navigateRatings(context),
+                  onTap: () => navigateRatings(context, stationID.toString()),
                   name: "Rating",
                   image: "assets/images/admin/rating.png"),
               _cardWidget(
-                  onTap: () => navigateRoute(context),
+                  onTap: () => navigateRoute(context, stationID.toString()),
                   name: "Routes",
                   image: "assets/images/admin/route.png"),
             ],
@@ -105,21 +108,32 @@ _cardWidget({Function onTap, String image, String name}) {
   );
 }
 
-_navigatePage(BuildContext context) {
+_navigatePage(BuildContext context, String id) {
   Navigator.push(
-      context, MaterialPageRoute(builder: (context) => TicketPage()));
+      context, MaterialPageRoute(builder: (context) => TicketPage(id: id)));
 }
 
-navigateRoute(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => Routes()));
+navigateRoute(BuildContext context, String id) {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Routes(id: id)));
 }
 
-navigateRatings(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => Rating()));
+navigateRatings(BuildContext context, String id) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Rating(
+                stationId: id,
+              )));
 }
 
-navigateSchedules(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => Schedules()));
+navigateSchedules(BuildContext context, String id) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => RoutesPage(
+                statiionId: id,
+              )));
 }
 
 navigateStaffs(BuildContext context, String id) {
@@ -132,6 +146,7 @@ navigateStaffs(BuildContext context, String id) {
 }
 
 navigateBuss(BuildContext context, String id) {
+  print(id);
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => Busses(stationId: id)));
 }

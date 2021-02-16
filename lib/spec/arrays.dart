@@ -16,3 +16,14 @@ const REGIONS = [
   'Volta',
   'Oti'
 ];
+const List<String> account_types = [
+  'Admin',
+  'General Manager',
+  'Station Master',
+  'Driver',
+  'Scheduler',
+  'Conductor',
+  'Porter',
+  'Special User',
+  'Normal User'
+];

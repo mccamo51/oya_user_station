@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/appBar.dart';
+import 'package:oya_porter/pages/admin/rating/widgets/ratingPage.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import 'widgets/ratingWidget.dart';
+import 'widgets/reportPage.dart';
 
 enum TabSelect { report, rating }
 
 class Rating extends StatefulWidget {
+  final stationId;
+  Rating({@required this.stationId});
   @override
   _RatingState createState() => _RatingState();
 }
@@ -17,6 +21,7 @@ class _RatingState extends State<Rating> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: appBar(
         title: ("Rating"),
@@ -99,18 +104,12 @@ class _RatingState extends State<Rating> {
               ),
             ),
             selectTab == TabSelect.report
-                ? Column(children: [
-                    itemTileReport(),
-                    itemTileReport(),
-                    itemTileReport(),
-                    itemTileReport(),
-                  ])
-                : Column(children: [
-                    itemTile(),
-                    itemTile(),
-                    itemTile(),
-                    itemTile(),
-                  ])
+                ? ReportPage(
+                    id: widget.stationId,
+                  )
+                : RatingPage(
+                    id: widget.stationId,
+                  )
           ],
         ),
       ),

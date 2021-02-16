@@ -12,7 +12,7 @@ import 'package:oya_porter/spec/sharePreference.dart';
 
 import 'loginWidget/loginWidget.dart';
 
-String accessToken;
+String accessToken, stationId;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -93,9 +93,11 @@ class _LoginPageState extends State<LoginPage> {
           saveBoolShare(key: "auth", data: true);
           if (responseData['status'] == 200) {
             if (responseData['data']['staffs'].length > 0) {
+              saveStringShare(key: "userDetails", data: response.body);
+
               setState(() {
-                accessToken = responseData["data"]["access_token"];
                 _isLoading = false;
+                accessToken = responseData["data"]["access_token"];
               });
               Navigator.pushAndRemoveUntil(
                   context,
@@ -103,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                       builder: (context) =>
                           MainHomePage(data: responseData['data']['staffs'])),
                   (route) => false);
-              print('=======================true');
+              print('===============$stationId========true');
             } else {
               setState(() {
                 print('=======================false');

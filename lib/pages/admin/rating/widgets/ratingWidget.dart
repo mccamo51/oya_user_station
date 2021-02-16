@@ -1,64 +1,99 @@
-
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-itemTileReport() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Card(
-        child: Column(
-      children: [
-        Text("GT-12344 2010"),
-        Text("From Accra to Kumasi"),
-        Text("Sunday, 10th Feb, 2020. 10:20pm"),
-        Divider(),
-        Text("Name: Kofi Ntoh"),
-        Text("Phone: 023456788"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
+itemTileReport(
+    {String carNo,
+    String from,
+    String to,
+    String datTime,
+    String name,
+    String phone,
+    String speed}) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Speed: 1.8Km/h"),
-            ),
+              child: Column(
+          children: [
+              Text("$carNo"),
+              Text("From $from to $to"),
+              Text("$datTime"),
+              Divider(),
+              Text("Name: $name"),
+              Text("Phone: $phone"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Speed: $speed Km/h"),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              )
           ],
         ),
-        SizedBox(
-          height: 10,
-        )
-      ],
-    )),
+            )),
+      ),
+      // Padding(
+      //   padding: const EdgeInsets.only(left: 25.0),
+      //   child: Divider(),
+      // )
+    ],
   );
 }
 
-itemTile() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Card(
-        child: Column(
-      children: [
-        Text("GT-12344 2010"),
-        Text("From Accra to Kumasi"),
-        Text("Sunday, 10th Feb, 2020. 10:20pm"),
-        Divider(),
-        Text("Name: Kofi Ntoh"),
-        Text("Phone: 023456788"),
-        SmoothStarRating(
-            allowHalfRating: false,
-            onRated: (v) {},
-            starCount: 5,
-            rating: 5,
-            size: 40.0,
-            isReadOnly: true,
-            // fullRatedIconData: Icons.blur_off,
-            // halfRatedIconData: Icons.blur_on,
-            color: Colors.green,
-            borderColor: Colors.green,
-            spacing: 0.0),
-        SizedBox(
-          height: 10,
-        )
-      ],
-    )),
+itemTile(
+    {String carNo,
+    String from,
+    String to,
+    String datTime,
+    String name,
+    String phone,
+    rating}) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text("$carNo"),
+              Text("From $from to $to"),
+              Text("$datTime"),
+              Divider(),
+              Text("Name: $name"),
+              Text("Phone: $phone"),
+              SmoothStarRating(
+                  allowHalfRating: false,
+                  onRated: (v) {},
+                  starCount: 5,
+                  rating: rating,
+                  size: 40.0,
+                  isReadOnly: true,
+                  // fullRatedIconData: Icons.blur_off,
+                  // halfRatedIconData: Icons.blur_on,
+                  color: Colors.green,
+                  borderColor: Colors.green,
+                  spacing: 0.0),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          ),
+        )),
+      ),
+      // Padding(
+      //   padding: const EdgeInsets.only(left: 25.0),
+      //   child: Divider(),
+      // )
+    ],
   );
 }

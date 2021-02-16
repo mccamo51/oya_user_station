@@ -2,120 +2,173 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-Map<String, dynamic> ticketFromMapOffline;
-Future<void> loadTicketFromOffline() async {
+Map<String, dynamic> allStaffMapOffline;
+Future<void> loadAllStaffOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (prefs.containsKey("ticketFrom")) {
-    String encodeData = prefs.getString("ticketFrom");
+  if (prefs.containsKey("allStaff")) {
+    String encodeData = prefs.getString("allStaff");
     print(encodeData);
     Map<String, dynamic> decodeData = json.decode(encodeData);
-    ticketFromMapOffline = decodeData;
+    allStaffMapOffline = decodeData;
   } else
-    ticketFromMapOffline = null;
+    allStaffMapOffline = null;
 }
 
-Map<String, dynamic> allTripsMapOffline;
-Future<void> loadallAllTripsOffline() async {
+Map<String, dynamic> alBussesMapOffline;
+Future<void> loadallAllBussesOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (prefs.containsKey("alltrips")) {
-    String encodeData = prefs.getString("alltrips");
+  if (prefs.containsKey("allBusses")) {
+    String encodeData = prefs.getString("allBusses");
     Map<String, dynamic> decodeData = json.decode(encodeData);
-    allTripsMapOffline = decodeData;
+    alBussesMapOffline = decodeData;
   } else
-    allTripsMapOffline = null;
+    alBussesMapOffline = null;
 }
 
-Map<String, dynamic> allTicketsMapOffline;
-Future<void> loadallAllTicketsOffline() async {
+Map<String, dynamic> allRatingMapOffline;
+Future<void> loadAllRatingOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (prefs.containsKey("alltickets")) {
-    String encodeData = prefs.getString("alltickets");
+  if (prefs.containsKey("allrating")) {
+    String encodeData = prefs.getString("allrating");
     Map<String, dynamic> decodeData = json.decode(encodeData);
-    allTicketsMapOffline = decodeData;
+    allRatingMapOffline = decodeData;
   } else
-    allTicketsMapOffline = null;
+    allRatingMapOffline = null;
 }
 
-// Map<String, dynamic> subCategoriesMapOffline;
-// Future<void> loadallSubCategoriesOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allsubCategories")) {
-//     String encodeData = prefs.getString("allsubCategories");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     subCategoriesMapOffline = decodeData;
-//   } else
-//     subCategoriesMapOffline = null;
-// }
+Map<String, dynamic> schedulesMapOffline;
+Future<void> loadallSchedulesOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("allschedule")) {
+    String encodeData = prefs.getString("allschedule");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    schedulesMapOffline = decodeData;
+  } else
+    schedulesMapOffline = null;
+}
 
-// Map<String, dynamic> carMakeMapOffline;
-// Future<void> loadallCarMakeOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allCarsMake")) {
-//     String encodeData = prefs.getString("allCarsMake");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     carMakeMapOffline = decodeData;
-//   } else
-//     carMakeMapOffline = null;
-// }
+Map<String, dynamic> ticketMapOffline;
+Future<void> loadallTicketsOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("allticket")) {
+    String encodeData = prefs.getString("allticket");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    ticketMapOffline = decodeData;
+  } else
+    ticketMapOffline = null;
+}
 
-// Map<String, dynamic> carModleMapOffline;
-// Future<void> loadallCarModelOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allCarBrand")) {
-//     String encodeData = prefs.getString("allCarBrand");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     carModleMapOffline = decodeData;
-//   } else
-//     carModleMapOffline = null;
-// }
+Map<String, dynamic> myRouteMapOffline;
+Future<void> loadMyRouteOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("myroute")) {
+    String encodeData = prefs.getString("myroute");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    myRouteMapOffline = decodeData;
+  } else
+    myRouteMapOffline = null;
+}
 
-// Map<String, dynamic> bussesMakeMapOffline;
-// Future<void> loadallBusMakeOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allBussesMake")) {
-//     String encodeData = prefs.getString("allBussesMake");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     bussesMakeMapOffline = decodeData;
-//   } else
-//     bussesMakeMapOffline = null;
-// }
+Map<String, dynamic> driversMapOffline;
+Future<void> loadDriverOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("drivers")) {
+    String encodeData = prefs.getString("drivers");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    driversMapOffline = decodeData;
+  } else
+    driversMapOffline = null;
+}
 
-// Map<String, dynamic> bussesModelMapOffline;
-// Future<void> loadallBusModelOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allCarBrand")) {
-//     String encodeData = prefs.getString("allCarBrand");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     bussesModelMapOffline = decodeData;
-//   } else
-//     bussesModelMapOffline = null;
-// }
+Map<String, dynamic> busTypeModelMapOffline;
+Future<void> loadBusTypeModelOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("bustype")) {
+    String encodeData = prefs.getString("bustype");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    busTypeModelMapOffline = decodeData;
+  } else
+    busTypeModelMapOffline = null;
+}
 
-// Map<String, dynamic> heavyDutyMapOffline;
-// Future<void> loadallHeavyDutyOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allHeavyEquip")) {
-//     String encodeData = prefs.getString("allHeavyEquip");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     heavyDutyMapOffline = decodeData;
-//   } else
-//     heavyDutyMapOffline = null;
-// }
+Map<String, dynamic> regionMapOffline;
+Future<void> loadregionOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("regions")) {
+    String encodeData = prefs.getString("regions");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    regionMapOffline = decodeData;
+  } else
+    regionMapOffline = null;
+}
 
-// Map<String, dynamic> tractorMapOffline;
-// Future<void> loadallTractorOffline() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   if (prefs.containsKey("allTrucks")) {
-//     String encodeData = prefs.getString("allTrucks");
-//     print(encodeData);
-//     Map<String, dynamic> decodeData = json.decode(encodeData);
-//     tractorMapOffline = decodeData;
-//   } else
-//     tractorMapOffline = null;
-// }
+Map<String, dynamic> townMapOffline;
+Future<void> loadTownOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("towns")) {
+    String encodeData = prefs.getString("towns");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    townMapOffline = decodeData;
+  } else
+    townMapOffline = null;
+}
+
+
+
+Map<String, dynamic> conductorsMapOffline;
+Future<void> loadconductorsOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("conductors")) {
+    String encodeData = prefs.getString("conductors");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    conductorsMapOffline = decodeData;
+  } else
+    conductorsMapOffline = null;
+}
+
+Map<String, dynamic> portersMapOffline;
+Future<void> loadportersOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("porters")) {
+    String encodeData = prefs.getString("porters");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    portersMapOffline = decodeData;
+  } else
+    portersMapOffline = null;
+}
+
+Map<String, dynamic> busesMapOffline;
+Future<void> loadbusesOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("buses")) {
+    String encodeData = prefs.getString("buses");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    busesMapOffline = decodeData;
+  } else
+    busesMapOffline = null;
+}
+
+Map<String, dynamic> reportMapOffline;
+Future<void> loadReportOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("speed_reports")) {
+    String encodeData = prefs.getString("speed_reports");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    reportMapOffline = decodeData;
+  } else
+    reportMapOffline = null;
+}
+
+
+

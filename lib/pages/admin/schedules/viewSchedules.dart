@@ -1,51 +1,54 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:oya_porter/bloc/ticketBloc.dart';
+import 'package:oya_porter/bloc/myRouteBloc.dart';
+import 'package:oya_porter/bloc/scheduleBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/config/offlineData.dart';
-import 'package:oya_porter/models/ticketModel.dart';
-import 'package:oya_porter/spec/colors.dart';
+import 'package:oya_porter/models/ScheduleModel.dart';
+import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/pages/admin/schedules/schedules.dart';
 
-import 'addTickets.dart';
+class ViewSchedules extends StatefulWidget {
+  final statiionId, routeId;
+  ViewSchedules({@required this.statiionId, @required this.routeId});
 
-class TicketPage extends StatefulWidget {
-  final id;
-  TicketPage({@required this.id});
   @override
-  _TicketPageState createState() => _TicketPageState();
+  _ViewSchedulesState createState() => _ViewSchedulesState();
 }
 
-class _TicketPageState extends State<TicketPage> {
-  @override
+class _ViewSchedulesState extends State<ViewSchedules> {
   void initState() {
+    scheduleBloc.fetchAllStaffs(
+      widget.routeId,
+      widget.statiionId,
+    );
+    loadallSchedulesOffline();
     // TODO: implement initState
-    ticketBloc.fetchAllTicket(widget.id);
-    loadallTicketsOffline();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: ("Tickets"), actions: [
+      appBar: appBar(title: "Schedules", actions: [
         IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddTicket()));
+                  MaterialPageRoute(builder: (context) => Schedules()));
             })
       ]),
       body: StreamBuilder(
-        stream: ticketBloc.allTickets,
-        initialData: ticketMapOffline == null
+        stream: scheduleBloc.allRating,
+        initialData: schedulesMapOffline == null
             ? null
-            : TicketsModel.fromJson(ticketMapOffline),
+            : ScheduleModel.fromJson(schedulesMapOffline),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           print("snapshot: ${snapshot.data}");
           if (snapshot.hasData) {
-            return _mainContent(snapshot.data);
+            return _mainContent(snapshot.data, context);
           } else if (snapshot.hasError) {
             return Scaffold(body: emptyBox(context));
           }
@@ -57,8 +60,8 @@ class _TicketPageState extends State<TicketPage> {
     );
   }
 
-  Widget _mainContent(TicketsModel model) {
-    // print(bussModel.data);
+  Widget _mainContent(ScheduleModel model, BuildContext context) {
+    print(model.data);
     if (model.data != null && model.data.length > 0)
       return SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -72,12 +75,11 @@ class _TicketPageState extends State<TicketPage> {
                 children: [
                   for (var x in model.data)
                     _itemTile(
-                        from: x.busSchedule.route.from.name,
-                        to: x.busSchedule.route.to.name,
-                        depTime: x.busSchedule.departureTime,
-                        depDate: x.busSchedule.departureDate,
-                        regNo: x.busSchedule.bus.regNumber,
-                        company: x.busSchedule.bus.busCompany.name)
+                        // from: x.from.name,
+                        // to: x.to.name,
+                        context: context,
+                        stId: widget.statiionId,
+                        routId: x.id.toString())
                 ],
               ),
             ),
@@ -89,34 +91,26 @@ class _TicketPageState extends State<TicketPage> {
   }
 }
 
-_itemTile({
-  String company,
-  String from,
-  to,
-  regNo,
-  depTime,
-  depDate,
-}) {
+_itemTile({String stId, String routId, BuildContext context, from, to}) {
   return Column(
     children: [
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
-          leading: Icon(Icons.car_repair),
-          title: Text("$company $from $to ($regNo)"),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("$company $from $to"),
-              Text("Departure: $depDate \n@ $depTime"),
-            ],
-          ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.delete_forever,
-              color: RED,
-            ),
-            onPressed: () {},
+          leading: Icon(FeatherIcons.mapPin),
+          title: Text("From: $from   -   $to"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Schedules(),
+              ),
+            );
+          },
+          trailing: Icon(
+            Icons.delete,
+            color: Colors.red,
+            size: 15,
           ),
         ),
       ),

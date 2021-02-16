@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/pages/admin/adminPage.dart';
 import 'package:oya_porter/pages/admin/busses/busses.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
+import 'package:oya_porter/pages/mainHome.dart';
 
 void navigation({
   @required BuildContext context,
@@ -22,7 +23,7 @@ void navigation({
       break;
     case "home":
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => StationMasterPage()),
+          MaterialPageRoute(builder: (context) => MainHomePage()),
           (Route<dynamic> route) => false);
       break;
     case "busses":

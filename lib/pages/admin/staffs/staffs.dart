@@ -4,6 +4,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/bloc/staffBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
+import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/spec/colors.dart';
 
@@ -20,6 +21,7 @@ class _StaffsState extends State<Staffs> {
   @override
   void initState() {
     stafBloc.fetchAllStaffs(widget.id.toString());
+    loadAllStaffOffline();
     // TODO: implement initState
     super.initState();
   }
@@ -38,9 +40,9 @@ class _StaffsState extends State<Staffs> {
       ]),
       body: StreamBuilder(
         stream: stafBloc.allStaff,
-        // initialData: allTripsMapOffline == null
-        //     ? null
-        //     : TripsModel.fromJson(allTripsMapOffline),
+        initialData: allStaffMapOffline == null
+            ? null
+            : StaffModel.fromJson(allStaffMapOffline),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           print("snapshot: ${snapshot.data}");
           if (snapshot.hasData) {
@@ -59,6 +61,7 @@ class _StaffsState extends State<Staffs> {
   Widget _mainContent(StaffModel staffModel) {
     if (staffModel.data != null && staffModel.data.length > 0)
       return SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,25 +88,33 @@ class _StaffsState extends State<Staffs> {
 }
 
 _itemTile({@required String name, @required String phone, String role}) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: ListTile(
-      leading: Icon(FeatherIcons.user),
-      title: Text("Name: $name"),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Phone: $phone"),
-          Text("User: $role"),
-        ],
-      ),
-      trailing: IconButton(
-        icon: Icon(
-          Icons.delete_forever,
-          color: RED,
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListTile(
+          leading: Icon(FeatherIcons.user),
+          title: Text("Name: $name"),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Phone: $phone"),
+              Text("User: $role"),
+            ],
+          ),
+          // trailing: IconButton(
+          //   icon: Icon(
+          //     Icons.delete_forever,
+          //     color: RED,
+          //   ),
+          //   onPressed: () {},
+          // ),
         ),
-        onPressed: () {},
       ),
-    ),
+      Padding(
+        padding: const EdgeInsets.only(left: 40.0),
+        child: Divider(),
+      )
+    ],
   );
 }
