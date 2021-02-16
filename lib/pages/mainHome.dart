@@ -70,7 +70,6 @@ class _MainHomePageState extends State<MainHomePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => StationMasterPage(
-                            // id: x['account_type']['id'],
                             stationID: stationId,
                           ),
                         ),
@@ -91,6 +90,7 @@ class _MainHomePageState extends State<MainHomePage> {
                   },
                   title: Text(x['account_type']['name']),
                   subtitle: Text(x['station']['name']),
+                  leading: Icon(Icons.bus_alert),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     size: 15,

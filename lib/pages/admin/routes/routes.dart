@@ -65,18 +65,14 @@ class _RoutesState extends State<Routes> {
     );
   }
 
-  deleteBus({String route_id, source_id}) async {
-    print(source_id);
+  deleteRoute({String route_id, }) async {
     setState(() {
       isLoading = true;
     });
     try {
-      final response = await http.post(
-        "$BASE_URL/routes",
-        body: {
-          'route_id': route_id,
-          'source': source_id,
-        },
+      final response = await http.delete(
+        "$BASE_URL/routes/$route_id",
+       
         headers: {
           "Authorization": "Bearer $accessToken",
         },
@@ -124,9 +120,8 @@ class _RoutesState extends State<Routes> {
                         from: x.from.name,
                         to: x.to.name,
                         onDelete: () {
-                          deleteBus(
+                          deleteRoute(
                             route_id: x.id.toString(),
-                            source_id: x.from.id,
                           );
                         })
                 ],

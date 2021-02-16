@@ -108,11 +108,8 @@ class _BussesState extends State<Busses> {
       isLoading = true;
     });
     try {
-      final response = await http.post(
-        "$BASE_URL/buses",
-        body: {
-          'bus_Id': busId,
-        },
+      final response = await http.delete(
+        "$BASE_URL/buses/$busId",
         headers: {
           "Authorization": "Bearer $accessToken",
         },
