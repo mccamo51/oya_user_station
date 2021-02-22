@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/textField.dart';
+import 'package:oya_porter/pages/auth/login/login.dart';
 
 class Account extends StatelessWidget {
   @override
@@ -14,17 +15,19 @@ class Account extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text("Name"),
             textFormField(
-                hintText: "Name",
+                hintText: "$userName",
                 controller: null,
                 focusNode: null,
                 enable: false,
-                labelText: "Name"),
+                labelText: "$userName"),
             SizedBox(
               height: 10,
             ),
+            Text("Phone"),
             textFormField(
-              hintText: "Phone Number",
+              hintText: "$userphone",
               controller: null,
               focusNode: null,
               enable: false,
@@ -32,19 +35,21 @@ class Account extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
+            Text("Primary ICE Phone Number"),
             textFormField(
-                hintText: "Primary ICE Phone number",
+                hintText: "$userICE1",
                 controller: null,
                 focusNode: null,
                 enable: false),
             SizedBox(
               height: 10,
             ),
+            Text("Secondary ICE Phone Number"),
             textFormField(
-              hintText: "Secondary ICE Phone number",
-              controller: null,
-              focusNode: null,
-            ),
+                hintText: "$userICE2",
+                controller: null,
+                focusNode: null,
+                enable: false),
             SizedBox(
               height: 20,
             ),

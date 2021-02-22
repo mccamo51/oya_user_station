@@ -12,7 +12,7 @@ import 'package:oya_porter/spec/sharePreference.dart';
 
 import 'loginWidget/loginWidget.dart';
 
-String accessToken, stationId;
+String accessToken, stationId, userName, userId, userRole, userphone, userICE1, userICE2;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -88,16 +88,23 @@ class _LoginPageState extends State<LoginPage> {
           'phone': phone,
           'pin': password
         }).timeout(Duration(seconds: 50));
+        print(response.body);
         if (response.statusCode == 200) {
           final responseData = json.decode(response.body);
-          saveBoolShare(key: "auth", data: true);
           if (responseData['status'] == 200) {
             if (responseData['data']['staffs'].length > 0) {
+              saveBoolShare(key: "auth", data: true);
               saveStringShare(key: "userDetails", data: response.body);
 
               setState(() {
                 _isLoading = false;
                 accessToken = responseData["data"]["access_token"];
+                userName = responseData["data"]["name"];
+                userphone = responseData["data"]["phone"];
+                userICE1 = responseData["data"]["ice_primary_phone"];
+                userICE2 = responseData["data"]["ice_secondary_phone"];
+                userRole = responseData["data"]["role"];
+                
               });
               Navigator.pushAndRemoveUntil(
                   context,
@@ -109,8 +116,11 @@ class _LoginPageState extends State<LoginPage> {
             } else {
               setState(() {
                 print('=======================false');
-
                 _isLoading = false;
+                wrongPasswordToast(
+                    context: context,
+                    title: "Login Failed",
+                    msg: "User does not have access to this system");
               });
             }
             // saveStringShare(key: "userDetails", data: response.body);

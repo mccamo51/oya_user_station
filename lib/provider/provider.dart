@@ -10,10 +10,13 @@ import 'package:oya_porter/models/busModel.dart';
 import 'package:oya_porter/models/busTypeModel.dart';
 import 'package:oya_porter/models/conductorModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
+import 'package:oya_porter/models/loadedBusModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/models/priorityBusModel.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/reportModel.dart';
+import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/models/townModle.dart';
@@ -110,7 +113,7 @@ class OyaProvider {
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
-        print(response.body);
+        // print(response.body);
         saveStringShare(
             key: "allschedule", data: json.encode(json.decode(response.body)));
         return ScheduleModel.fromJson(json.decode(response.body));
@@ -302,7 +305,8 @@ class OyaProvider {
       if (response.statusCode == 200) {
         print(response.body);
         saveStringShare(
-            key: "speed_reports", data: json.encode(json.decode(response.body)));
+            key: "speed_reports",
+            data: json.encode(json.decode(response.body)));
         return ReportModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load Busses');
@@ -360,6 +364,92 @@ class OyaProvider {
         saveStringShare(
             key: "porters", data: json.encode(json.decode(response.body)));
         return PortersModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load porters');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<LoadedBusModel> fetchLoadedBuses(
+    String id,
+  ) async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/stations/$id/loaded_buses",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 30));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "loaded_buses", data: json.encode(json.decode(response.body)));
+        return LoadedBusModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load porters');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ScaledBusModel> fetchScaledBuses(
+    String id,
+  ) async {
+    print("====================$id");
+    try {
+      final response = await client.get(
+        "$BASE_URL/stations/$stationId/scaled_buses",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 30));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "scaled_buses", data: json.encode(json.decode(response.body)));
+        return ScaledBusModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load porters');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<PriorityBusModel> fetchPriorityBus(
+    String id,
+  ) async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/stations/$id/priority_buses",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 30));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "priority_buses",
+            data: json.encode(json.decode(response.body)));
+        return PriorityBusModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load porters');
       }

@@ -1,11 +1,11 @@
-class ScheduleModel {
+class ScaledBusModel {
   int status;
   String message;
   List<Data> data;
 
-  ScheduleModel({this.status, this.message, this.data});
+  ScaledBusModel({this.status, this.message, this.data});
 
-  ScheduleModel.fromJson(Map<String, dynamic> json) {
+  ScaledBusModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
@@ -39,10 +39,10 @@ class Data {
   String arrivalDate;
   String arrivalTime;
   int passengersCount;
-  int minors;
+  String minors;
   String createdAt;
   List<Staffs> staffs;
-  int price;
+  String price;
   int midRoute;
   Bus bus;
   Route route;
@@ -84,7 +84,7 @@ class Data {
     arrivalDate = json['arrival_date'];
     arrivalTime = json['arrival_time'];
     passengersCount = json['passengers_count'];
-    minors = json['minors'];
+    minors = json['minors'].toString();
     createdAt = json['created_at'];
     if (json['staffs'] != null) {
       staffs = new List<Staffs>();
@@ -92,7 +92,7 @@ class Data {
         staffs.add(new Staffs.fromJson(v));
       });
     }
-    price = json['price'];
+    price = json['price'].toString();
     midRoute = json['mid_route'];
     bus = json['bus'] != null ? new Bus.fromJson(json['bus']) : null;
     route = json['route'] != null ? new Route.fromJson(json['route']) : null;
@@ -253,8 +253,8 @@ class Station {
   String name;
   String location;
   String email;
-  String longitude;
-  String latitude;
+  Null longitude;
+  Null latitude;
   BusCompany busCompany;
   Region region;
 
@@ -311,7 +311,7 @@ class BusCompany {
   String name;
   String phone;
   String email;
-  String logo;
+  Null logo;
   String contactName;
   String contactPhone;
   int status;
@@ -404,14 +404,14 @@ class User {
   int id;
   String phone;
   String name;
-  String email;
+  Null email;
   String ice1Phone;
   String ice2Phone;
   String verifiedAt;
   String code;
   String expiration;
   int accountStatus;
-  int specialHireCode;
+  Null specialHireCode;
 
   User(
       {this.id,

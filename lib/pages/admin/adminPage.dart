@@ -1,13 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:oya_porter/pages/admin/schedules/viewRoutes.dart';
 import 'package:oya_porter/spec/styles.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'busses/busses.dart';
 import 'rating/rating.dart';
 import 'routes/routes.dart';
+import 'schedules/viewSchedules.dart';
 import 'staffs/staffs.dart';
 import 'tickets/tickets.dart';
 
@@ -20,7 +17,7 @@ class StationMasterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Admin Home"),
+        title: Text("Station Master"),
         centerTitle: true,
         elevation: 0.6,
       ),
@@ -131,8 +128,9 @@ navigateSchedules(BuildContext context, String id) {
   Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => RoutesPage(
-                statiionId: id,
+          builder: (context) => ViewSchedules(
+                statiionId: id.toString(),
+                routeId: id.toString(),
               )));
 }
 

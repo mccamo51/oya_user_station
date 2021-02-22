@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oya_porter/pages/porter/homePage/account/account.dart';
 import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
+import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
 import 'package:oya_porter/pages/porter/homePage/trips/trips.dart';
 import 'package:oya_porter/spec/colors.dart';
 
@@ -13,7 +14,7 @@ class _PorterHomePageState extends State<PorterHomePage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     HomePagePorter(),
-    Trips(),
+    PorterSchedule(),
     Account(),
   ];
 

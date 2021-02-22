@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //saving
@@ -25,12 +26,17 @@ Future<bool> getShareAuthData() async {
   return ret;
 }
 
-clearUser() async {
+clearUser(BuildContext context) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  saveBoolShare(key: "auth", data: false);
+  saveStringShare(key: "userDetails", data: "");
   await preferences.remove('userDetails');
-  await preferences.remove("displayName");
-  await preferences.remove("email");
-  await preferences.remove("photoURL");
+  await preferences.remove("userDetails");
+  await preferences.remove("stationId");
+  await preferences.remove("accessToken");
   await preferences.remove("uid");
   await preferences.remove("google");
+  Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginPage()),
+      (Route<dynamic> route) => false);
 }

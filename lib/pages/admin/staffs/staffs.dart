@@ -6,6 +6,7 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/models/stuffModel.dart';
+import 'package:oya_porter/pages/admin/staffs/editStaff.dart';
 import 'package:oya_porter/spec/colors.dart';
 
 import 'addStaff.dart';
@@ -72,10 +73,23 @@ class _StaffsState extends State<Staffs> {
                 children: [
                   for (var x in staffModel.data)
                     _itemTile(
-                      name: x.user.name,
-                      phone: x.user.phone,
-                      role: x.accountType.name,
-                    )
+                        name: x.user.name,
+                        phone: x.user.phone,
+                        role: x.accountType.name,
+                        onFunction: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditStaff(
+                                icePhone: x.user.ice1Phone,
+                                name: x.user.name,
+                                phone: x.user.phone,
+                                uid: x.user.id,
+                                accountId: x.accountType.name
+                              ),
+                            ),
+                          );
+                        })
                 ],
               ),
             ),
@@ -87,7 +101,11 @@ class _StaffsState extends State<Staffs> {
   }
 }
 
-_itemTile({@required String name, @required String phone, String role}) {
+_itemTile(
+    {@required String name,
+    @required String phone,
+    String role,
+    Function onFunction}) {
   return Column(
     children: [
       Padding(
@@ -102,13 +120,14 @@ _itemTile({@required String name, @required String phone, String role}) {
               Text("User: $role"),
             ],
           ),
-          // trailing: IconButton(
-          //   icon: Icon(
-          //     Icons.delete_forever,
-          //     color: RED,
-          //   ),
-          //   onPressed: () {},
-          // ),
+          trailing: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              FeatherIcons.edit,
+              color: PRIMARYCOLOR,
+            ),
+            onPressed: onFunction,
+          ),
         ),
       ),
       Padding(

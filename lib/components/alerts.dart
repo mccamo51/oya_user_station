@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/spec/colors.dart';
+import 'package:oya_porter/spec/sharePreference.dart';
 
 Future<void> iceAlert(BuildContext context, msg) async {
   return showDialog<void>(
@@ -85,8 +86,7 @@ Future<void> logoutDialog(BuildContext context) async {
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              Text(
-                  'Are you sure you want to sign out from the app. You will have to login the next time you open the app'),
+              Text('Are you sure you want to sign out from the app?'),
             ],
           ),
         ),
@@ -109,7 +109,7 @@ Future<void> logoutDialog(BuildContext context) async {
               'Sign Out',
             ),
             onPressed: () {
-              // deleteCache(context);
+              clearUser(context);
               Navigator.of(context).pop();
             },
           ),
@@ -126,8 +126,7 @@ Future<void> iosDialog(BuildContext context) async {
     builder: (BuildContext context) {
       return CupertinoAlertDialog(
         title: Text('Sign Out Confirmation'),
-        content: Text(
-            'Are you sure you want to sign out from the app. You will have to login the next time you open the app'),
+        content: Text('Are you sure you want to sign out from the app?'),
         actions: <Widget>[
           CupertinoDialogAction(
             child: Text('Cancel'),
@@ -168,6 +167,7 @@ Future<void> exceptionAlert(
             color: PRIMARYCOLOR,
             child: Text('Try again'),
             onPressed: () {
+              clearUser(context);
               Navigator.pop(context);
             },
           ),

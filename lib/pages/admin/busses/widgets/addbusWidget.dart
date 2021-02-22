@@ -15,6 +15,8 @@ Widget addBusWidget({
   @required Function onSave,
   @required Function onSelectBus,
   @required Function onSelectDriver,
+  @required Function onInsurance,
+  @required Function onRoadWorthy,
 }) {
   return Scaffold(
     appBar: appBar(title: "Add New Bus"),
@@ -65,6 +67,34 @@ Widget addBusWidget({
                 enable: false,
                 labelText: "Select Bus Driver",
                 icon: Icons.arrow_drop_down),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: onRoadWorthy,
+            child: textFormField(
+              hintText: "Select Road Worthy Expiration",
+              controller: roadWorthyExpController,
+              focusNode: null,
+              enable: false,
+              labelText: "Select Road Worthy Expiration",
+              icon: Icons.calendar_today,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: onInsurance,
+            child: textFormField(
+              hintText: "Select Insurance Expiration",
+              controller: insExpController,
+              focusNode: null,
+              enable: false,
+              labelText: "Select Insurance Expiration",
+              icon: Icons.calendar_today,
+            ),
           )
         ],
       ),

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/spec/colors.dart';
 
-itemTile({@required String carNumber, @required String seater, Function onDelete}) {
+itemTile(
+    {@required String carNumber, @required String seater, Function onDelete}) {
   return Column(
     children: [
       Padding(
@@ -21,7 +22,7 @@ itemTile({@required String carNumber, @required String seater, Function onDelete
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 25.0),
+        padding: const EdgeInsets.only(left: 50.0),
         child: Divider(),
       )
     ],

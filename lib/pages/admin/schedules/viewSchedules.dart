@@ -31,6 +31,7 @@ class _ViewSchedulesState extends State<ViewSchedules> {
 
   @override
   Widget build(BuildContext context) {
+    // print(widget.statiionId);
     return Scaffold(
       appBar: appBar(title: "Schedules", actions: [
         IconButton(
@@ -75,8 +76,8 @@ class _ViewSchedulesState extends State<ViewSchedules> {
                 children: [
                   for (var x in model.data)
                     _itemTile(
-                        // from: x.from.name,
-                        // to: x.to.name,
+                        from: x.route.from.name,
+                        to: x.route.to.name,
                         context: context,
                         stId: widget.statiionId,
                         routId: x.id.toString())
@@ -99,14 +100,7 @@ _itemTile({String stId, String routId, BuildContext context, from, to}) {
         child: ListTile(
           leading: Icon(FeatherIcons.mapPin),
           title: Text("From: $from   -   $to"),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Schedules(),
-              ),
-            );
-          },
+          onTap: () {},
           trailing: Icon(
             Icons.delete,
             color: Colors.red,

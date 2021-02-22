@@ -161,7 +161,7 @@ class _AddStaffState extends State<AddStaff> {
 
   onSave({String userId, String accountId, String staId}) async {
     setState(() {
-      isLoading = false;
+      isLoading = true;
     });
     try {
       final response = await http.post(
@@ -179,11 +179,12 @@ class _AddStaffState extends State<AddStaff> {
       );
       print(response.body);
       if (response.statusCode == 200) {
+        setState(() => isLoading = false);
+
         final responseData = json.decode(response.body);
         // print(responseData);
         if (responseData['status'] == 200) {
           setState(() {
-            isLoading = false;
             show = true;
             name = responseData['data']['name'];
             phone = responseData['data']['phone'];
@@ -191,6 +192,8 @@ class _AddStaffState extends State<AddStaff> {
           });
           toastContainer(text: "New Staff Added Successfully");
           Navigator.pop(context);
+        } else {
+          toastContainer(text: responseData['message']);
         }
       }
     } on TimeoutException catch (e) {

@@ -28,9 +28,9 @@ import 'package:http/http.dart' as http;
 enum SelectPriority { PRIORITY, NOTPRI }
 enum SelectTicket { YesTick, NoTick }
 enum SelectBoarding { YesBoard, NoBoard }
-SelectPriority _character = SelectPriority.PRIORITY;
-SelectTicket _characterT = SelectTicket.YesTick;
-SelectBoarding _characterB = SelectBoarding.YesBoard;
+SelectPriority _character = SelectPriority.NOTPRI;
+SelectTicket _characterT = SelectTicket.NoTick;
+SelectBoarding _characterB = SelectBoarding.NoBoard;
 
 class Schedules extends StatefulWidget {
   @override
@@ -47,7 +47,7 @@ class _SchedulesState extends State<Schedules> {
   TextEditingController arrivalDateTimeController = TextEditingController();
   TextEditingController deptimeDateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-  int priority, board, ticket = 0;
+  int priority = 0, board = 0, ticket = 0;
 
   bool isLoading = false;
 
@@ -144,7 +144,7 @@ class _SchedulesState extends State<Schedules> {
                     GestureDetector(
                       onTap: () => _pickDate(),
                       child: textFormField(
-                        hintText: "Departure Date/Time",
+                        hintText: "Departure Date",
                         controller: deptimeDateController,
                         focusNode: null,
                         icon: Icons.arrow_drop_down,
@@ -157,7 +157,7 @@ class _SchedulesState extends State<Schedules> {
                     GestureDetector(
                       onTap: () => _selectTime(context),
                       child: textFormField(
-                        hintText: "Estimate Arrival Date/Time",
+                        hintText: "Departure Time",
                         controller: arrivalDateTimeController,
                         focusNode: null,
                         icon: Icons.arrow_drop_down,
@@ -366,13 +366,15 @@ class _SchedulesState extends State<Schedules> {
         for (var data in model.data) ...[
           Platform.isIOS
               ? CupertinoActionSheetAction(
-                  child: Text('${data.busType.name}',
-                      style: TextStyle(color: BLACK)),
+                  child:
+                      Text('${data.regNumber}', style: TextStyle(color: BLACK)),
                   onPressed: () {
                     setState(() {
                       // _toCode = data.id;
                       busId = (data.id).toString();
-                      busController.text = data.busType.name;
+                      busController.text = data.regNumber;
+                      driverController.text = data.driver.user.name;
+                      driverId = data.driver.id.toString();
                     });
 
                     Navigator.pop(context);
@@ -381,11 +383,14 @@ class _SchedulesState extends State<Schedules> {
               : SimpleDialogOption(
                   onPressed: () {
                     busId = (data.id).toString();
-                    busController.text = data.busType.name;
+                    busController.text = data.regNumber;
+
+                    driverController.text = data.driver.user.name;
+                    driverId = data.driver.id.toString();
                     Navigator.pop(context);
                   },
-                  child: Text("${data.busType.name}",
-                      style: TextStyle(fontSize: 20)),
+                  child:
+                      Text("${data.regNumber}", style: TextStyle(fontSize: 20)),
                 ),
           Divider(),
         ]
@@ -458,7 +463,7 @@ class _SchedulesState extends State<Schedules> {
   }
 
   Widget allBus() {
-    // loadAllCities();
+    loadbusesOffline();
     busesBloc.fetchAllStaffs(stationId);
     return StreamBuilder<Object>(
       stream: busesBloc.allBuses,
@@ -524,7 +529,7 @@ class _SchedulesState extends State<Schedules> {
   }
 
   Widget allRoute() {
-    // loadAllCities();
+    loadMyRouteOffline();
     myRouteBloc.fetchAllStaffs(stationId);
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
@@ -599,8 +604,9 @@ class _SchedulesState extends State<Schedules> {
         selectedTime = picked;
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
-        _time = _hour + ' : ' + _minute;
+        _time = _hour + ':' + _minute;
         arrivalDateTimeController.text = _time;
+        print(_minute);
         // arrivalDateTimeController.text = formatDate(
         //     DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
         //     ['hh', ':', 'nn', " ", 'am']).toString();

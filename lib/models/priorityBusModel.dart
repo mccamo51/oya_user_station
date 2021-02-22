@@ -1,11 +1,11 @@
-class ScheduleModel {
+class PriorityBusModel {
   int status;
   String message;
   List<Data> data;
 
-  ScheduleModel({this.status, this.message, this.data});
+  PriorityBusModel({this.status, this.message, this.data});
 
-  ScheduleModel.fromJson(Map<String, dynamic> json) {
+  PriorityBusModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
@@ -42,12 +42,12 @@ class Data {
   int minors;
   String createdAt;
   List<Staffs> staffs;
-  int price;
+  String price;
   int midRoute;
   Bus bus;
   Route route;
   Station station;
-  // List<Null> tickets;
+  // List<Ticket> tickets;
 
   Data({
     this.id,
@@ -92,7 +92,7 @@ class Data {
         staffs.add(new Staffs.fromJson(v));
       });
     }
-    price = json['price'];
+    price = json['price'].toString();
     midRoute = json['mid_route'];
     bus = json['bus'] != null ? new Bus.fromJson(json['bus']) : null;
     route = json['route'] != null ? new Route.fromJson(json['route']) : null;
@@ -253,8 +253,8 @@ class Station {
   String name;
   String location;
   String email;
-  String longitude;
-  String latitude;
+  double longitude;
+  double latitude;
   BusCompany busCompany;
   Region region;
 
@@ -404,14 +404,14 @@ class User {
   int id;
   String phone;
   String name;
-  String email;
+  Null email;
   String ice1Phone;
   String ice2Phone;
   String verifiedAt;
   String code;
   String expiration;
   int accountStatus;
-  int specialHireCode;
+  Null specialHireCode;
 
   User(
       {this.id,

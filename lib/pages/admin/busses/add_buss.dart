@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:oya_porter/bloc/busTypeBloc.dart';
 import 'package:oya_porter/bloc/driverBloc.dart';
 import 'package:oya_porter/components/toast.dart';
@@ -41,6 +42,8 @@ class _AddBusState extends State<AddBus> {
               child: CupertinoActivityIndicator(),
             )
           : addBusWidget(
+              onRoadWorthy: () => _pickDate(roadWorthyExpController),
+              onInsurance: () => _pickDate(insExpController),
               context: context,
               busModelController: busModelController,
               busTypeController: busTypeController,
@@ -51,6 +54,8 @@ class _AddBusState extends State<AddBus> {
                   driverId: driverId,
                   regNo: regNoController.text,
                   model: busModelController.text,
+                  road_exp_date: roadWorthyExpController.text,
+                  ins_exp_date: insExpController.text,
                   staId: stationId),
               regNoController: regNoController,
               roadWorthyExpController: roadWorthyExpController,
@@ -65,54 +70,101 @@ class _AddBusState extends State<AddBus> {
     );
   }
 
+  _pickDate(TextEditingController controller) async {
+    DateTime now = DateTime.now();
+    DateTime date = await showDatePicker(
+      context: context,
+      firstDate: DateTime(DateTime.now().year - 5),
+      lastDate: DateTime(DateTime.now().year + 5),
+      initialDate: now,
+    );
+    if (date != null)
+      setState(() {
+        controller.text = DateFormat.yMMMMEEEEd().format(date);
+      });
+  }
+
+  void _showDatePicker(ctx, TextEditingController controller) {
+    // showCupertinoModalPopup is a built-in function of the cupertino library
+    showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => Container(
+              height: 200,
+              color: Color.fromARGB(255, 255, 255, 255),
+              child: Column(
+                children: [
+                  Container(
+                    height: 200,
+                    child: CupertinoDatePicker(
+                        initialDateTime: DateTime.now(),
+                        onDateTimeChanged: (val) {
+                          setState(() {
+                            controller.text =
+                                DateFormat.yMMMMEEEEd().format(val);
+                          });
+                        }),
+                  ),
+                ],
+              ),
+            ));
+  }
+
   _onSave(
       {String staId,
       String busId,
       String regNo,
+      String ins_exp_date,
+      String road_exp_date,
       String model,
       String driverId}) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      print("$driverId");
-      final response = await http.post(
-        "$BASE_URL/buses",
-        body: {
-          'station_id': staId,
-          'bus_type_id': busId,
-          'reg_number': regNo,
-          'model': model,
-          'driver_id': driverId,
-          'image': ''
-        },
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      ).timeout(
-        Duration(seconds: 50),
-      );
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
+    if (regNo.isEmpty || road_exp_date.isEmpty || ins_exp_date.isEmpty) {
+      toastContainer(text: "All this fields are required");
+    } else {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        print("$driverId");
+        final response = await http.post(
+          "$BASE_URL/buses",
+          body: {
+            'station_id': staId,
+            'bus_type_id': busId,
+            'reg_number': regNo,
+            'model': model,
+            'driver_id': driverId,
+            'rw_exp_date': '',
+            'insurance_exp_date': '',
+            'image': ''
+          },
+          headers: {
+            "Authorization": "Bearer $accessToken",
+          },
+        ).timeout(
+          Duration(seconds: 50),
+        );
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+          setState(() {
+            isLoading = false;
+          });
+          if (responseData['status'] == 200) {
+            toastContainer(text: responseData['message']);
+            Navigator.pop(context);
+          } else {
+            toastContainer(text: responseData['message']);
+          }
+        }
+      } on TimeoutException catch (e) {
         setState(() {
           isLoading = false;
         });
-        if (responseData['status'] == 200) {
-          toastContainer(text: responseData['message']);
-          Navigator.pop(context);
-        } else {
-          toastContainer(text: responseData['message']);
-        }
+      } catch (e) {
+        print(e);
+        setState(() {
+          isLoading = false;
+        });
       }
-    } on TimeoutException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print(e);
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 

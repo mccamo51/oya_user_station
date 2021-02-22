@@ -6,10 +6,13 @@ import 'package:oya_porter/models/busModel.dart';
 import 'package:oya_porter/models/busTypeModel.dart';
 import 'package:oya_porter/models/conductorModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
+import 'package:oya_porter/models/loadedBusModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/models/priorityBusModel.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/reportModel.dart';
+import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/models/townModle.dart';
@@ -52,4 +55,13 @@ class Repository {
 
   Future<PortersModel> fetchPorter(String staffId) =>
       _myProvider.fetchPorters(staffId);
+
+  Future<LoadedBusModel> fetchLoadedBus(String staffId) =>
+      _myProvider.fetchLoadedBuses(staffId);
+
+  Future<ScaledBusModel> fetchScaledBus(String staffId) =>
+      _myProvider.fetchScaledBuses(staffId);
+
+  Future<PriorityBusModel> fetchPriorityBus(String staffId) =>
+      _myProvider.fetchPriorityBus(staffId);
 }
