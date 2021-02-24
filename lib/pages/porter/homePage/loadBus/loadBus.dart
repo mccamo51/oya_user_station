@@ -226,6 +226,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                 hintText: "Enter ICE Phone number",
                                 controller: primaryICEphoneController,
                                 focusNode: icePhoneFocus,
+                                inputType: TextInputType.phone,
                                 labelText: "ICE Phone number",
                               ),
                             ],
@@ -541,7 +542,16 @@ class _LoadBusesState extends State<LoadBuses> {
         'pin': '$pin',
         'phone': '$phone',
         'minor_count': '$minor',
+        showPhone ? 'name' : '$name': '',
+        showPhone ? 'ice1_phone' : '$icePhone': '',
+        'type': 'a'
+      };
+      Map general2 = {
+        'pin': '$pin',
+        'phone': '$phone',
+        'minor_count': '$minor',
         'name': '$name',
+        'ice1_phone': '$icePhone',
         'type': 'a'
       };
       Map noPhone = {
@@ -559,14 +569,16 @@ class _LoadBusesState extends State<LoadBuses> {
         'type': 'c'
       };
       print(_character);
-      // print(noPhone);
+      print(showPhone);
       final response = await http.post(
         "$BASE_URL/schedules/$scheduleId/manifest",
-        body: _character == BusType.Genral
-            ? general
-            : _character == BusType.NoPhone
-                ? noPhone
-                : noPhoneNoICE,
+        body: showPhone && _character == BusType.Genral
+            ? general2
+            : _character == BusType.Genral
+                ? general
+                : _character == BusType.NoPhone
+                    ? noPhone
+                    : noPhoneNoICE,
         headers: {
           "Authorization": "Bearer $accessToken",
         },
