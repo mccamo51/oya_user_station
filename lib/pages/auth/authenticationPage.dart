@@ -12,7 +12,6 @@ class AuthenticationPage extends StatefulWidget {
 class _AuthenticationPageState extends State<AuthenticationPage> {
   @override
   Future<void> initState() {
-
     super.initState();
     checkSession().then((status) {
       if (status != null && status == "auth") {
@@ -20,9 +19,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       } else {
         print("Splash");
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoginPage()),
-          (Route<dynamic> route) => false);
-
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (Route<dynamic> route) => false);
       }
     });
   }
@@ -38,7 +36,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             children: [
               Center(
                   child: Image.asset(
-                "assets/images/admin/mainlogo.png",
+                "assets/images/admin/adminlogo.png",
                 width: 100,
                 height: 100,
               )),
@@ -53,7 +51,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 20),
                   child: Text(
-                    "MAINSCREENTEXT",
+                    "Contribute to your safe travel experience",
                     style: TextStyle(fontSize: 17),
                     textAlign: TextAlign.center,
                   ),
@@ -63,29 +61,29 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           )
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Container(
-            height: 120,
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 45,
-                  child: OutlineButton(
-                    highlightedBorderColor: PRIMARYCOLOR,
-                    borderSide: BorderSide(width: 0.5, color: PRIMARYCOLOR),
-                    onPressed: () => navigation(
-                      context: context,
-                      pageName: "loginpage",
-                    ),
-                    child: Text("Log In",
-                        style: TextStyle(color: PRIMARYCOLOR, fontSize: 16)),
-                  ),
-                )
-              ],
-            )),
-      ),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(15.0),
+      //   child: Container(
+      //       height: 120,
+      //       child: Column(
+      //         children: [
+      //           SizedBox(
+      //             width: double.infinity,
+      //             height: 45,
+      //             child: OutlineButton(
+      //               highlightedBorderColor: PRIMARYCOLOR,
+      //               borderSide: BorderSide(width: 0.5, color: PRIMARYCOLOR),
+      //               onPressed: () => navigation(
+      //                 context: context,
+      //                 pageName: "loginpage",
+      //               ),
+      //               child: Text("Log In",
+      //                   style: TextStyle(color: PRIMARYCOLOR, fontSize: 16)),
+      //             ),
+      //           )
+      //         ],
+      //       )),
+      // ),
     );
   }
 }

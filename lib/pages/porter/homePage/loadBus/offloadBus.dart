@@ -118,6 +118,7 @@ class _OffloadBusState extends State<OffloadBus> {
       final responseData = json.decode(response.body);
       if (responseData['status'] == 200) {
         toastContainer(text: responseData['message']);
+        Navigator.pop(context);
       } else {
         toastContainer(text: responseData['message']);
       }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/offloadBus.dart';
@@ -46,6 +47,7 @@ class _LoadBusesState extends State<LoadBuses> {
   int minor = 0;
   bool isSearch = false;
   bool isLoading = false;
+  bool showPhone = false;
   FocusNode ticktFocus,
       fullNameFocus,
       phoneFocus,
@@ -208,12 +210,49 @@ class _LoadBusesState extends State<LoadBuses> {
                         height: 8,
                       ),
                       Visibility(
+                          visible: showPhone,
+                          child: Column(
+                            children: [
+                              textFormField(
+                                hintText: "Enter Full Name",
+                                controller: fullNameController,
+                                focusNode: fullNameFocus,
+                                labelText: "Full name",
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              textFormField(
+                                hintText: "Enter ICE Phone number",
+                                controller: primaryICEphoneController,
+                                focusNode: icePhoneFocus,
+                                labelText: "ICE Phone number",
+                              ),
+                            ],
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Visibility(
                         visible: _character == BusType.Genral ? true : false,
-                        child: textFormField(
-                          hintText: "Enter Ticket Number",
-                          controller: ticketController,
-                          focusNode: ticktFocus,
-                          labelText: "Ticket Number",
+                        child: Column(
+                          children: [
+                            // textFormField(
+                            //   hintText: "Enter Full Name",
+                            //   controller: fullNameController,
+                            //   focusNode: fullNameFocus,
+                            //   labelText: "Full name",
+                            // ),
+                            // SizedBox(
+                            //   height: 8,
+                            // ),
+                            textFormField(
+                              hintText: "Enter Ticket Number",
+                              controller: ticketController,
+                              focusNode: ticktFocus,
+                              labelText: "Ticket Number",
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -323,9 +362,22 @@ class _LoadBusesState extends State<LoadBuses> {
                                       "Enter Primary Emergency phone (ICE)",
                                   controller: primaryICEphoneController,
                                   focusNode: icePhoneFocus,
+                                  inputType: TextInputType.phone,
                                   labelText: "Primary Emergency phone (ICE)",
                                 ),
                               ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: _characterT == TravelWithMinor.Yes
+                                ? true
+                                : false,
+                            child: textFormField(
+                              hintText: "Enter Minor",
+                              controller: ticketController,
+                              focusNode: ticktFocus,
+                              inputType: TextInputType.number,
+                              labelText: "Minor",
                             ),
                           ),
                         ],
@@ -452,15 +504,17 @@ class _LoadBusesState extends State<LoadBuses> {
       ).timeout(
         Duration(seconds: 50),
       );
-      print(response);
+      print(response.body);
 
       if (response.statusCode == 200) {
         setState(() {
           isLoading = false;
         });
         final responseData = json.decode(response.body);
+        print(responseData);
         if (responseData['status'] == 200) {
           toastContainer(text: responseData['message']);
+          navigation(context: context, pageName: "home");
         } else {
           toastContainer(text: responseData['message']);
         }
@@ -487,21 +541,24 @@ class _LoadBusesState extends State<LoadBuses> {
         'pin': '$pin',
         'phone': '$phone',
         'minor_count': '$minor',
+        'name': '$name',
+        'type': 'a'
       };
       Map noPhone = {
         'pin': '$pin',
-        'phone': '$phone',
         'minor_count': '$minor',
-        'ice1_phone': '$icePhone'
+        'ice1_phone': '$icePhone',
+        'name': '$name',
+        'type': 'b'
       };
       Map noPhoneNoICE = {
         'pin': '$pin',
-        'phone': '$phone',
         'minor_count': '$minor',
         'ice1_name': '$name',
         'ice1_address': '$iceAddress',
+        'type': 'c'
       };
-      // print(noPhoneNoICE);
+      print(_character);
       // print(noPhone);
       final response = await http.post(
         "$BASE_URL/schedules/$scheduleId/manifest",
@@ -520,15 +577,20 @@ class _LoadBusesState extends State<LoadBuses> {
         setState(() {
           isLoading = false;
         });
-        print(response);
-
         final responseData = json.decode(response.body);
+        print(responseData);
+
         if (responseData['status'] == 200) {
           setState(() {
             widget.passengerCount =
                 responseData['data']['passengers_count'].toString();
           });
-          print(responseData);
+          navigation(context: context, pageName: "home");
+        } else if (responseData['status'] == 203) {
+          toastContainer(text: 'Please Name and ICE phone is required');
+          setState(() {
+            showPhone = true;
+          });
         } else {
           toastContainer(text: responseData['message']);
         }
@@ -568,7 +630,7 @@ class _LoadBusesState extends State<LoadBuses> {
                             ['ice_primary_phone'],
                         minor: responseData['data']['minor_count'].toString(),
                         dateLoaded: responseData['data']['created_at'],
-                        manifestCode: responseData['data']['manifest_code'],
+                        manifestCode: responseData['data']['id'].toString(),
                         schedID: widget.scheduleId,
                       )));
         } else {

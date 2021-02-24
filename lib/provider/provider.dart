@@ -408,7 +408,6 @@ class OyaProvider {
   Future<ScaledBusModel> fetchScaledBuses(
     String id,
   ) async {
-    print("====================$id");
     try {
       final response = await client.get(
         "$BASE_URL/stations/$stationId/scaled_buses",

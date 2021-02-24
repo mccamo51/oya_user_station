@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
+import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/homePageWithNav.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 import 'package:oya_porter/spec/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import 'admin/adminPage.dart';
+import 'porter/homePage/home/homePagePorter.dart';
 
 class MainHomePage extends StatefulWidget {
   var data;
@@ -40,7 +43,6 @@ class _MainHomePageState extends State<MainHomePage> {
       setState(() {
         data = decodeData['data']['staffs'];
       });
-      print("--------------------$stationId");
     } else {
       print("please log in now");
     }
@@ -102,6 +104,7 @@ class _MainHomePageState extends State<MainHomePage> {
                             data: (x['station']['id'].toString()));
                         stationId = (x['station']['id'].toString());
                       });
+                      // _getLoading(stationId);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -124,5 +127,24 @@ class _MainHomePageState extends State<MainHomePage> {
         ],
       ),
     );
+  }
+
+  _getLoading(stid) async {
+    final response = await http.get(
+      "$BASE_URL/stations/$stid/loading_bus",
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    ).timeout(
+      Duration(seconds: 50),
+    );
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      if (responseData['status'] == 200) {
+        print(responseData['data']);
+        carNumber = responseData['data']['bus']['reg_number'];
+        // scheduleID = responseData['data'];
+      }
+    }
   }
 }

@@ -76,9 +76,6 @@ class _LoginPageState extends State<LoginPage> {
     phone,
     password,
   }) async {
-    // // hideKeyboard();
-    // phoneFocus.unfocus();
-    // pinFocus.unfocus();
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -115,7 +112,6 @@ class _LoginPageState extends State<LoginPage> {
               print('===============$stationId========true');
             } else {
               setState(() {
-                print('=======================false');
                 _isLoading = false;
                 wrongPasswordToast(
                     context: context,
@@ -123,22 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                     msg: "User does not have access to this system");
               });
             }
-            // saveStringShare(key: "userDetails", data: response.body);
-            // setState(() {
-            //   print("Success");
-            //   userName = responseData["data"]["name"];
-            //   userPhone = responseData["data"]["phone"];
-            //   icePrimaryPhone = responseData["data"]["ice_primary_phone"];
-            //   iceSecondaryPhone = responseData["data"]["ice_secondary_phone"];
-            //   userRole = responseData["data"]["role"];
-            // });
-
-            // wrongPasswordToast(
-            //     context: context,
-            //     title: "Login Successful",
-            //     msg: responseData['message']);
-            // navigation(context: context, pageName: "home");
-            // if(response["data"]["role"])
+           
           } else {
             setState(() {
               _isLoading = false;

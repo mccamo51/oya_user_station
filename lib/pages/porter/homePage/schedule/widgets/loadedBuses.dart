@@ -26,7 +26,6 @@ class _LoadedBusesState extends State<LoadedBuses> {
   bool isLoading = false;
   @override
   void initState() {
-    // TODO: implement initState
     loadedBusBloc.fetchLoadedBuses(widget.stationId);
     loadLoadedBusOffline();
     super.initState();
@@ -34,7 +33,6 @@ class _LoadedBusesState extends State<LoadedBuses> {
 
   @override
   Widget build(BuildContext context) {
-    print("==========${widget.stationId}");
     return Scaffold(
       body: isLoading
           ? Center(
@@ -94,8 +92,10 @@ class _LoadedBusesState extends State<LoadedBuses> {
                               SizedBox(
                                 height: 5,
                               ),
-                              Text(
-                                  "Arrival: ${x.arrivalDate} @ ${x.arrivalTime}"),
+                              x.arrivalTime == null
+                                  ? Text("Arrival: ${x.arrivalDate}")
+                                  : Text(
+                                      "Arrival: ${x.arrivalDate} @ ${x.arrivalTime}"),
                             ],
                           ),
                           leading: Column(

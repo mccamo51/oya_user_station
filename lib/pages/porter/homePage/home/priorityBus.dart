@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -5,8 +7,14 @@ import 'package:oya_porter/bloc/priorityBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/config/offlineData.dart';
+import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/priorityBusModel.dart';
+import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/loadBus.dart';
+import 'package:http/http.dart' as http;
+import 'package:oya_porter/spec/colors.dart';
+
+int priorityLength = 0, scaledLength = 0;
 
 class PriorityBuses extends StatefulWidget {
   final scheduleID;
@@ -23,13 +31,13 @@ class _PriorityBusesState extends State<PriorityBuses> {
     super.initState();
   }
 
-  bool isLoading = false;
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(title: "Priority Buses"),
       body: SingleChildScrollView(
-        child: isLoading
+        child: _isLoading
             ? Center(
                 child: CupertinoActivityIndicator(),
               )
@@ -56,7 +64,6 @@ class _PriorityBusesState extends State<PriorityBuses> {
   }
 
   Widget _mainContent(PriorityBusModel bussModel) {
-    // print(bussModel.data);
     if (bussModel.data != null && bussModel.data.length > 0)
       return SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -70,7 +77,6 @@ class _PriorityBusesState extends State<PriorityBuses> {
                 children: [
                   for (var x in bussModel.data)
                     Card(
-                      // color: PRIMARYCOLOR,
                       child: ListTile(
                         title: Text(
                             "Bus No: ${x.bus.regNumber} [${x.code.toString()}]"),
@@ -104,7 +110,21 @@ class _PriorityBusesState extends State<PriorityBuses> {
                           ],
                         ),
                         onTap: () {
-                          Navigator.push(
+                          print(scaledLength);
+                          if (scaledLength > 0)
+                            exceptionAlert(
+                              context: context,
+                              title: "Confimation",
+                              message:
+                                  "Do you want to maigrate passengers to a different bus?",
+                              onMigrate: () {
+                                _migratePassenger(
+                                    busId: x.bus.id.toString(),
+                                    scheduleID: x.id.toString());
+                              },
+                            );
+                          else
+                            Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => LoadBuses(
@@ -114,10 +134,19 @@ class _PriorityBusesState extends State<PriorityBuses> {
                                 from: x.route.from.name,
                                 to: x.route.to.name,
                                 carNo: x.bus.regNumber,
-                                company: x.bus.driver.station.busCompany.name,
+                                company: x.station.busCompany.name,
                               ),
                             ),
                           );
+                          // _checkMigration(
+                          //     id: x.id.toString(),
+                          //     busCompany: x.bus.driver.station.busCompany.name,
+                          //     regNumber: x.bus.regNumber,
+                          //     passengersCount: x.passengersCount.toString(),
+                          //     minors: x.minors.toString(),
+                          //     from: x.route.from.name,
+                          //     to: x.route.to.name,
+                          //     busId: x.bus.id.toString());
                         },
                       ),
                     )
@@ -130,4 +159,54 @@ class _PriorityBusesState extends State<PriorityBuses> {
     else
       return emptyBox(context);
   }
+}
+
+_migratePassenger({
+  @required String scheduleID,
+  @required String busId,
+}) async {
+  final response = await http
+      .post("$BASE_URL/schedules/$scheduleID/migrate_manifest", body: {
+    'to': '$busId',
+  }, headers: {
+    "Authorization": "Bearer $accessToken",
+  }).timeout(
+    Duration(seconds: 50),
+  );
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+    print(responseData);
+    if (responseData['status'] == 200) {
+      print("Done");
+    }
+  }
+}
+
+Future<void> exceptionAlert(
+    {BuildContext context,
+    String title,
+    String message,
+    Function onMigrate}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('$title'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('$message'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+              color: PRIMARYCOLOR,
+              child: Text('Migrate'),
+              onPressed: onMigrate),
+        ],
+      );
+    },
+  );
 }
