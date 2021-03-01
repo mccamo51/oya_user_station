@@ -19,6 +19,16 @@ class Staffs extends StatefulWidget {
 }
 
 class _StaffsState extends State<Staffs> {
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    stafBloc.fetchAllStaffs(widget.id.toString());
+
+    return null;
+  }
+
   @override
   void initState() {
     stafBloc.fetchAllStaffs(widget.id.toString());
@@ -39,22 +49,26 @@ class _StaffsState extends State<Staffs> {
                   context, MaterialPageRoute(builder: (context) => AddStaff()));
             })
       ]),
-      body: StreamBuilder(
-        stream: stafBloc.allStaff,
-        initialData: allStaffMapOffline == null
-            ? null
-            : StaffModel.fromJson(allStaffMapOffline),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          print("snapshot: ${snapshot.data}");
-          if (snapshot.hasData) {
-            return _mainContent(snapshot.data);
-          } else if (snapshot.hasError) {
-            return Scaffold(body: emptyBox(context));
-          }
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        },
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: refreshList,
+        child: StreamBuilder(
+          stream: stafBloc.allStaff,
+          initialData: allStaffMapOffline == null
+              ? null
+              : StaffModel.fromJson(allStaffMapOffline),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            print("snapshot: ${snapshot.data}");
+            if (snapshot.hasData) {
+              return _mainContent(snapshot.data);
+            } else if (snapshot.hasError) {
+              return Scaffold(body: emptyBox(context));
+            }
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
+          },
+        ),
       ),
     );
   }
@@ -81,12 +95,11 @@ class _StaffsState extends State<Staffs> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditStaff(
-                                icePhone: x.user.ice1Phone,
-                                name: x.user.name,
-                                phone: x.user.phone,
-                                uid: x.user.id,
-                                accountId: x.accountType.name
-                              ),
+                                  icePhone: x.user.ice1Phone,
+                                  name: x.user.name,
+                                  phone: x.user.phone,
+                                  uid: x.user.id,
+                                  accountId: x.accountType.name),
                             ),
                           );
                         })

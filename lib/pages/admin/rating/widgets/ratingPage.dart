@@ -15,6 +15,16 @@ class RatingPage extends StatefulWidget {
 }
 
 class _RatingPageState extends State<RatingPage> {
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    ratingBloc.fetchAllStaffs(widget.id);
+
+    return null;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -25,22 +35,26 @@ class _RatingPageState extends State<RatingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: ratingBloc.allRating,
-      initialData: allRatingMapOffline == null
-          ? null
-          : RatingModel.fromJson(allRatingMapOffline),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        print("snapshot: ${snapshot.data}");
-        if (snapshot.hasData) {
-          return _mainContent(snapshot.data);
-        } else if (snapshot.hasError) {
-          return Scaffold(body: emptyBox(context));
-        }
-        return Center(
-          child: CupertinoActivityIndicator(),
-        );
-      },
+    return RefreshIndicator(
+      onRefresh: refreshList,
+      key: refreshKey,
+      child: StreamBuilder(
+        stream: ratingBloc.allRating,
+        initialData: allRatingMapOffline == null
+            ? null
+            : RatingModel.fromJson(allRatingMapOffline),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          print("snapshot: ${snapshot.data}");
+          if (snapshot.hasData) {
+            return _mainContent(snapshot.data);
+          } else if (snapshot.hasError) {
+            return Scaffold(body: emptyBox(context));
+          }
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        },
+      ),
     );
   }
 

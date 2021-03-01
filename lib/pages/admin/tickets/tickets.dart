@@ -19,6 +19,16 @@ class TicketPage extends StatefulWidget {
 
 class _TicketPageState extends State<TicketPage> {
   @override
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    ticketBloc.fetchAllTicket(widget.id);
+
+    return null;
+  }
+
   void initState() {
     // TODO: implement initState
     ticketBloc.fetchAllTicket(widget.id);
@@ -37,22 +47,26 @@ class _TicketPageState extends State<TicketPage> {
                   MaterialPageRoute(builder: (context) => AddTicket()));
             })
       ]),
-      body: StreamBuilder(
-        stream: ticketBloc.allTickets,
-        initialData: ticketMapOffline == null
-            ? null
-            : TicketsModel.fromJson(ticketMapOffline),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          print("snapshot: ${snapshot.data}");
-          if (snapshot.hasData) {
-            return _mainContent(snapshot.data);
-          } else if (snapshot.hasError) {
-            return Scaffold(body: emptyBox(context));
-          }
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: refreshList,
+        key: refreshKey,
+        child: StreamBuilder(
+          stream: ticketBloc.allTickets,
+          initialData: ticketMapOffline == null
+              ? null
+              : TicketsModel.fromJson(ticketMapOffline),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            print("snapshot: ${snapshot.data}");
+            if (snapshot.hasData) {
+              return _mainContent(snapshot.data);
+            } else if (snapshot.hasError) {
+              return Scaffold(body: emptyBox(context));
+            }
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

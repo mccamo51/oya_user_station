@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
@@ -44,6 +45,7 @@ class _LoadBusesState extends State<LoadBuses> {
   TextEditingController primaryICENameController = TextEditingController();
   TextEditingController searchController = TextEditingController();
   TextEditingController pinController = TextEditingController();
+  TextEditingController minorController = TextEditingController();
   int minor = 0;
   bool isSearch = false;
   bool isLoading = false;
@@ -55,6 +57,7 @@ class _LoadBusesState extends State<LoadBuses> {
       icePhoneFocus,
       iceAddressFocus,
       searchFocus,
+      minorFocus,
       pinFocus;
   @override
   void initState() {
@@ -66,6 +69,7 @@ class _LoadBusesState extends State<LoadBuses> {
     iceAddressFocus = FocusNode();
     searchFocus = FocusNode();
     pinFocus = FocusNode();
+    minorFocus = FocusNode();
     // TODO: implement initState
     super.initState();
   }
@@ -80,13 +84,20 @@ class _LoadBusesState extends State<LoadBuses> {
                 controller: searchController,
                 focusNode: searchFocus,
                 inputType: TextInputType.phone,
+                onEditingComplete: () =>
+                    onSearch(phoneNo: searchController.text),
               )
             : Text("Load Bus"),
         elevation: 0.3,
         centerTitle: true,
         actions: [
           IconButton(
-              icon: isSearch ? Icon(Icons.close) : Icon(Icons.search),
+              icon: isSearch
+                  ? Icon(
+                      Icons.search,
+                      color: PRIMARYCOLOR,
+                    )
+                  : Icon(Icons.search),
               onPressed: () {
                 setState(() {
                   isSearch = !isSearch;
@@ -166,6 +177,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                   onChanged: (BusType value) {
                                     setState(() {
                                       _character = value;
+                                      showPhone = false;
                                     });
                                   },
                                 ),
@@ -184,6 +196,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                   onChanged: (BusType value) {
                                     setState(() {
                                       _character = value;
+                                      showPhone = false;
                                     });
                                   },
                                 ),
@@ -198,13 +211,6 @@ class _LoadBusesState extends State<LoadBuses> {
                       ),
                       SizedBox(
                         height: 8,
-                      ),
-                      textFormField(
-                        hintText: "Enter Phone Number",
-                        controller: phoneNumberController,
-                        focusNode: phoneFocus,
-                        inputType: TextInputType.phone,
-                        labelText: "Phone Number",
                       ),
                       SizedBox(
                         height: 8,
@@ -238,15 +244,16 @@ class _LoadBusesState extends State<LoadBuses> {
                         visible: _character == BusType.Genral ? true : false,
                         child: Column(
                           children: [
-                            // textFormField(
-                            //   hintText: "Enter Full Name",
-                            //   controller: fullNameController,
-                            //   focusNode: fullNameFocus,
-                            //   labelText: "Full name",
-                            // ),
-                            // SizedBox(
-                            //   height: 8,
-                            // ),
+                            textFormField(
+                              hintText: "Enter Phone Number",
+                              controller: phoneNumberController,
+                              focusNode: phoneFocus,
+                              inputType: TextInputType.phone,
+                              labelText: "Phone Number",
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
                             textFormField(
                               hintText: "Enter Ticket Number",
                               controller: ticketController,
@@ -369,14 +376,17 @@ class _LoadBusesState extends State<LoadBuses> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Visibility(
                             visible: _characterT == TravelWithMinor.Yes
                                 ? true
                                 : false,
                             child: textFormField(
                               hintText: "Enter Minor",
-                              controller: ticketController,
-                              focusNode: ticktFocus,
+                              controller: minorController,
+                              focusNode: minorFocus,
                               inputType: TextInputType.number,
                               labelText: "Minor",
                             ),
@@ -390,7 +400,16 @@ class _LoadBusesState extends State<LoadBuses> {
                         width: double.infinity,
                         height: 45,
                         child: primaryButton(
-                            onFunction: () => enrollBusDialog(context),
+                            onFunction: () => _enroll(
+                                scheduleId: widget.scheduleId,
+                                icePhone: primaryICEphoneController.text,
+                                iceAddress: primaryICEAddressController.text,
+                                minor: minor == 1
+                                    ? minorController.text
+                                    : minor.toString(),
+                                phone: phoneNumberController.text,
+                                name: fullNameController.text,
+                                pin: pinController.text),
                             title: "Enroll Passenger"),
                       ),
                       SizedBox(
@@ -409,47 +428,6 @@ class _LoadBusesState extends State<LoadBuses> {
                 ),
               ),
             ),
-    );
-  }
-
-  Future<void> enrollBusDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          // title: Text('Sign Out Confirmation'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                textFormField(
-                  hintText: '*PIN',
-                  controller: pinController,
-                  inputType: TextInputType.number,
-                  focusNode: pinFocus,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                primaryButton(
-                    title: "Enroll Passenger",
-                    color: PRIMARYCOLOR,
-                    onFunction: () {
-                      _enroll(
-                          scheduleId: widget.scheduleId,
-                          icePhone: primaryICEphoneController.text,
-                          iceAddress: primaryICEAddressController.text,
-                          minor: minor.toString(),
-                          phone: phoneNumberController.text,
-                          name: fullNameController.text,
-                          pin: pinController.text);
-                      Navigator.pop(context);
-                    })
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -476,9 +454,16 @@ class _LoadBusesState extends State<LoadBuses> {
                     title: "Away Bus (Start Trip)",
                     color: PRIMARYCOLOR,
                     onFunction: () {
-                      _awayBus(
-                          scheduleId: widget.scheduleId,
-                          pin: pinController.text);
+                      if (pinController.text.isEmpty) {
+                        wrongPasswordToast(
+                            msg: "Please enter pin to continue ",
+                            title: "Required");
+                      } else {
+                        _awayBus(
+                            scheduleId: widget.scheduleId,
+                            pin: pinController.text);
+                      }
+
                       Navigator.pop(context);
                     })
               ],
@@ -523,6 +508,16 @@ class _LoadBusesState extends State<LoadBuses> {
     }
   }
 
+  clearTextField() {
+    fullNameController.clear();
+    pinController.clear();
+    primaryICEAddressController.clear();
+    primaryICENameController.clear();
+    primaryICEphoneController.clear();
+    minorController.clear();
+    phoneNumberController.clear();
+  }
+
   _enroll({
     @required String scheduleId,
     @required String icePhone,
@@ -532,80 +527,75 @@ class _LoadBusesState extends State<LoadBuses> {
     @required String name,
     @required String pin,
   }) async {
-    if (pinController.text.isEmpty) {
-      toastContainer(text: "Pin field required!");
-    } else {
+    setState(() {
+      isLoading = true;
+    });
+    Map general = {
+      'pin': '$pin',
+      'phone': '$phone',
+      'minor_count': '$minor',
+      'type': 'a'
+    };
+    Map general2 = {
+      'pin': '$pin',
+      'phone': '$phone',
+      'minor_count': '$minor',
+      'name': '$name',
+      'ice1_phone': '$icePhone',
+      'type': 'a'
+    };
+    Map noPhone = {
+      'pin': '$pin',
+      'minor_count': '$minor',
+      'ice1_phone': '$icePhone',
+      'name': '$name',
+      'type': 'b'
+    };
+    Map noPhoneNoICE = {
+      'pin': '$pin',
+      'minor_count': '$minor',
+      'ice1_name': '$name',
+      'ice1_address': '$iceAddress',
+      'type': 'c'
+    };
+    print(_character);
+    print(showPhone);
+    final response = await http.post(
+      "$BASE_URL/schedules/$scheduleId/manifest",
+      body: showPhone && _character == BusType.Genral
+          ? general2
+          : _character == BusType.Genral
+              ? general
+              : _character == BusType.NoPhone
+                  ? noPhone
+                  : noPhoneNoICE,
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    ).timeout(
+      Duration(seconds: 50),
+    );
+    if (response.statusCode == 200) {
       setState(() {
-        isLoading = true;
+        isLoading = false;
       });
-      Map general = {
-        'pin': '$pin',
-        'phone': '$phone',
-        'minor_count': '$minor',
-        showPhone ? 'name' : '$name': '',
-        showPhone ? 'ice1_phone' : '$icePhone': '',
-        'type': 'a'
-      };
-      Map general2 = {
-        'pin': '$pin',
-        'phone': '$phone',
-        'minor_count': '$minor',
-        'name': '$name',
-        'ice1_phone': '$icePhone',
-        'type': 'a'
-      };
-      Map noPhone = {
-        'pin': '$pin',
-        'minor_count': '$minor',
-        'ice1_phone': '$icePhone',
-        'name': '$name',
-        'type': 'b'
-      };
-      Map noPhoneNoICE = {
-        'pin': '$pin',
-        'minor_count': '$minor',
-        'ice1_name': '$name',
-        'ice1_address': '$iceAddress',
-        'type': 'c'
-      };
-      print(_character);
-      print(showPhone);
-      final response = await http.post(
-        "$BASE_URL/schedules/$scheduleId/manifest",
-        body: showPhone && _character == BusType.Genral
-            ? general2
-            : _character == BusType.Genral
-                ? general
-                : _character == BusType.NoPhone
-                    ? noPhone
-                    : noPhoneNoICE,
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      ).timeout(
-        Duration(seconds: 50),
-      );
-      if (response.statusCode == 200) {
-        setState(() {
-          isLoading = false;
-        });
-        final responseData = json.decode(response.body);
-        print(responseData);
+      final responseData = json.decode(response.body);
+      print(responseData);
 
-        if (responseData['status'] == 200) {
-          setState(() {
-            widget.passengerCount =
-                responseData['data']['passengers_count'].toString();
-          });
-          navigation(context: context, pageName: "home");
-        } else if (responseData['status'] == 203) {
-          toastContainer(text: 'Please Name and ICE phone is required');
-          setState(() {
-            showPhone = true;
-          });
-        } else {
-          toastContainer(text: responseData['message']);
-        }
+      if (responseData['status'] == 200) {
+        setState(() {
+          widget.passengerCount =
+              responseData['data']['passengers_count'].toString();
+        });
+        clearTextField();
+        toastContainer(text: 'Passenger has been enrolled successfully');
+      } else if (responseData['status'] == 203) {
+        toastContainer(text: 'Please Name and ICE phone is required');
+        setState(() {
+          showPhone = true;
+        });
+      } else {
+        toastContainer(text: responseData['message']);
       }
     }
   }

@@ -52,23 +52,26 @@ class _BussesState extends State<Busses> {
           ? Center(
               child: CupertinoActivityIndicator(),
             )
-          : StreamBuilder(
-              stream: busesBloc.allBuses,
-              initialData: alBussesMapOffline == null
-                  ? null
-                  : BussModel.fromJson(alBussesMapOffline),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                print("snapshot: ${snapshot.data}");
-                if (snapshot.hasData) {
-                  return _mainContent(snapshot.data);
-                } else if (snapshot.hasError) {
-                  return Scaffold(body: emptyBox(context));
-                }
-                return Center(
-                  child: CupertinoActivityIndicator(),
-                );
-              },
-            ),
+          : RefreshIndicator(
+            
+                      child: StreamBuilder(
+                stream: busesBloc.allBuses,
+                initialData: alBussesMapOffline == null
+                    ? null
+                    : BussModel.fromJson(alBussesMapOffline),
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  print("snapshot: ${snapshot.data}");
+                  if (snapshot.hasData) {
+                    return _mainContent(snapshot.data);
+                  } else if (snapshot.hasError) {
+                    return Scaffold(body: emptyBox(context));
+                  }
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                },
+              ),
+          ),
     );
   }
 

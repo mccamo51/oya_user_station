@@ -26,6 +26,16 @@ class Routes extends StatefulWidget {
 
 class _RoutesState extends State<Routes> {
   bool isLoading = false;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    myRouteBloc.fetchAllStaffs(widget.id);
+
+    return null;
+  }
+
   @override
   void initState() {
     myRouteBloc.fetchAllStaffs(widget.id);
@@ -45,34 +55,39 @@ class _RoutesState extends State<Routes> {
                   context, MaterialPageRoute(builder: (context) => AddRoute()));
             })
       ]),
-      body: StreamBuilder(
-        stream: myRouteBloc.myroutes,
-        initialData: myRouteMapOffline == null
-            ? null
-            : MyRouteModel.fromJson(myRouteMapOffline),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          print("snapshot: ${snapshot.data}");
-          if (snapshot.hasData) {
-            return _mainContent(snapshot.data);
-          } else if (snapshot.hasError) {
-            return Scaffold(body: emptyBox(context));
-          }
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: refreshList,
+        key: refreshKey,
+        child: StreamBuilder(
+          stream: myRouteBloc.myroutes,
+          initialData: myRouteMapOffline == null
+              ? null
+              : MyRouteModel.fromJson(myRouteMapOffline),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            print("snapshot: ${snapshot.data}");
+            if (snapshot.hasData) {
+              return _mainContent(snapshot.data);
+            } else if (snapshot.hasError) {
+              return Scaffold(body: emptyBox(context));
+            }
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
+          },
+        ),
       ),
     );
   }
 
-  deleteRoute({String route_id, }) async {
+  deleteRoute({
+    String route_id,
+  }) async {
     setState(() {
       isLoading = true;
     });
     try {
       final response = await http.delete(
         "$BASE_URL/routes/$route_id",
-       
         headers: {
           "Authorization": "Bearer $accessToken",
         },

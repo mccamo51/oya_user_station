@@ -27,6 +27,16 @@ class ScaledBusses extends StatefulWidget {
 
 class _ScaledBussesState extends State<ScaledBusses> {
   @override
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    scaledBloc.fetchScaledBuses(widget.scheduleID);
+
+    return null;
+  }
+
   void initState() {
     // TODO: implement initState
     scaledBloc.fetchScaledBuses(widget.scheduleID);
@@ -44,22 +54,27 @@ class _ScaledBussesState extends State<ScaledBusses> {
           ? Center(
               child: CupertinoActivityIndicator(),
             )
-          : StreamBuilder(
-              stream: scaledBloc.scaledBuses,
-              // initialData: scaledBusMapOffline == null
-              //     ? null
-              //     : ScaledBusModel.fromJson(scaledBusMapOffline),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                print("snapshot: ${snapshot.data}");
-                if (snapshot.hasData) {
-                  return _mainContent(snapshot.data);
-                } else if (snapshot.hasError) {
-                  return Scaffold(body: emptyBox(context));
-                }
-                return Center(
-                  child: CupertinoActivityIndicator(),
-                );
-              },
+          : RefreshIndicator(
+              onRefresh: refreshList,
+              key: refreshKey,
+              child: StreamBuilder(
+                stream: scaledBloc.scaledBuses,
+                initialData: scaledBusMapOffline == null
+                    ? null
+                    : ScaledBusModel.fromJson(scaledBusMapOffline),
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  print("snapshot: ${snapshot.data}");
+                  if (snapshot.hasData) {
+                    return _mainContent(snapshot.data);
+                  } else if (snapshot.hasError) {
+                    return Scaffold(body: emptyBox(context));
+                  }
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                },
+              ),
             ),
     );
   }

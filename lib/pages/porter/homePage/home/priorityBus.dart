@@ -25,6 +25,16 @@ class PriorityBuses extends StatefulWidget {
 
 class _PriorityBusesState extends State<PriorityBuses> {
   @override
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    priorityBusBloc.fetchPriorityBuses(widget.scheduleID);
+
+    return null;
+  }
+
   void initState() {
     priorityBusBloc.fetchPriorityBuses(widget.scheduleID);
     loadPriorityBusOffline();
@@ -41,23 +51,27 @@ class _PriorityBusesState extends State<PriorityBuses> {
             ? Center(
                 child: CupertinoActivityIndicator(),
               )
-            : StreamBuilder(
-                stream: priorityBusBloc.prioritybus,
-                // initialData: priorityBusMapOffline == null
-                //     ? null
-                //     : PriorityBusModel.fromJson(priorityBusMapOffline),
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  print("snapshot: ${snapshot.data}");
-                  if (snapshot.hasData) {
-                    return _mainContent(snapshot.data);
-                  } else if (snapshot.hasError) {
-                    return Scaffold(body: emptyBox(context));
-                  }
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                },
+            : RefreshIndicator(
+                onRefresh: refreshList,
+                key: refreshKey,
+                child: StreamBuilder(
+                  stream: priorityBusBloc.prioritybus,
+                  initialData: priorityBusMapOffline == null
+                      ? null
+                      : PriorityBusModel.fromJson(priorityBusMapOffline),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    print("snapshot: ${snapshot.data}");
+                    if (snapshot.hasData) {
+                      return _mainContent(snapshot.data);
+                    } else if (snapshot.hasError) {
+                      return Scaffold(body: emptyBox(context));
+                    }
+                    return Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  },
+                ),
               ),
       ),
     );
@@ -125,19 +139,19 @@ class _PriorityBusesState extends State<PriorityBuses> {
                             );
                           else
                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoadBuses(
-                                scheduleId: x.id.toString(),
-                                minorCount: x.minors.toString(),
-                                passengerCount: x.passengersCount.toString(),
-                                from: x.route.from.name,
-                                to: x.route.to.name,
-                                carNo: x.bus.regNumber,
-                                company: x.station.busCompany.name,
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoadBuses(
+                                  scheduleId: x.id.toString(),
+                                  minorCount: x.minors.toString(),
+                                  passengerCount: x.passengersCount.toString(),
+                                  from: x.route.from.name,
+                                  to: x.route.to.name,
+                                  carNo: x.bus.regNumber,
+                                  company: x.station.busCompany.name,
+                                ),
                               ),
-                            ),
-                          );
+                            );
                           // _checkMigration(
                           //     id: x.id.toString(),
                           //     busCompany: x.bus.driver.station.busCompany.name,

@@ -17,6 +17,19 @@ class ViewSchedules extends StatefulWidget {
 }
 
 class _ViewSchedulesState extends State<ViewSchedules> {
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    scheduleBloc.fetchAllStaffs(
+      widget.routeId,
+      widget.statiionId,
+    );
+
+    return null;
+  }
+
   void initState() {
     scheduleBloc.fetchAllStaffs(
       widget.routeId,
@@ -39,22 +52,26 @@ class _ViewSchedulesState extends State<ViewSchedules> {
                   MaterialPageRoute(builder: (context) => Schedules()));
             })
       ]),
-      body: StreamBuilder(
-        stream: scheduleBloc.allRating,
-        initialData: schedulesMapOffline == null
-            ? null
-            : ScheduleModel.fromJson(schedulesMapOffline),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          print("snapshot: ${snapshot.data}");
-          if (snapshot.hasData) {
-            return _mainContent(snapshot.data, context);
-          } else if (snapshot.hasError) {
-            return Scaffold(body: emptyBox(context));
-          }
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: refreshList,
+        key: refreshKey,
+        child: StreamBuilder(
+          stream: scheduleBloc.allRating,
+          initialData: schedulesMapOffline == null
+              ? null
+              : ScheduleModel.fromJson(schedulesMapOffline),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            print("snapshot: ${snapshot.data}");
+            if (snapshot.hasData) {
+              return _mainContent(snapshot.data, context);
+            } else if (snapshot.hasError) {
+              return Scaffold(body: emptyBox(context));
+            }
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
+          },
+        ),
       ),
     );
   }
@@ -91,10 +108,10 @@ class _ViewSchedulesState extends State<ViewSchedules> {
 }
 
 _itemTile({String stId, String routId, BuildContext context, from, to}) {
-  return Column(
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
+  return Card(
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
         child: ListTile(
           leading: Icon(FeatherIcons.mapPin),
           title: Text("From: $from   -   $to"),
@@ -106,10 +123,6 @@ _itemTile({String stId, String routId, BuildContext context, from, to}) {
           ),
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(left: 25.0),
-        child: Divider(),
-      )
-    ],
+    ),
   );
 }
