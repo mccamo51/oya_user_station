@@ -12,7 +12,14 @@ import 'package:oya_porter/spec/sharePreference.dart';
 
 import 'loginWidget/loginWidget.dart';
 
-String accessToken, stationId, userName, userId, userRole, userphone, userICE1, userICE2;
+String accessToken,
+    stationId,
+    userName,
+    userId,
+    userRole,
+    userphone,
+    userICE1,
+    userICE2;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -101,7 +108,6 @@ class _LoginPageState extends State<LoginPage> {
                 userICE1 = responseData["data"]["ice_primary_phone"];
                 userICE2 = responseData["data"]["ice_secondary_phone"];
                 userRole = responseData["data"]["role"];
-                
               });
               Navigator.pushAndRemoveUntil(
                   context,
@@ -119,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
                     msg: "User does not have access to this system");
               });
             }
-           
           } else {
             setState(() {
               _isLoading = false;
@@ -165,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 _onReset(BuildContext context) {
-  // navigation(context: context, pageName: "secrete");
+  navigation(context: context, pageName: "secrete");
 }
 
 // _onLogint(BuildContext context) {

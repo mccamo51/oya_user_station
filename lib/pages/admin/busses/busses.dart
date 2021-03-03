@@ -25,6 +25,17 @@ class Busses extends StatefulWidget {
 
 class _BussesState extends State<Busses> {
   bool isLoading = false;
+
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 3));
+    busesBloc.fetchAllStaffs(widget.stationId);
+
+    return null;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,13 +64,15 @@ class _BussesState extends State<Busses> {
               child: CupertinoActivityIndicator(),
             )
           : RefreshIndicator(
-            
-                      child: StreamBuilder(
+              onRefresh: refreshList,
+              key: refreshKey,
+              child: StreamBuilder(
                 stream: busesBloc.allBuses,
                 initialData: alBussesMapOffline == null
                     ? null
                     : BussModel.fromJson(alBussesMapOffline),
-                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   print("snapshot: ${snapshot.data}");
                   if (snapshot.hasData) {
                     return _mainContent(snapshot.data);
@@ -71,7 +84,7 @@ class _BussesState extends State<Busses> {
                   );
                 },
               ),
-          ),
+            ),
     );
   }
 

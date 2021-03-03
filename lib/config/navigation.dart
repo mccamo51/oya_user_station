@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/pages/admin/adminPage.dart';
 import 'package:oya_porter/pages/admin/busses/busses.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
+import 'package:oya_porter/pages/auth/secreteQuestion/secreteQuestion.dart';
 import 'package:oya_porter/pages/mainHome.dart';
 
 void navigation({
@@ -30,10 +31,10 @@ void navigation({
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => Busses()));
       break;
-    // case "secrete":
-    //   Navigator.of(context)
-    //       .push(MaterialPageRoute(builder: (context) => SecreteQuestion()));
-    //   break;
+    case "secrete":
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SecreteQuestion()));
+      break;
     // case "rentbusfrom":
     //   Navigator.of(context, rootNavigator: true)
     //       .push(MaterialPageRoute(builder: (context) => RentBusForm()));

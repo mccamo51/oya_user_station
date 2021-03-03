@@ -7,6 +7,7 @@ import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
 import 'package:oya_porter/pages/admin/schedules/schedules.dart';
+import 'package:oya_porter/spec/colors.dart';
 
 class ViewSchedules extends StatefulWidget {
   final statiionId, routeId;
@@ -44,6 +45,7 @@ class _ViewSchedulesState extends State<ViewSchedules> {
   Widget build(BuildContext context) {
     // print(widget.statiionId);
     return Scaffold(
+      backgroundColor: WHITE,
       appBar: appBar(title: "Schedules", actions: [
         IconButton(
             icon: Icon(Icons.add),

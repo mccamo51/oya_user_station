@@ -108,8 +108,8 @@ Future<void> logoutDialog(BuildContext context) async {
             child: Text(
               'Sign Out',
             ),
-            onPressed: () {
-              clearUser(context);
+            onPressed: () async {
+              await clearUser(context);
               Navigator.of(context).pop();
             },
           ),
