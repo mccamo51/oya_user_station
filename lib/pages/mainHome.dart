@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/config/routes.dart';
+import 'package:oya_porter/pages/Conductor/conductorHome.dart';
+import 'package:oya_porter/pages/Driver/driverHome.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/homePageWithNav.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
@@ -94,8 +96,40 @@ class _MainHomePageState extends State<MainHomePage> {
                         ),
                       );
                     } else if (x['account_type']['id'] == 4) {
+                      setState(() {
+                        userId = x['id'].toString();
+                        saveStringShare(
+                            key: "stationId",
+                            data: (x['station']['id'].toString()));
+                        stationId = (x['station']['id'].toString());
+                      });
+                      // _getLoading(stationId);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DriverHomePage(
+                            id: stationId,
+                          ),
+                        ),
+                      );
                     } else if (x['account_type']['id'] == 5) {
                     } else if (x['account_type']['id'] == 6) {
+                      setState(() {
+                        userId = x['id'].toString();
+                        saveStringShare(
+                            key: "stationId",
+                            data: (x['station']['id'].toString()));
+                        stationId = (x['station']['id'].toString());
+                      });
+                      // _getLoading(stationId);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ConductorHomePage(
+                            id: stationId,
+                          ),
+                        ),
+                      );
                     } else if (x['account_type']['id'] == 7) {
                       setState(() {
                         userId = x['id'].toString();
@@ -104,6 +138,7 @@ class _MainHomePageState extends State<MainHomePage> {
                             data: (x['station']['id'].toString()));
                         stationId = (x['station']['id'].toString());
                       });
+
                       // _getLoading(stationId);
                       Navigator.push(
                         context,

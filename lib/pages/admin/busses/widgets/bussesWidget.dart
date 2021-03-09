@@ -3,7 +3,10 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/spec/colors.dart';
 
 itemTile(
-    {@required String carNumber, @required String seater, Function onDelete}) {
+    {@required String carNumber,
+    @required String seater,
+    Function onDelete,
+    bool showDele = false}) {
   return Column(
     children: [
       Padding(
@@ -12,13 +15,15 @@ itemTile(
           leading: Icon(FeatherIcons.truck),
           title: Text("$carNumber"),
           subtitle: Text("$seater Seater"),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.delete_forever,
-              color: RED,
-            ),
-            onPressed: onDelete,
-          ),
+          trailing: showDele
+              ? Container(height: 0, width: 0)
+              : IconButton(
+                  icon: Icon(
+                    Icons.delete_forever,
+                    color: RED,
+                  ),
+                  onPressed: onDelete,
+                ),
         ),
       ),
       Padding(
