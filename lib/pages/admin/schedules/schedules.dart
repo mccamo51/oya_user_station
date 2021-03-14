@@ -21,6 +21,8 @@ import 'package:oya_porter/models/busModel.dart';
 import 'package:oya_porter/models/conductorModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/pages/admin/schedules/widgets/seachWidgetBus.dart';
+import 'package:oya_porter/pages/admin/schedules/widgets/searchRoute.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
@@ -38,16 +40,16 @@ class Schedules extends StatefulWidget {
 }
 
 class _SchedulesState extends State<Schedules> {
-  String busId, routId, driverId, conductorId, porterId;
-  TextEditingController busController = TextEditingController();
-  TextEditingController routeController = TextEditingController();
+  String driverId, conductorId, porterId;
   TextEditingController driverController = TextEditingController();
   TextEditingController conductorController = TextEditingController();
   TextEditingController porterController = TextEditingController();
   TextEditingController arrivalDateTimeController = TextEditingController();
   TextEditingController deptimeDateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+
   int priority = 0, board = 0, ticket = 0;
+  String _searchText = "";
 
   bool isLoading = false;
 
@@ -73,7 +75,8 @@ class _SchedulesState extends State<Schedules> {
                   children: [
                     GestureDetector(
                       onTap: () => androidSelectRoute(
-                          context: context, title: "Select Route"),
+                        context: context,
+                      ),
                       child: textFormField(
                         hintText: "Select Route",
                         controller: routeController,
@@ -87,7 +90,8 @@ class _SchedulesState extends State<Schedules> {
                     ),
                     GestureDetector(
                       onTap: () => androidSelectBus(
-                          context: context, title: "Select Bus"),
+                        context: context,
+                      ),
                       child: textFormField(
                         hintText: "Select Bus",
                         controller: busController,
@@ -358,45 +362,98 @@ class _SchedulesState extends State<Schedules> {
     );
   }
 
-  Widget _mBusT(BussModel model, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var data in model.data) ...[
-          Platform.isIOS
-              ? CupertinoActionSheetAction(
-                  child:
-                      Text('${data.regNumber}', style: TextStyle(color: BLACK)),
-                  onPressed: () {
-                    setState(() {
-                      // _toCode = data.id;
-                      busId = (data.id).toString();
-                      busController.text = data.regNumber;
-                      driverController.text = data.driver.user.name;
-                      driverId = data.driver.id.toString();
-                    });
+  // Widget _mBusT(BussModel model, BuildContext context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.all(8.0),
+  //         child: Container(
+  //           padding: EdgeInsets.only(left: 6),
+  //           decoration: BoxDecoration(
+  //               color: SECONDARYCOLOR, borderRadius: BorderRadius.circular(6)),
+  //           child: TextFormField(
+  //             cursorColor: SECONDARYCOLOR,
+  //             controller: searchController,
+  //             focusNode: null,
+  //             onChanged: (String text) => setState(() => _searchText = text),
+  //             onFieldSubmitted: (String text) =>
+  //                 setState(() => _searchText = text),
+  //             decoration: InputDecoration(
+  //               hintText: "Type your seach here",
+  //               hoverColor: BLACK,
+  //               border: InputBorder.none,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       for (var data in model.data) ...[
+  //         if (_searchText == "" || _searchText == null)
+  //           Platform.isIOS
+  //               ? CupertinoActionSheetAction(
+  //                   child: Text('${data.regNumber}',
+  //                       style: TextStyle(color: BLACK)),
+  //                   onPressed: () {
+  //                     setState(() {
+  //                       // _toCode = data.id;
+  //                       busId = (data.id).toString();
+  //                       busController.text = data.regNumber;
+  //                       driverController.text = data.driver.user.name;
+  //                       driverId = data.driver.id.toString();
+  //                     });
 
-                    Navigator.pop(context);
-                  },
-                )
-              : SimpleDialogOption(
-                  onPressed: () {
-                    busId = (data.id).toString();
-                    busController.text = data.regNumber;
+  //                     Navigator.pop(context);
+  //                   },
+  //                 )
+  //               : SimpleDialogOption(
+  //                   onPressed: () {
+  //                     busId = (data.id).toString();
+  //                     busController.text = data.regNumber;
 
-                    driverController.text = data.driver.user.name;
-                    driverId = data.driver.id.toString();
-                    Navigator.pop(context);
-                  },
-                  child:
-                      Text("${data.regNumber}", style: TextStyle(fontSize: 20)),
-                ),
-          Divider(),
-        ]
-      ],
-    );
-  }
+  //                     driverController.text = data.driver.user.name;
+  //                     driverId = data.driver.id.toString();
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Text("${data.regNumber}",
+  //                       style: TextStyle(fontSize: 20)),
+  //                 ),
+  //         if (_searchText != null &&
+  //             _searchText != "" &&
+  //             data.regNumber.toLowerCase().contains(_searchText.toLowerCase()))
+  //           Platform.isIOS
+  //               ? CupertinoActionSheetAction(
+  //                   child: Text('${data.regNumber}',
+  //                       style: TextStyle(color: BLACK)),
+  //                   onPressed: () {
+  //                     setState(() {
+  //                       // _toCode = data.id;
+  //                       busId = (data.id).toString();
+  //                       busController.text = data.regNumber;
+  //                       driverController.text = data.driver.user.name;
+  //                       driverId = data.driver.id.toString();
+  //                     });
+
+  //                     Navigator.pop(context);
+  //                   },
+  //                 )
+  //               : SimpleDialogOption(
+  //                   onPressed: () {
+  //                     busId = (data.id).toString();
+  //                     busController.text = data.regNumber;
+
+  //                     driverController.text = data.driver.user.name;
+  //                     driverId = data.driver.id.toString();
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Text("${data.regNumber}",
+  //                       style: TextStyle(fontSize: 20)),
+  //                 ),
+  //         Divider(),
+  //       ]
+  //     ],
+  //   );
+  // }
 
   _onSave({
     @required String routeId,
@@ -415,7 +472,7 @@ class _SchedulesState extends State<Schedules> {
       isLoading = true;
     });
     try {
-      print("$driverId");
+      print("$routeId");
       final response = await http.post(
         "$BASE_URL/schedules",
         body: {
@@ -462,98 +519,42 @@ class _SchedulesState extends State<Schedules> {
     }
   }
 
-  Widget allBus() {
-    loadbusesOffline();
-    busesBloc.fetchAllStaffs(stationId);
-    return StreamBuilder<Object>(
-      stream: busesBloc.allBuses,
-      initialData:
-          busesMapOffline == null ? null : BussModel.fromJson(busesMapOffline),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _mBusT(snapshot.data, context);
-        } else if (snapshot.hasError) {
-          return Text("Error");
-        }
-        return Center(child: CupertinoActivityIndicator(radius: 15));
-      },
-    );
-  }
+  // Widget allBus() {
+  //   loadbusesOffline();
+  //   busesBloc.fetchAllStaffs(stationId);
+  //   return StreamBuilder<Object>(
+  //     stream: busesBloc.allBuses,
+  //     initialData:
+  //         busesMapOffline == null ? null : BussModel.fromJson(busesMapOffline),
+  //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+  //       if (snapshot.hasData) {
+  //         return _mBusT(snapshot.data, context);
+  //       } else if (snapshot.hasError) {
+  //         return Text("Error");
+  //       }
+  //       return Center(child: CupertinoActivityIndicator(radius: 15));
+  //     },
+  //   );
+  // }
 
-  Future<void> androidSelectBus({String title, BuildContext context}) async {
+  Future<void> androidSelectBus({BuildContext context}) async {
     switch (await showDialog<String>(
-        context: context,
+        context: (context),
         builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('$title'),
-            children: <Widget>[allBus()],
+          return Dialog(
+            child: SeachBus(),
           );
         })) {
     }
   }
 
-  Widget _mRoute(MyRouteModel model, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var data in model.data) ...[
-          Platform.isIOS
-              ? CupertinoActionSheetAction(
-                  child: Text('${data.from.name} - ${data.to.name}',
-                      style: TextStyle(color: BLACK)),
-                  onPressed: () {
-                    setState(() {
-                      routId = data.id.toString();
-                      routeController.text =
-                          "${data.from.name} - ${data.to.name}";
-                    });
-
-                    Navigator.pop(context);
-                  },
-                )
-              : SimpleDialogOption(
-                  onPressed: () {
-                    routId = data.id.toString();
-                    routeController.text =
-                        "${data.from.name} - ${data.to.name}";
-                    Navigator.pop(context);
-                  },
-                  child: Text("${data.from.name} - ${data.to.name}",
-                      style: TextStyle(fontSize: 20)),
-                ),
-          Divider(),
-        ]
-      ],
-    );
-  }
-
-  Widget allRoute() {
-    loadMyRouteOffline();
-    myRouteBloc.fetchAllStaffs(stationId);
-    return StreamBuilder<Object>(
-      stream: myRouteBloc.myroutes,
-      initialData: myRouteMapOffline == null
-          ? null
-          : MyRouteModel.fromJson(myRouteMapOffline),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _mRoute(snapshot.data, context);
-        } else if (snapshot.hasError) {
-          return Text("Error");
-        }
-        return Center(child: CupertinoActivityIndicator(radius: 15));
-      },
-    );
-  }
-
-  Future<void> androidSelectRoute({String title, BuildContext context}) async {
+  Future<void> androidSelectRoute({BuildContext context}) async {
     switch (await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('$title'),
-            children: <Widget>[allRoute()],
+          return Dialog(
+            // title: Text('$title'),
+            child: SearchRoute(),
           );
         })) {
     }

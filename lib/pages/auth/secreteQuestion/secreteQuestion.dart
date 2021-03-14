@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,11 @@ import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/forgotPass/verifyOtpForgotPass.dart';
 import 'package:oya_porter/pages/auth/secreteQuestion/secreteWidget/secreteWidget.dart';
+import 'package:oya_porter/spec/colors.dart';
+import 'package:oya_porter/spec/sharePreference.dart';
+import 'package:oya_porter/spec/strings.dart';
+
+String onTopPhone;
 
 class SecreteQuestion extends StatefulWidget {
   @override
@@ -42,30 +49,62 @@ class _SecreteQuestionState extends State<SecreteQuestion> {
   }
 
   _onContinue({String phone, BuildContext context}) async {
-    if (phone.isEmpty) {
-      wrongPasswordToast(
-          msg: "Phone Number required", title: "Required", context: context);
-    } else {
-      setState(() {
-        isLoading = true;
-      });
-      final response = await http.post("$BASE_URL/account/check_phone", body: {
-        'phone': phone,
-      }).timeout(Duration(seconds: 50));
-      if (response.statusCode == 200) {
+    try {
+      if (phone.isEmpty) {
+        wrongPasswordToast(
+            msg: "Phone Number required", title: "Required", context: context);
+      } else {
         setState(() {
-          isLoading = false;
+          isLoading = true;
         });
-        final responseData = json.decode(response.body);
-        if (responseData['status'] == 200) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => VerifyOtpForgotPassword()),
-              (Route<dynamic> route) => false);
-        } else {
-          toastContainer(text: responseData['message']);
+        final response =
+            await http.post("$BASE_URL/account/check_phone", body: {
+          'phone': phone,
+        }).timeout(Duration(seconds: 50));
+        if (response.statusCode == 200) {
+          setState(() {
+            isLoading = false;
+          });
+          final responseData = json.decode(response.body);
+          if (responseData['status'] == 200) {
+            setState(() {
+              onTopPhone = phone;
+            });
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => VerifyOtpForgotPassword()),
+                (Route<dynamic> route) => false);
+          } else {
+            toastContainer(text: responseData['message']);
+          }
         }
       }
+    } on TimeoutException catch (_) {
+      setState(() {
+        isLoading = false;
+      });
+      toastContainer(
+        text: CONNECTIONTIMEOUT,
+        backgroundColor: RED,
+      );
+    } on SocketException catch (s) {
+      setState(() {
+        isLoading = false;
+      });
+      print(s);
+      toastContainer(
+        text: INTERNETCONNECTIONPROBLEM,
+        backgroundColor: RED,
+      );
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print(e);
+      toastContainer(
+        text: "Error occured. Please try again...$e",
+        backgroundColor: RED,
+      );
     }
   }
 }

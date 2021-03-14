@@ -67,7 +67,7 @@ class _ScheduledBusState extends State<ScheduledBus> {
   }
 
   Widget _mainContent(ScaledBusModel bussModel) {
-    // print(bussModel.data);
+    print(bussModel.data);
     if (bussModel.data != null && bussModel.data.length > 0)
       return SingleChildScrollView(
         physics: BouncingScrollPhysics(),

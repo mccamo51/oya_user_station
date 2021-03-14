@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
+import 'package:oya_porter/pages/auth/secreteQuestion/secreteQuestion.dart';
+
 Widget verifyWidget(
     {@required BuildContext context,
     @required TextEditingController phoneNumberController,
@@ -42,8 +44,9 @@ Widget verifyWidget(
                 controller: phoneNumberController,
                 focusNode: phoneNumberFocus,
                 inputType: TextInputType.number,
-                hintText: "Phone Number",
-                labelText: "Phone Number"),
+                enable: false,
+                hintText: "$onTopPhone",
+                labelText: "$onTopPhone"),
             SizedBox(height: 15),
             textFormField(
                 controller: otpController,
