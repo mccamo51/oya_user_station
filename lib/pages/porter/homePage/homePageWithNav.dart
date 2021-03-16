@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/pages/porter/homePage/account/account.dart';
 import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
+import 'package:oya_porter/pages/porter/homePage/parcels/parcels.dart';
 import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
 import 'package:oya_porter/pages/porter/homePage/trips/trips.dart';
 import 'package:oya_porter/spec/colors.dart';
@@ -15,6 +17,7 @@ class _PorterHomePageState extends State<PorterHomePage> {
   List<Widget> _widgetOptions = <Widget>[
     HomePagePorter(),
     PorterSchedule(),
+    Parcels(),
     Account(),
   ];
 
@@ -41,12 +44,17 @@ class _PorterHomePageState extends State<PorterHomePage> {
             title: Text('Trips'),
           ),
           BottomNavigationBarItem(
+            icon: Icon(FeatherIcons.box),
+            title: Text('Parcels'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             title: Text('Account'),
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: PRIMARYCOLOR,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
     );

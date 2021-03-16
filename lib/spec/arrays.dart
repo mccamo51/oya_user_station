@@ -27,3 +27,11 @@ const List<String> account_types = [
   'Special User',
   'Normal User'
 ];
+
+const List<String> momoType = ['Cash', 'Mobile Money'];
+
+const Map<String, dynamic> momoMode = {
+  'MTN Momo': 'mtn',
+  'Vodafon Cash': 'vfc',
+  'AirtelTigo Cash': 'at'
+};

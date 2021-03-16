@@ -133,8 +133,8 @@ class _AddBusState extends State<AddBus> {
             'reg_number': regNo,
             'model': model,
             'driver_id': driverId,
-            'rw_exp_date': '',
-            'insurance_exp_date': '',
+            'rw_exp_date': '$road_exp_date',
+            'insurance_exp_date': '$ins_exp_date',
             'image': ''
           },
           headers: {
