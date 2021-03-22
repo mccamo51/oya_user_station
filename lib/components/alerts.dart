@@ -110,7 +110,6 @@ Future<void> logoutDialog(BuildContext context) async {
             ),
             onPressed: () async {
               await clearUser(context);
-              Navigator.of(context).pop();
             },
           ),
         ],
@@ -136,9 +135,8 @@ Future<void> iosDialog(BuildContext context) async {
           ),
           CupertinoDialogAction(
             child: Text('Sign Out'),
-            onPressed: () {
-              Navigator.of(context).pop();
-              // deleteCache(context);
+            onPressed: () async {
+              await clearUser(context);
             },
           ),
         ],

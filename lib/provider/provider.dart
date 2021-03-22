@@ -12,11 +12,14 @@ import 'package:oya_porter/models/conductorModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
 import 'package:oya_porter/models/loadedBusModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/models/parcelByPorter.dart';
+import 'package:oya_porter/models/parcerRecievedModel.dart';
 import 'package:oya_porter/models/priorityBusModel.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/reportModel.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
+import 'package:oya_porter/models/stationsModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/models/townModle.dart';
@@ -451,6 +454,86 @@ class OyaProvider {
         return PriorityBusModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load porters');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<StationsModel> fetchStations() async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/stations",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 50));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "stations", data: json.encode(json.decode(response.body)));
+        return StationsModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load stations');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ParcelSentUserModel> fetchParcelSentByPorter({String id}) async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/stations/$id/parcels_sent_by_porter",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 50));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "parcelByPorter",
+            data: json.encode(json.decode(response.body)));
+        return ParcelSentUserModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load stations');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ParcelRecievedModel> fetchParcelRecieved({String id}) async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/stations/$id/parcels_received",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 50));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "parcelRecieved",
+            data: json.encode(json.decode(response.body)));
+        return ParcelRecievedModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load stations');
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");

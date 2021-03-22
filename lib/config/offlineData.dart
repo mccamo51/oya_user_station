@@ -203,3 +203,42 @@ Future<void> loadPriorityBusOffline() async {
   } else
     priorityBusMapOffline = null;
 }
+
+
+Map<String, dynamic> stationsMapOffline;
+Future<void> loadStationsOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("stations")) {
+    String encodeData = prefs.getString("stations");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    stationsMapOffline = decodeData;
+  } else
+    stationsMapOffline = null;
+}
+
+
+Map<String, dynamic> loadParcelSentMapOffline;
+Future<void> loadParcelSentOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("parcelByPorter")) {
+    String encodeData = prefs.getString("parcelByPorter");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    loadParcelSentMapOffline = decodeData;
+  } else
+    loadParcelSentMapOffline = null;
+}
+
+
+Map<String, dynamic> loadParcelRecievedMapOffline;
+Future<void> loadParcelRecievedOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("parcelRecieved")) {
+    String encodeData = prefs.getString("parcelRecieved");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    loadParcelRecievedMapOffline = decodeData;
+  } else
+    loadParcelRecievedMapOffline = null;
+}

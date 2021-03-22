@@ -8,11 +8,14 @@ import 'package:oya_porter/models/conductorModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
 import 'package:oya_porter/models/loadedBusModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/models/parcelByPorter.dart';
+import 'package:oya_porter/models/parcerRecievedModel.dart';
 import 'package:oya_porter/models/priorityBusModel.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/reportModel.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
+import 'package:oya_porter/models/stationsModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/models/townModle.dart';
@@ -64,4 +67,12 @@ class Repository {
 
   Future<PriorityBusModel> fetchPriorityBus(String staffId) =>
       _myProvider.fetchPriorityBus(staffId);
+
+  Future<StationsModel> fetchStations() => _myProvider.fetchStations();
+
+  Future<ParcelSentUserModel> fetchParcelsSent(String staffId) =>
+      _myProvider.fetchParcelSentByPorter(id: staffId);
+
+  Future<ParcelRecievedModel> fetchParcelsRecieved(String staffId) =>
+      _myProvider.fetchParcelRecieved(id: staffId);
 }

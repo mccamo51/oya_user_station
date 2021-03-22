@@ -42,7 +42,7 @@ class Data {
   int minors;
   String createdAt;
   List<Staffs> staffs;
-  int price;
+  String price;
   int midRoute;
   Bus bus;
   Route route;
@@ -92,7 +92,7 @@ class Data {
         staffs.add(new Staffs.fromJson(v));
       });
     }
-    price = json['price'];
+    price = json['price'].toString();
     midRoute = json['mid_route'];
     bus = json['bus'] != null ? new Bus.fromJson(json['bus']) : null;
     route = json['route'] != null ? new Route.fromJson(json['route']) : null;

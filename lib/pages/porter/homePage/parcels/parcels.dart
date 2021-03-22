@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/pages/porter/homePage/parcels/addParcel.dart';
+import 'package:oya_porter/pages/porter/homePage/parcels/parcelSentByStation.dart';
+import 'package:oya_porter/pages/porter/homePage/parcels/parcelSentByUser.dart';
 
 class Parcels extends StatelessWidget {
   @override
@@ -14,7 +16,31 @@ class Parcels extends StatelessWidget {
         )
       ]),
       body: Column(
-        children: [Text("Parcels")],
+        children: [
+          ListTile(
+            leading: Icon(Icons.sentiment_dissatisfied),
+            title: Text("Parcel Sent by Porter"),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+            ),
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ParcelSent())),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          ListTile(
+            leading: Icon(Icons.sentiment_dissatisfied),
+            title: Text("Parcel Recieved"),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+            ),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ParcelRecieved())),
+          )
+        ],
       ),
     );
   }

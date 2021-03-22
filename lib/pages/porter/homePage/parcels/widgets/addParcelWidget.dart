@@ -67,6 +67,7 @@ Widget addParcelWidget(
               controller: senderPhoneController,
               focusNode: null,
               labelText: "Sender's Phone",
+              inputType: TextInputType.number,
             ),
             SizedBox(
               height: 10,
@@ -116,6 +117,8 @@ Widget addParcelWidget(
               controller: reciepeintPhoneController,
               focusNode: null,
               labelText: "Recipient Phone",
+              inputType: TextInputType.number,
+
             ),
             SizedBox(
               height: 10,
@@ -125,6 +128,8 @@ Widget addParcelWidget(
               controller: priceController,
               focusNode: null,
               labelText: "Price",
+              inputType: TextInputType.number,
+
             ),
             SizedBox(
               height: 10,

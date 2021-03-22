@@ -4,7 +4,6 @@ import 'package:oya_porter/pages/porter/homePage/account/account.dart';
 import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
 import 'package:oya_porter/pages/porter/homePage/parcels/parcels.dart';
 import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
-import 'package:oya_porter/pages/porter/homePage/trips/trips.dart';
 import 'package:oya_porter/spec/colors.dart';
 
 class PorterHomePage extends StatefulWidget {
