@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
-import 'package:oya_porter/spec/colors.dart';
 
 class AuthenticationPage extends StatefulWidget {
   @override

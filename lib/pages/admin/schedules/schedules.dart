@@ -62,6 +62,7 @@ class _SchedulesState extends State<Schedules> {
   String dateTime;
   @override
   Widget build(BuildContext context) {
+    setCurrentTime();
     return Scaffold(
       appBar: appBar(
         title: ("Schedules"),
@@ -159,7 +160,10 @@ class _SchedulesState extends State<Schedules> {
                       height: 15,
                     ),
                     GestureDetector(
-                      onTap: () => _selectTime(context),
+                      onTap: () => selectTime(
+                        context,
+                        arrivalDateTimeController,
+                      ),
                       child: textFormField(
                         hintText: "Departure Time",
                         controller: arrivalDateTimeController,
@@ -362,98 +366,40 @@ class _SchedulesState extends State<Schedules> {
     );
   }
 
-  // Widget _mBusT(BussModel model, BuildContext context) {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.start,
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Padding(
-  //         padding: const EdgeInsets.all(8.0),
-  //         child: Container(
-  //           padding: EdgeInsets.only(left: 6),
-  //           decoration: BoxDecoration(
-  //               color: SECONDARYCOLOR, borderRadius: BorderRadius.circular(6)),
-  //           child: TextFormField(
-  //             cursorColor: SECONDARYCOLOR,
-  //             controller: searchController,
-  //             focusNode: null,
-  //             onChanged: (String text) => setState(() => _searchText = text),
-  //             onFieldSubmitted: (String text) =>
-  //                 setState(() => _searchText = text),
-  //             decoration: InputDecoration(
-  //               hintText: "Type your seach here",
-  //               hoverColor: BLACK,
-  //               border: InputBorder.none,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       for (var data in model.data) ...[
-  //         if (_searchText == "" || _searchText == null)
-  //           Platform.isIOS
-  //               ? CupertinoActionSheetAction(
-  //                   child: Text('${data.regNumber}',
-  //                       style: TextStyle(color: BLACK)),
-  //                   onPressed: () {
-  //                     setState(() {
-  //                       // _toCode = data.id;
-  //                       busId = (data.id).toString();
-  //                       busController.text = data.regNumber;
-  //                       driverController.text = data.driver.user.name;
-  //                       driverId = data.driver.id.toString();
-  //                     });
+  TimeOfDay _currentTime = new TimeOfDay.now();
+  String timeText = 'Set A Time';
 
-  //                     Navigator.pop(context);
-  //                   },
-  //                 )
-  //               : SimpleDialogOption(
-  //                   onPressed: () {
-  //                     busId = (data.id).toString();
-  //                     busController.text = data.regNumber;
+  Future<Null> selectTime(
+      BuildContext context, TextEditingController controller) async {
+    TimeOfDay selectedTime = await showTimePicker(
+      context: context,
+      initialTime: _currentTime,
+    );
 
-  //                     driverController.text = data.driver.user.name;
-  //                     driverId = data.driver.id.toString();
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: Text("${data.regNumber}",
-  //                       style: TextStyle(fontSize: 20)),
-  //                 ),
-  //         if (_searchText != null &&
-  //             _searchText != "" &&
-  //             data.regNumber.toLowerCase().contains(_searchText.toLowerCase()))
-  //           Platform.isIOS
-  //               ? CupertinoActionSheetAction(
-  //                   child: Text('${data.regNumber}',
-  //                       style: TextStyle(color: BLACK)),
-  //                   onPressed: () {
-  //                     setState(() {
-  //                       // _toCode = data.id;
-  //                       busId = (data.id).toString();
-  //                       busController.text = data.regNumber;
-  //                       driverController.text = data.driver.user.name;
-  //                       driverId = data.driver.id.toString();
-  //                     });
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    if (selectedTime != null) {
+      String formattedTime = localizations.formatTimeOfDay(selectedTime,
+          alwaysUse24HourFormat: false);
+      if (formattedTime != null) {
+        setState(() {
+          timeText = formattedTime;
+          controller.text = timeText;
+        });
+      }
+    }
+  }
 
-  //                     Navigator.pop(context);
-  //                   },
-  //                 )
-  //               : SimpleDialogOption(
-  //                   onPressed: () {
-  //                     busId = (data.id).toString();
-  //                     busController.text = data.regNumber;
-
-  //                     driverController.text = data.driver.user.name;
-  //                     driverId = data.driver.id.toString();
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: Text("${data.regNumber}",
-  //                       style: TextStyle(fontSize: 20)),
-  //                 ),
-  //         Divider(),
-  //       ]
-  //     ],
-  //   );
-  // }
+  void setCurrentTime() {
+    TimeOfDay selectedTime = new TimeOfDay.now();
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    String formattedTime = localizations.formatTimeOfDay(selectedTime,
+        alwaysUse24HourFormat: false);
+    if (formattedTime != null) {
+      setState(() {
+        timeText = formattedTime;
+      });
+    }
+  }
 
   _onSave({
     @required String routeId,

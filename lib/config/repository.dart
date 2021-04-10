@@ -75,4 +75,5 @@ class Repository {
 
   Future<ParcelRecievedModel> fetchParcelsRecieved(String staffId) =>
       _myProvider.fetchParcelRecieved(id: staffId);
+
 }

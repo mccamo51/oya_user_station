@@ -1,6 +1,5 @@
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
-import 'package:oya_porter/models/parcelByPorter.dart';
 import 'package:oya_porter/models/parcerRecievedModel.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:rxdart/subjects.dart';
