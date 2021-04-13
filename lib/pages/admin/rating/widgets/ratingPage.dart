@@ -73,8 +73,8 @@ class _RatingPageState extends State<RatingPage> {
                 children: [
                   for (var x in ratingModel.data)
                     itemTile(
-                      name: "${x.busSchedule.driver.user.name}",
-                      phone: "${x.busSchedule.driver.user.phone}",
+                      name: "${x.user.name}",
+                      phone: "${x.user.phone}",
                       carNo: x.busSchedule.bus.regNumber,
                       from: x.busSchedule.route.from.name,
                       to: x.busSchedule.route.to.name,

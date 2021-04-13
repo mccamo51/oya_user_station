@@ -22,6 +22,9 @@ import 'package:oya_porter/models/conductorModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
 import 'package:oya_porter/pages/admin/schedules/widgets/seachWidgetBus.dart';
+import 'package:oya_porter/pages/admin/schedules/widgets/searchConductor.dart';
+import 'package:oya_porter/pages/admin/schedules/widgets/searchDriver.dart';
+import 'package:oya_porter/pages/admin/schedules/widgets/searchPorter.dart';
 import 'package:oya_porter/pages/admin/schedules/widgets/searchRoute.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
@@ -41,9 +44,8 @@ class Schedules extends StatefulWidget {
 
 class _SchedulesState extends State<Schedules> {
   String driverId, conductorId, porterId;
-  TextEditingController driverController = TextEditingController();
-  TextEditingController conductorController = TextEditingController();
-  TextEditingController porterController = TextEditingController();
+  // TextEditingController conductorController = TextEditingController();
+  // TextEditingController porterController = TextEditingController();
   TextEditingController arrivalDateTimeController = TextEditingController();
   TextEditingController deptimeDateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
@@ -105,8 +107,7 @@ class _SchedulesState extends State<Schedules> {
                       height: 15,
                     ),
                     GestureDetector(
-                      onTap: () => androidSelectDriver(
-                          context: context, title: "Select Driver"),
+                      onTap: () => androidSelectDriver(context: context),
                       child: textFormField(
                         hintText: "Select Driver",
                         controller: driverController,
@@ -506,40 +507,40 @@ class _SchedulesState extends State<Schedules> {
     }
   }
 
-  Widget _mDriver(DriversModel model, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var data in model.data) ...[
-          Platform.isIOS
-              ? CupertinoActionSheetAction(
-                  child:
-                      Text('${data.user.name}', style: TextStyle(color: BLACK)),
-                  onPressed: () {
-                    setState(() {
-                      // _toCode = data.id;
-                      driverId = (data.id).toString();
-                      driverController.text = data.user.name;
-                    });
+  // Widget _mDriver(DriversModel model, BuildContext context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       for (var data in model.data) ...[
+  //         Platform.isIOS
+  //             ? CupertinoActionSheetAction(
+  //                 child:
+  //                     Text('${data.user.name}', style: TextStyle(color: BLACK)),
+  //                 onPressed: () {
+  //                   setState(() {
+  //                     // _toCode = data.id;
+  //                     driverId = (data.id).toString();
+  //                     driverController.text = data.user.name;
+  //                   });
 
-                    Navigator.pop(context);
-                  },
-                )
-              : SimpleDialogOption(
-                  onPressed: () {
-                    driverId = (data.id).toString();
-                    driverController.text = data.user.name;
-                    Navigator.pop(context);
-                  },
-                  child:
-                      Text("${data.user.name}", style: TextStyle(fontSize: 20)),
-                ),
-          Divider(),
-        ]
-      ],
-    );
-  }
+  //                   Navigator.pop(context);
+  //                 },
+  //               )
+  //             : SimpleDialogOption(
+  //                 onPressed: () {
+  //                   driverId = (data.id).toString();
+  //                   driverController.text = data.user.name;
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child:
+  //                     Text("${data.user.name}", style: TextStyle(fontSize: 20)),
+  //               ),
+  //         Divider(),
+  //       ]
+  //     ],
+  //   );
+  // }
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
@@ -560,164 +561,162 @@ class _SchedulesState extends State<Schedules> {
       });
   }
 
-  Widget allDriver() {
-    loadDriverOffline();
-    driverBloc.fetchDrivers(stationId);
-    return StreamBuilder<Object>(
-      stream: driverBloc.drivers,
-      initialData: driversMapOffline == null
-          ? null
-          : DriversModel.fromJson(driversMapOffline),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _mDriver(snapshot.data, context);
-        } else if (snapshot.hasError) {
-          return Text("Error");
-        }
-        return Center(child: CupertinoActivityIndicator(radius: 15));
-      },
-    );
-  }
+  // Widget allDriver() {
+  //   loadDriverOffline();
+  //   driverBloc.fetchDrivers(stationId);
+  //   return StreamBuilder<Object>(
+  //     stream: driverBloc.drivers,
+  //     initialData: driversMapOffline == null
+  //         ? null
+  //         : DriversModel.fromJson(driversMapOffline),
+  //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+  //       if (snapshot.hasData) {
+  //         return _mDriver(snapshot.data, context);
+  //       } else if (snapshot.hasError) {
+  //         return Text("Error");
+  //       }
+  //       return Center(child: CupertinoActivityIndicator(radius: 15));
+  //     },
+  //   );
+  // }
 
-  Future<void> androidSelectDriver({String title, BuildContext context}) async {
+  Future<void> androidSelectDriver({BuildContext context}) async {
     switch (await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('$title'),
-            children: <Widget>[allDriver()],
+          return Dialog(
+            // title: Text('$title'),
+            child: SearchDiver(),
           );
         })) {
     }
   }
 
-  Widget _mConductor(ConductorModel model, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var data in model.data) ...[
-          Platform.isIOS
-              ? CupertinoActionSheetAction(
-                  child:
-                      Text('${data.user.name}', style: TextStyle(color: BLACK)),
-                  onPressed: () {
-                    setState(() {
-                      conductorId = data.id.toString();
-                      conductorController.text = "${data.user.name}";
-                    });
+  // Widget _mConductor(ConductorModel model, BuildContext context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       for (var data in model.data) ...[
+  //         Platform.isIOS
+  //             ? CupertinoActionSheetAction(
+  //                 child:
+  //                     Text('${data.user.name}', style: TextStyle(color: BLACK)),
+  //                 onPressed: () {
+  //                   setState(() {
+  //                     conductorId = data.id.toString();
+  //                     conductorController.text = "${data.user.name}";
+  //                   });
 
-                    Navigator.pop(context);
-                  },
-                )
-              : SimpleDialogOption(
-                  onPressed: () {
-                    conductorId = data.id.toString();
-                    conductorController.text = "${data.user.name}";
-                    Navigator.pop(context);
-                  },
-                  child:
-                      Text("${data.user.name}", style: TextStyle(fontSize: 20)),
-                ),
-          Divider(),
-        ]
-      ],
-    );
-  }
+  //                   Navigator.pop(context);
+  //                 },
+  //               )
+  //             : SimpleDialogOption(
+  //                 onPressed: () {
+  //                   conductorId = data.id.toString();
+  //                   conductorController.text = "${data.user.name}";
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child:
+  //                     Text("${data.user.name}", style: TextStyle(fontSize: 20)),
+  //               ),
+  //         Divider(),
+  //       ]
+  //     ],
+  //   );
+  // }
 
-  Widget allConductor() {
-    loadconductorsOffline();
-    conductorBloc.fetchConductors(stationId);
-    return StreamBuilder<Object>(
-      stream: conductorBloc.conductors,
-      initialData: conductorsMapOffline == null
-          ? null
-          : ConductorModel.fromJson(conductorsMapOffline),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _mConductor(snapshot.data, context);
-        } else if (snapshot.hasError) {
-          return Text("Error");
-        }
-        return Center(child: CupertinoActivityIndicator(radius: 15));
-      },
-    );
-  }
+  // Widget allConductor() {
+  //   loadconductorsOffline();
+  //   conductorBloc.fetchConductors(stationId);
+  //   return StreamBuilder<Object>(
+  //     stream: conductorBloc.conductors,
+  //     initialData: conductorsMapOffline == null
+  //         ? null
+  //         : ConductorModel.fromJson(conductorsMapOffline),
+  //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+  //       if (snapshot.hasData) {
+  //         return _mConductor(snapshot.data, context);
+  //       } else if (snapshot.hasError) {
+  //         return Text("Error");
+  //       }
+  //       return Center(child: CupertinoActivityIndicator(radius: 15));
+  //     },
+  //   );
+  // }
 
   Future<void> androidSelectConductor(
       {String title, BuildContext context}) async {
     switch (await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('$title'),
-            children: <Widget>[allConductor()],
+          return Dialog(
+            child: SearchConductor(),
           );
         })) {
     }
   }
 
-  Widget _mPorter(PortersModel model, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var data in model.data) ...[
-          Platform.isIOS
-              ? CupertinoActionSheetAction(
-                  child:
-                      Text('${data.user.name}', style: TextStyle(color: BLACK)),
-                  onPressed: () {
-                    setState(() {
-                      porterId = data.id.toString();
-                      porterController.text = "${data.user.name}";
-                    });
+  // Widget _mPorter(PortersModel model, BuildContext context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       for (var data in model.data) ...[
+  //         Platform.isIOS
+  //             ? CupertinoActionSheetAction(
+  //                 child:
+  //                     Text('${data.user.name}', style: TextStyle(color: BLACK)),
+  //                 onPressed: () {
+  //                   setState(() {
+  //                     porterId = data.id.toString();
+  //                     porterController.text = "${data.user.name}";
+  //                   });
 
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                )
-              : SimpleDialogOption(
-                  onPressed: () {
-                    porterId = data.id.toString();
-                    porterController.text = "${data.user.name}";
-                    Navigator.pop(context);
-                  },
-                  child:
-                      Text("${data.user.name}", style: TextStyle(fontSize: 20)),
-                ),
-          Divider(),
-        ]
-      ],
-    );
-  }
+  //                   Navigator.pop(context);
+  //                   Navigator.pop(context);
+  //                 },
+  //               )
+  //             : SimpleDialogOption(
+  //                 onPressed: () {
+  //                   porterId = data.id.toString();
+  //                   porterController.text = "${data.user.name}";
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child:
+  //                     Text("${data.user.name}", style: TextStyle(fontSize: 20)),
+  //               ),
+  //         Divider(),
+  //       ]
+  //     ],
+  //   );
+  // }
 
-  Widget allPorter() {
-    loadportersOffline();
-    porterBloc.fetchPorters(stationId);
-    return StreamBuilder<Object>(
-      stream: porterBloc.porters,
-      initialData: portersMapOffline == null
-          ? null
-          : PortersModel.fromJson(portersMapOffline),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _mPorter(snapshot.data, context);
-        } else if (snapshot.hasError) {
-          return Text("Error");
-        }
-        return Center(child: CupertinoActivityIndicator(radius: 15));
-      },
-    );
-  }
+  // Widget allPorter() {
+  //   loadportersOffline();
+  //   porterBloc.fetchPorters(stationId);
+  //   return StreamBuilder<Object>(
+  //     stream: porterBloc.porters,
+  //     initialData: portersMapOffline == null
+  //         ? null
+  //         : PortersModel.fromJson(portersMapOffline),
+  //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+  //       if (snapshot.hasData) {
+  //         return _mPorter(snapshot.data, context);
+  //       } else if (snapshot.hasError) {
+  //         return Text("Error");
+  //       }
+  //       return Center(child: CupertinoActivityIndicator(radius: 15));
+  //     },
+  //   );
+  // }
 
   Future<void> androidSelectPorter({String title, BuildContext context}) async {
     switch (await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('$title'),
-            children: <Widget>[allPorter()],
+          return Dialog(
+            child: SearchPorter(),
           );
         })) {
     }
