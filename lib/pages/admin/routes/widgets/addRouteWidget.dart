@@ -34,9 +34,23 @@ Widget addRouteWidget({
             height: 15,
           ),
           Visibility(
+              child: GestureDetector(
+            onTap: onSelectDestination,
+            child: textFormField(
+              hintText: "Select Source Town",
+              controller: destinationController,
+              focusNode: null,
+              icon: Icons.arrow_drop_down,
+              enable: false,
+            ),
+          )),
+          SizedBox(
+            height: 15,
+          ),
+          Visibility(
             child: GestureDetector(
                 child: textFormField(
-                  hintText: "Select Source Town",
+                  hintText: "Select Destination Town",
                   controller: townController,
                   focusNode: null,
                   icon: Icons.arrow_drop_down,
@@ -44,20 +58,6 @@ Widget addRouteWidget({
                 ),
                 onTap: onSelectTown),
           ),
-          SizedBox(
-            height: 15,
-          ),
-          Visibility(
-              child: GestureDetector(
-            onTap: onSelectDestination,
-            child: textFormField(
-              hintText: "Select Destination Town",
-              controller: destinationController,
-              focusNode: null,
-              icon: Icons.arrow_drop_down,
-              enable: false,
-            ),
-          ))
         ],
       ),
     ),

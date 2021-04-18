@@ -72,7 +72,6 @@ class _TicketPageState extends State<TicketPage> {
   }
 
   Widget _mainContent(TicketsModel model) {
-    // print(bussModel.data);
     if (model.data != null && model.data.length > 0)
       return SingleChildScrollView(
         physics: BouncingScrollPhysics(),

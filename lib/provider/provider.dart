@@ -23,6 +23,7 @@ import 'package:oya_porter/models/stationsModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/models/townModle.dart';
+import 'package:oya_porter/models/townRegionModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 
@@ -545,6 +546,32 @@ class OyaProvider {
     }
   }
 
+ Future<TonwFromRegionModel> fetchTownByRegion({String id}) async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/regions/$id/towns",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 50));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "townByRegion",
+            data: json.encode(json.decode(response.body)));
+        return TonwFromRegionModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load stations');
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
 
   
