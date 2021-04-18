@@ -1,4 +1,4 @@
-package com.example.oya_porter
+package com.oyaghana.oyaapp_admin
 
 import io.flutter.embedding.android.FlutterActivity
 
