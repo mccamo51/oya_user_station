@@ -10,7 +10,7 @@ import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
 
 TextEditingController busController = TextEditingController();
-String busId, routId, driverId, conductorId, porterId;
+String busId, routId, driverId, conductorId, porterId,bus_schedle_id;
 TextEditingController driverController = TextEditingController();
 
 class SeachBus extends StatefulWidget {

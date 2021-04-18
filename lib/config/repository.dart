@@ -19,6 +19,7 @@ import 'package:oya_porter/models/stationsModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/models/townModle.dart';
+import 'package:oya_porter/models/townRegionModel.dart';
 import 'package:oya_porter/provider/provider.dart';
 
 class Repository {
@@ -75,5 +76,8 @@ class Repository {
 
   Future<ParcelRecievedModel> fetchParcelsRecieved(String staffId) =>
       _myProvider.fetchParcelRecieved(id: staffId);
+
+  Future<TonwFromRegionModel> frechTownByRegion(String id) =>
+      _myProvider.fetchTownByRegion(id: id);
 
 }

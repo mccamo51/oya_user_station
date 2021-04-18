@@ -242,3 +242,16 @@ Future<void> loadParcelRecievedOffline() async {
   } else
     loadParcelRecievedMapOffline = null;
 }
+
+
+Map<String, dynamic> loadTownsByRegMapOffline;
+Future<void> loadTownsByRegOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("townByRegion")) {
+    String encodeData = prefs.getString("townByRegion");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    loadParcelRecievedMapOffline = decodeData;
+  } else
+    loadParcelRecievedMapOffline = null;
+}

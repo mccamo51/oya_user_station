@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/bloc/regionBloc.dart';
 import 'package:oya_porter/bloc/townBloc.dart';
+import 'package:oya_porter/bloc/townByRegionBloc.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/townModle.dart';
+import 'package:oya_porter/models/townRegionModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +44,7 @@ class _AddRouteState extends State<AddRoute> {
               destinationController: destinationController,
               regionController: regionController,
               townController: townController,
-              onSelectDestination: () => androidSelectDestination(
+              onSelectDestination: () => androidSelectSource(
                 context: context,
                 title: "Select Town",
               ),
@@ -65,47 +67,51 @@ class _AddRouteState extends State<AddRoute> {
     String destId,
     String regID,
   }) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final response = await http.post(
-        "$BASE_URL/routes",
-        body: {
-          'source': souId,
-          'destination': destId,
-          'region_id': regID,
-        },
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      ).timeout(
-        Duration(seconds: 50),
-      );
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
+    if (townController.text.isEmpty && destinationController.text.isEmpty) {
+      toastContainer(text: "Please select town to continue");
+    } else {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        final response = await http.post(
+          "$BASE_URL/routes",
+          body: {
+            'source': souId,
+            'destination': destId,
+            'region_id': regID,
+          },
+          headers: {
+            "Authorization": "Bearer $accessToken",
+          },
+        ).timeout(
+          Duration(seconds: 50),
+        );
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+          setState(() {
+            isLoading = false;
+          });
+          if (responseData['status'] == 200) {
+            Navigator.pop(context);
+            toastContainer(text: responseData['message']);
+          } else {
+            toastContainer(text: responseData['message']);
+          }
+        }
+      } on TimeoutException catch (e) {
         setState(() {
           isLoading = false;
         });
-        if (responseData['status'] == 200) {
-          Navigator.pop(context);
-          toastContainer(text: responseData['message']);
-        } else {
-          toastContainer(text: responseData['message']);
-        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
       }
-    } on TimeoutException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
-  Widget _mDest(TownModel model, BuildContext context) {
+  Widget _mSource(TonwFromRegionModel model, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,11 +178,9 @@ class _AddRouteState extends State<AddRoute> {
   }
 
   Widget allDestination2() {
-    // loadAllCities();
     townBloc.fetchTown();
     return StreamBuilder<Object>(
       stream: townBloc.towns,
-      // initialData: allCities == null ? null : CitiesModel.fromJson(allCities),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mDest2(snapshot.data, context);
@@ -203,15 +207,14 @@ class _AddRouteState extends State<AddRoute> {
     }
   }
 
-  Widget allDestination() {
-    // loadAllCities();
-    townBloc.fetchTown();
+  Widget allSOurce() {
+    print(regionId);
+    townsByRegBloc.fetchTownByReg(regionId);
     return StreamBuilder<Object>(
-      stream: townBloc.towns,
-      // initialData: allCities == null ? null : CitiesModel.fromJson(allCities),
+      stream: townsByRegBloc.townFromregion,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          return _mDest(snapshot.data, context);
+          return _mSource(snapshot.data, context);
         } else if (snapshot.hasError) {
           return Text("Error");
         }
@@ -220,15 +223,14 @@ class _AddRouteState extends State<AddRoute> {
     );
   }
 
-  Future<void> androidSelectDestination(
-      {String title, BuildContext context}) async {
+  Future<void> androidSelectSource({String title, BuildContext context}) async {
     switch (await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
             title: Text('$title'),
             children: <Widget>[
-              allDestination(),
+              allSOurce(),
             ],
           );
         })) {

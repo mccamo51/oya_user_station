@@ -43,7 +43,7 @@ class Schedules extends StatefulWidget {
 }
 
 class _SchedulesState extends State<Schedules> {
-  String driverId, conductorId, porterId;
+  // String driverId, conductorId, porterId;
   // TextEditingController conductorController = TextEditingController();
   // TextEditingController porterController = TextEditingController();
   TextEditingController arrivalDateTimeController = TextEditingController();
@@ -415,6 +415,7 @@ class _SchedulesState extends State<Schedules> {
     @required String price,
     @required String midRute,
   }) async {
+    print("=================$driverId");
     setState(() {
       isLoading = true;
     });
