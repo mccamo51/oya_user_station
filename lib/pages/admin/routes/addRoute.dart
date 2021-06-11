@@ -30,24 +30,33 @@ class _AddRouteState extends State<AddRoute> {
   TextEditingController insExpController = TextEditingController();
   TextEditingController regNoController = TextEditingController();
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String townId, regionId, destId;
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: isLoading
           ? Center(
               child: CupertinoActivityIndicator(),
             )
           : addRouteWidget(
+              formKey: _formKey,
               context: context,
               destinationController: destinationController,
               regionController: regionController,
               townController: townController,
-              onSelectDestination: () => androidSelectSource(
-                context: context,
-                title: "Select Town",
-              ),
+              onSelectDestination: () {
+                if (_formKey.currentState.validate()) {
+                  androidSelectSource(
+                    context: context,
+                    title: "Select Town",
+                  );
+                }
+              },
               onAddROute: () =>
                   _onSave(destId: destId, regID: regionId, souId: townId),
               onSelectRegion: () => androidSelectRegion(

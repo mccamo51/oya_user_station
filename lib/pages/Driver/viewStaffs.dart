@@ -21,7 +21,7 @@ class _ViewStaffsState extends State<ViewStaffs> {
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 3));
     stafBloc.fetchAllStaffs(widget.id.toString());
 
     return null;
@@ -39,9 +39,7 @@ class _ViewStaffsState extends State<ViewStaffs> {
   Widget build(BuildContext context) {
     print(widget.id);
     return Scaffold(
-      appBar: appBar(
-        title: ("Staffs"),
-      ),
+      appBar: appBar(title: ("Staffs"), actions: []),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: refreshList,
@@ -80,21 +78,21 @@ class _ViewStaffsState extends State<ViewStaffs> {
                 children: [
                   for (var x in staffModel.data)
                     _itemTile(
-                        name: x.user.name,
+                        name: x.user.id.toString(),
                         phone: x.user.phone,
                         role: x.accountType.name,
                         onFunction: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditStaff(
-                                  icePhone: x.user.ice1Phone,
-                                  name: x.user.name,
-                                  phone: x.user.phone,
-                                  uid: x.user.id,
-                                  accountId: x.accountType.name),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => EditStaff(
+                          //         icePhone: x.user.ice1Phone,
+                          //         name: x.user.name,
+                          //         phone: x.user.phone,
+                          //         uid: x.user.id,
+                          //         accountId: x.accountType.name),
+                          //   ),
+                          // );
                         })
                 ],
               ),

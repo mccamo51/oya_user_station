@@ -6,14 +6,12 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/bloc/scaledBusBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
-import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/home/priorityBus.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/loadBus.dart';
-import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
@@ -97,10 +95,23 @@ class _ScaledBussesState extends State<ScaledBusses> {
                       // color: PRIMARYCOLOR,
                       child: ListTile(
                         title: Text(
-                            "Bus No: ${x.bus.regNumber}[${x.code.toString()}]"),
+                            "Bus No: ${x.bus.regNumber} [${x.code.toString()}]"),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${x.bus.driver.station.name}",
+                                  style: h3Black,
+                                ),
+                                Text(
+                                  "${x.bus.regNumber}",
+                                  style: h3Black,
+                                ),
+                              ],
+                            ),
                             SizedBox(
                               height: 8,
                             ),
@@ -120,12 +131,9 @@ class _ScaledBussesState extends State<ScaledBusses> {
                             Icon(FeatherIcons.truck),
                           ],
                         ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("${x.bus.driver.station.name}"),
-                            Text("${x.bus.regNumber}"),
-                          ],
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
                         ),
                         onTap: () {
                           print(priorityLength.toString());

@@ -140,11 +140,19 @@ class _LoadBusesState extends State<LoadBuses> {
                       ),
                       Text(
                         "${widget.passengerCount} Passengers onboard",
-                        style: h5ASH,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                          color: ASHDEEP,
+                        ),
                       ),
                       Text(
                         "${widget.minorCount} Minors",
-                        style: h5ASH,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                          color: ASHDEEP,
+                        ),
                       ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -233,6 +241,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                 controller: primaryICEphoneController,
                                 focusNode: icePhoneFocus,
                                 inputType: TextInputType.phone,
+                                textLength: 10,
                                 labelText: "ICE Phone number",
                               ),
                             ],
@@ -249,6 +258,7 @@ class _LoadBusesState extends State<LoadBuses> {
                               controller: phoneNumberController,
                               focusNode: phoneFocus,
                               inputType: TextInputType.phone,
+                              textLength: 10,
                               labelText: "Phone Number",
                             ),
                             SizedBox(
@@ -371,6 +381,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                   controller: primaryICEphoneController,
                                   focusNode: icePhoneFocus,
                                   inputType: TextInputType.phone,
+                                  textLength: 10,
                                   labelText: "Primary Emergency phone (ICE)",
                                 ),
                               ],
@@ -401,6 +412,7 @@ class _LoadBusesState extends State<LoadBuses> {
                         height: 45,
                         child: primaryButton(
                             onFunction: () => _enroll(
+                                iceName: primaryICENameController.text,
                                 scheduleId: widget.scheduleId,
                                 icePhone: primaryICEphoneController.text,
                                 iceAddress: primaryICEAddressController.text,
@@ -525,6 +537,7 @@ class _LoadBusesState extends State<LoadBuses> {
     @required String minor,
     @required String phone,
     @required String name,
+    @required String iceName,
     @required String pin,
   }) async {
     setState(() {
@@ -554,7 +567,8 @@ class _LoadBusesState extends State<LoadBuses> {
     Map noPhoneNoICE = {
       'pin': '$pin',
       'minor_count': '$minor',
-      'ice1_name': '$name',
+      'ice1_name': '$iceName',
+      'name': '$name',
       'ice1_address': '$iceAddress',
       'type': 'c'
     };

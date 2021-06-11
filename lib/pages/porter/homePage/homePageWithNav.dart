@@ -15,7 +15,9 @@ class _PorterHomePageState extends State<PorterHomePage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     HomePagePorter(),
-    PorterSchedule(),
+    PorterSchedule(
+      isSchedule: true,
+    ),
     Parcels(),
     Account(),
   ];

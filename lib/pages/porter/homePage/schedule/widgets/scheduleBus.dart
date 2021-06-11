@@ -97,7 +97,7 @@ class _ScheduledBusState extends State<ScheduledBus> {
                           SizedBox(
                             height: 5,
                           ),
-                          Text("Arrival: ${x.arrivalDate} @ ${x.arrivalTime}"),
+                          Text("Arrival: ${x.arrivalDate} "),
                         ],
                       ),
                       leading: Icon(FeatherIcons.truck),

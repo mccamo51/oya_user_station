@@ -7,6 +7,7 @@ import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/Conductor/conductorHome.dart';
 import 'package:oya_porter/pages/Driver/driverHome.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
+import 'package:oya_porter/pages/generalManager/generalPage.dart';
 import 'package:oya_porter/pages/porter/homePage/homePageWithNav.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 import 'package:oya_porter/spec/strings.dart';
@@ -77,7 +78,41 @@ class _MainHomePageState extends State<MainHomePage> {
                 child: ListTile(
                   onTap: () {
                     if (x['account_type']['id'] == 1) {
+                      setState(() {
+                        userId = x['id'].toString();
+                        saveStringShare(
+                            key: "stationId",
+                            data: (x['station']['id'].toString()));
+                        stationId = (x['station']['id'].toString());
+                      });
+                      // _getLoading(stationId);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GeneralManagerPage(
+                            stationID: stationId,
+                            title: "Admin",
+                          ),
+                        ),
+                      );
                     } else if (x['account_type']['id'] == 2) {
+                      setState(() {
+                        userId = x['id'].toString();
+                        saveStringShare(
+                            key: "stationId",
+                            data: (x['station']['id'].toString()));
+                        stationId = (x['station']['id'].toString());
+                      });
+                      // _getLoading(stationId);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GeneralManagerPage(
+                            stationID: stationId,
+                            title: "General Manager",
+                          ),
+                        ),
+                      );
                     } else if (x['account_type']['id'] == 3) {
                       setState(() {
                         userId = x['id'].toString();

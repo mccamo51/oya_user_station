@@ -39,7 +39,7 @@ class OyaProvider {
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
-        // print(response.body);
+        print(response.body);
         saveStringShare(
             key: "allStaff", data: json.encode(json.decode(response.body)));
         return StaffModel.fromJson(json.decode(response.body));
@@ -546,7 +546,7 @@ class OyaProvider {
     }
   }
 
- Future<TonwFromRegionModel> fetchTownByRegion({String id}) async {
+  Future<TonwFromRegionModel> fetchTownByRegion({String id}) async {
     try {
       final response = await client.get(
         "$BASE_URL/regions/$id/towns",
@@ -557,8 +557,7 @@ class OyaProvider {
       if (response.statusCode == 200) {
         print(response.body);
         saveStringShare(
-            key: "townByRegion",
-            data: json.encode(json.decode(response.body)));
+            key: "townByRegion", data: json.encode(json.decode(response.body)));
         return TonwFromRegionModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load stations');
@@ -572,7 +571,4 @@ class OyaProvider {
       throw Exception(e);
     }
   }
-
-
-  
 }

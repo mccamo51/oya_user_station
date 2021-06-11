@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -10,6 +11,7 @@ import 'package:oya_porter/pages/porter/homePage/home/scaledBus.dart';
 import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:oya_porter/spec/strings.dart';
 import 'package:oya_porter/spec/styles.dart';
 
 String carNumber = "";
@@ -35,7 +37,21 @@ class _HomePagePorterState extends State<HomePagePorter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: "Home"),
+      appBar: appBar(title: "Home", actions: [
+        PopupMenuButton<String>(
+          onSelected: ((val) {
+            logoutDialog(context);
+          }),
+          itemBuilder: (BuildContext context) {
+            return Constants.choices.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        )
+      ]),
       body: isLoading
           ? Center(
               child: CupertinoActivityIndicator(),
@@ -93,35 +109,31 @@ class _HomePagePorterState extends State<HomePagePorter> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _cardItem(
-                          onContinue: () {
-                            _checkPrio().whenComplete(() => {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ScaledBusses(
-                                        scheduleID: stationId,
-                                      ),
-                                    ),
-                                  )
-                                });
-                          },
-                          name: "Scaled",
-                          image: "assets/images/admin/bus.png"),
-                      _cardItem(
-                          onContinue: () {
-                            _checkMigrationScal().whenComplete(() => {
-                                  print(priorityLength),
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PriorityBuses(
-                                        scheduleID: stationId,
-                                      ),
-                                    ),
-                                  )
-                                });
-                          },
+                      _cardItem(context, onContinue: () {
+                        _checkPrio().whenComplete(() => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ScaledBusses(
+                                    scheduleID: stationId,
+                                  ),
+                                ),
+                              )
+                            });
+                      }, name: "Scaled", image: "assets/images/admin/bus.png"),
+                      _cardItem(context, onContinue: () {
+                        _checkMigrationScal().whenComplete(() => {
+                              print(priorityLength),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PriorityBuses(
+                                    scheduleID: stationId,
+                                  ),
+                                ),
+                              )
+                            });
+                      },
                           name: "Priority",
                           image: "assets/images/admin/bus.png"),
                     ],
@@ -205,17 +217,19 @@ class _HomePagePorterState extends State<HomePagePorter> {
   }
 }
 
-_cardItem({String image, String name, Function onContinue}) {
+_cardItem(BuildContext context,
+    {String image, String name, Function onContinue}) {
   return Card(
     child: GestureDetector(
       onTap: onContinue,
       child: Container(
+          width: MediaQuery.of(context).size.width / 2.3,
           padding: EdgeInsets.all(30),
           child: Column(
             children: [
               ClipOval(
                 child: Container(
-                  height: 70,
+                  height: 90,
                   decoration: BoxDecoration(shape: BoxShape.circle),
                   child: Image.asset(
                     image,

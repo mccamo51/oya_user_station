@@ -54,9 +54,9 @@ class _StaffsState extends State<Staffs> {
         onRefresh: refreshList,
         child: StreamBuilder(
           stream: stafBloc.allStaff,
-          // initialData: allStaffMapOffline == null
-          //     ? null
-          //     : StaffModel.fromJson(allStaffMapOffline),
+          initialData: allStaffMapOffline == null
+              ? null
+              : StaffModel.fromJson(allStaffMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

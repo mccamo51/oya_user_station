@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
 import 'package:oya_porter/spec/styles.dart';
 
 import 'busses/busses.dart';
@@ -128,13 +129,13 @@ navigateSchedules(BuildContext context, String id) {
   Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ViewSchedules(
-                statiionId: id.toString(),
-                routeId: id.toString(),
+          builder: (context) => PorterSchedule(
+                isSchedule: true,
               )));
 }
 
 navigateStaffs(BuildContext context, String id) {
+  print(id);
   Navigator.push(
       context,
       MaterialPageRoute(

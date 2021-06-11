@@ -15,7 +15,7 @@ import 'package:oya_porter/models/myRouteModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 
 class AddTicket extends StatefulWidget {
   @override
@@ -172,62 +172,62 @@ class _AddTicketState extends State<AddTicket> {
   }
 
   _onSave(
-      {String staId,
-      String busId,
-      String regNo,
-      String ins_exp_date,
-      String road_exp_date,
-      String model,
-      String driverId}) async {
-    if (regNo.isEmpty || road_exp_date.isEmpty || ins_exp_date.isEmpty) {
-      toastContainer(text: "All this fields are required");
-    } else {
-      setState(() {
-        isLoading = true;
-      });
-      try {
-        print("$driverId");
-        final response = await http.post(
-          "$BASE_URL/$stationId/tickets",
-          body: {
-            'bus_schedule_id': staId,
-            'phone': busId,
-            'minor': regNo,
-            'payment_type': model,
-            'momo_phone': driverId,
-            'momo_name': '$road_exp_date',
-            'price': '$ins_exp_date',
-          },
-          headers: {
-            "Authorization": "Bearer $accessToken",
-          },
-        ).timeout(
-          Duration(seconds: 50),
-        );
-        if (response.statusCode == 200) {
-          final responseData = json.decode(response.body);
-          setState(() {
-            isLoading = false;
-          });
-          if (responseData['status'] == 200) {
-            toastContainer(text: responseData['message']);
-            Navigator.pop(context);
-          } else {
-            toastContainer(text: responseData['message']);
-          }
+      {String busID,
+      String phone,
+      String minor,
+      String momoName,
+      String price,
+      String mapymentMode,
+      String momoPhone}) async {
+    // if (regNo.isEmpty || road_exp_date.isEmpty || ins_exp_date.isEmpty) {
+    //   toastContainer(text: "All this fields are required");
+    // } else {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      print("$momoPhone");
+      final response = await http.post(
+        "$BASE_URL/$stationId/tickets",
+        body: {
+          'bus_schedule_id': busID,
+          'phone': phone,
+          'minor': minor,
+          'payment_type': mapymentMode,
+          'momo_phone': momoPhone,
+          'momo_name': '$momoName',
+          'price': '$price',
+        },
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(
+        Duration(seconds: 50),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        setState(() {
+          isLoading = false;
+        });
+        if (responseData['status'] == 200) {
+          toastContainer(text: responseData['message']);
+          Navigator.pop(context);
+        } else {
+          toastContainer(text: responseData['message']);
         }
-      } on TimeoutException catch (e) {
-        setState(() {
-          isLoading = false;
-        });
-      } catch (e) {
-        print(e);
-        setState(() {
-          isLoading = false;
-        });
       }
+    } on TimeoutException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
     }
   }
+  // }
 
   _onPaymentType(BuildContext context) {
     showDialog(

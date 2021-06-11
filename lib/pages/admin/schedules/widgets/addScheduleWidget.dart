@@ -144,6 +144,7 @@ class _SchedulesState extends State<Schedules> {
                   controller: arrivalDateTimeController,
                   focusNode: null,
                   icon: Icons.arrow_drop_down,
+                  // validate: true
                   enable: false,
                 ),
               ),
@@ -156,6 +157,7 @@ class _SchedulesState extends State<Schedules> {
                   hintText: "Ticket Price",
                   controller: priceController,
                   focusNode: null,
+                  // validate: true
                   labelText: "Ticket Price",
                   inputType: TextInputType.number,
                   // icon: Icons.arrow_drop_down,
@@ -201,7 +203,7 @@ class _SchedulesState extends State<Schedules> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("A low ticket sales?"),
+                    child: Text("Allow ticket sales?"),
                   ),
                   Row(
                     children: [
@@ -240,7 +242,7 @@ class _SchedulesState extends State<Schedules> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("A low mid route boarding?"),
+                    child: Text("Allow mid route boarding?"),
                   ),
                   Row(
                     children: [
