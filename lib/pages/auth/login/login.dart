@@ -88,10 +88,14 @@ class _LoginPageState extends State<LoginPage> {
         _isLoading = true;
       });
       try {
-        final response = await http.post("$LOGIN_URL", body: {
-          'phone': phone,
-          'pin': password
-        }).timeout(Duration(seconds: 50));
+        Map<String, dynamic> body = {'phone': phone, 'pin': password};
+        final response = await http.post(
+          "$LOGIN_URL",
+          body: json.encode(body),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ).timeout(Duration(seconds: 50));
         print(response.body);
         if (response.statusCode == 200) {
           final responseData = json.decode(response.body);

@@ -4,7 +4,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/bloc/scaledBusBloc.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/config/offlineData.dart';
-import 'package:http/http.dart' as http;
 import 'package:oya_porter/models/scaledBusModel.dart';
 
 class ScheduledBus extends StatefulWidget {
@@ -21,14 +20,14 @@ class _ScheduledBusState extends State<ScheduledBus> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    scaledBloc.fetchScaledBuses(widget.stationId);
+    scaledBloc.fetchScaledBuses(widget.stationId, context);
 
     return null;
   }
 
   @override
   void initState() {
-    scaledBloc.fetchScaledBuses(widget.stationId);
+    scaledBloc.fetchScaledBuses(widget.stationId, context);
     loadScaledBusOffline();
     super.initState();
   }

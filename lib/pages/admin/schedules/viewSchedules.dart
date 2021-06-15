@@ -24,8 +24,8 @@ class _ViewSchedulesState extends State<ViewSchedules> {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
     scheduleBloc.fetchAllStaffs(
-      widget.routeId,
-      widget.statiionId,
+      routeId: widget.routeId,
+      id: widget.statiionId,
     );
 
     return null;
@@ -33,8 +33,8 @@ class _ViewSchedulesState extends State<ViewSchedules> {
 
   void initState() {
     scheduleBloc.fetchAllStaffs(
-      widget.routeId,
-      widget.statiionId,
+      routeId: widget.routeId,
+      id: widget.statiionId,
     );
     loadallSchedulesOffline();
     // TODO: implement initState

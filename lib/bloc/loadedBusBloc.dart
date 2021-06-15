@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/loadedBusModel.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
@@ -11,8 +12,8 @@ class LoadedBusBloc {
 
   Stream<LoadedBusModel> get loadedbuses => _busesFetcher.stream;
 
-  fetchLoadedBuses(String id) async {
-    LoadedBusModel timeResponse = await _repository.fetchLoadedBus(id);
+  fetchLoadedBuses(String id,BuildContext context) async {
+    LoadedBusModel timeResponse = await _repository.fetchLoadedBus(id, context);
     _busesFetcher.sink.add(timeResponse);
   }
 

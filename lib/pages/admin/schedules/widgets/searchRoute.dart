@@ -153,7 +153,7 @@ class _SearchRouteState extends State<SearchRoute> {
 
   Widget allRoute() {
     loadMyRouteOffline();
-    myRouteBloc.fetchAllStaffs(stationId);
+    myRouteBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
       initialData: myRouteMapOffline == null

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oya_porter/pages/admin/schedules/widgets/addScheduleWidget.dart';
+import 'package:oya_porter/pages/admin/schedules/schedules.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/schedule/widgets/loadedBuses.dart';
 import 'package:oya_porter/pages/porter/homePage/schedule/widgets/scheduleBus.dart';

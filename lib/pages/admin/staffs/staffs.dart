@@ -24,14 +24,14 @@ class _StaffsState extends State<Staffs> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    stafBloc.fetchAllStaffs(widget.id.toString());
+    stafBloc.fetchAllStaffs(widget.id.toString(), context);
 
     return null;
   }
 
   @override
   void initState() {
-    stafBloc.fetchAllStaffs(widget.id.toString());
+    stafBloc.fetchAllStaffs(widget.id.toString(), context);
     loadAllStaffOffline();
     // TODO: implement initState
     super.initState();

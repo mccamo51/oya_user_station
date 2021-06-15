@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
+import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/home/priorityBus.dart';
@@ -152,6 +154,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
       "$BASE_URL/stations/$stationId/scaled_buses",
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(Duration(seconds: 30));
     if (response.statusCode == 200) {
@@ -167,6 +170,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
         });
         print("------------------$scaledLength");
       }
+    }else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 
@@ -178,6 +185,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
       "$BASE_URL/stations/$stationId/priority_buses",
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(Duration(seconds: 30));
     if (response.statusCode == 200) {
@@ -191,6 +199,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
         });
         print("-------------------$priorityLength");
       }
+    }else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 
@@ -199,6 +211,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
       "$BASE_URL/stations/$stationId/loading_bus",
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(
       Duration(seconds: 50),
@@ -213,6 +226,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
         sca = responseData['data']['scaled'];
         setState(() {});
       }
+    }else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 }

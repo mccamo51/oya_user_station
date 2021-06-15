@@ -22,14 +22,14 @@ class _ParcelSentState extends State<ParcelSent> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    parcelSentBloc.fetchAllParcelSent(stationId);
+    parcelSentBloc.fetchAllParcelSent(stationId, context);
 
     return null;
   }
 
   @override
   void initState() {
-    parcelSentBloc.fetchAllParcelSent(stationId);
+    parcelSentBloc.fetchAllParcelSent(stationId, context);
     loadParcelSentOffline();
     // TODO: implement initState
     super.initState();

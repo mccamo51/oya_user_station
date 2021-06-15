@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/forgotPass/widgets/verifyWidget.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -66,11 +67,21 @@ class _VerifyOtpForgotPasswordState extends State<VerifyOtpForgotPassword> {
             title: "Required!",
             context: context);
       } else {
-        final response = await http.put("$BASE_URL/account/pin/reset", body: {
+        Map<String, dynamic> body = {
           'phone': phone,
           'otp': otp,
           'new_pin': pin,
-        }).timeout(Duration(seconds: 50));
+        };
+        final response = await http.put(
+          "$BASE_URL/account/pin/reset",
+          body: json.encode(body),
+          headers: {
+            "Authorization": "Bearer $accessToken",
+            'Content-Type': 'application/json'
+          },
+        ).timeout(
+          Duration(seconds: 50),
+        );
         if (response.statusCode == 200) {
           setState(() {
             _isLoading = false;
@@ -84,6 +95,10 @@ class _VerifyOtpForgotPasswordState extends State<VerifyOtpForgotPassword> {
           } else {
             toastContainer(text: responseData['message']);
           }
+        } else if (response.statusCode == 401) {
+          sessionExpired(context);
+        } else {
+          toastContainer(text: "Error has occured");
         }
       }
     } on TimeoutException catch (_) {

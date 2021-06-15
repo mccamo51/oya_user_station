@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/styles.dart';
@@ -107,6 +108,7 @@ class _OffloadBusState extends State<OffloadBus> {
       "$BASE_URL/schedules/${widget.schedID}/manifest/${widget.manifestCode}",
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(
       Duration(seconds: 50),
@@ -122,6 +124,10 @@ class _OffloadBusState extends State<OffloadBus> {
       } else {
         toastContainer(text: responseData['message']);
       }
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 }

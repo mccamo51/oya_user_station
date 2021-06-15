@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' show Client;
+import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
-import 'package:oya_porter/models/BusByStationModel.dart';
 import 'package:oya_porter/models/PorterModel.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
 import 'package:oya_porter/models/busModel.dart';
@@ -19,6 +21,7 @@ import 'package:oya_porter/models/ratingModel.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/reportModel.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
+import 'package:oya_porter/models/scheduledBusesModel.dart';
 import 'package:oya_porter/models/stationsModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
@@ -30,12 +33,13 @@ import 'package:oya_porter/spec/sharePreference.dart';
 class OyaProvider {
   Client client = Client();
 
-  Future<StaffModel> fetchAllStaffs(String id) async {
+  Future<StaffModel> fetchAllStaffs(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/staffs/$id",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -43,9 +47,14 @@ class OyaProvider {
         saveStringShare(
             key: "allStaff", data: json.encode(json.decode(response.body)));
         return StaffModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
+      //  else {
+      //     throw Exception('Failed to load Busses');
+      //   }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
       throw Exception("Timeout");
@@ -56,12 +65,13 @@ class OyaProvider {
     }
   }
 
-  Future<BussModel> fetchBusses(String id) async {
+  Future<BussModel> fetchBusses(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/buses",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -69,8 +79,10 @@ class OyaProvider {
         saveStringShare(
             key: "allBusses", data: json.encode(json.decode(response.body)));
         return BussModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -82,12 +94,13 @@ class OyaProvider {
     }
   }
 
-  Future<RatingModel> fetchRating(String id) async {
+  Future<RatingModel> fetchRating(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/ratings",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -95,8 +108,10 @@ class OyaProvider {
         saveStringShare(
             key: "allrating", data: json.encode(json.decode(response.body)));
         return RatingModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -108,12 +123,14 @@ class OyaProvider {
     }
   }
 
-  Future<ScheduleModel> fetchSchedule(String id, String routeID) async {
+  Future<ScheduleModel> fetchSchedule(
+      {String id, String routeID, BuildContext context}) async {
     try {
       final response = await client.get(
         "$BASE_URL/routes/$routeID/schedules/$id",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -121,8 +138,10 @@ class OyaProvider {
         saveStringShare(
             key: "allschedule", data: json.encode(json.decode(response.body)));
         return ScheduleModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -134,14 +153,13 @@ class OyaProvider {
     }
   }
 
-  Future<TicketsModel> fetchTicket(
-    String id,
-  ) async {
+  Future<TicketsModel> fetchTicket(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/tickets",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -149,8 +167,10 @@ class OyaProvider {
         saveStringShare(
             key: "allticket", data: json.encode(json.decode(response.body)));
         return TicketsModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -162,14 +182,13 @@ class OyaProvider {
     }
   }
 
-  Future<MyRouteModel> fetchMyRoute(
-    String id,
-  ) async {
+  Future<MyRouteModel> fetchMyRoute(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/routes",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -177,8 +196,10 @@ class OyaProvider {
         saveStringShare(
             key: "myroute", data: json.encode(json.decode(response.body)));
         return MyRouteModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -190,14 +211,13 @@ class OyaProvider {
     }
   }
 
-  Future<DriversModel> fetchDrivers(
-    String id,
-  ) async {
+  Future<DriversModel> fetchDrivers(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/drivers",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -205,8 +225,10 @@ class OyaProvider {
         saveStringShare(
             key: "drivers", data: json.encode(json.decode(response.body)));
         return DriversModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -218,12 +240,13 @@ class OyaProvider {
     }
   }
 
-  Future<BusTypeModel> fetchBusType() async {
+  Future<BusTypeModel> fetchBusType(BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/bus_types",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -231,8 +254,10 @@ class OyaProvider {
         saveStringShare(
             key: "bustype", data: json.encode(json.decode(response.body)));
         return BusTypeModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -244,12 +269,13 @@ class OyaProvider {
     }
   }
 
-  Future<RegionModel> fetchRegion() async {
+  Future<RegionModel> fetchRegion(BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/regions",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -257,8 +283,10 @@ class OyaProvider {
         saveStringShare(
             key: "regions", data: json.encode(json.decode(response.body)));
         return RegionModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -270,12 +298,13 @@ class OyaProvider {
     }
   }
 
-  Future<TownModel> fetchTown() async {
+  Future<TownModel> fetchTown(BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/towns",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -283,8 +312,10 @@ class OyaProvider {
         saveStringShare(
             key: "towns", data: json.encode(json.decode(response.body)));
         return TownModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -296,14 +327,13 @@ class OyaProvider {
     }
   }
 
-  Future<ReportModel> fetchReports(
-    String id,
-  ) async {
+  Future<ReportModel> fetchReports(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/speed_reports",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -312,8 +342,10 @@ class OyaProvider {
             key: "speed_reports",
             data: json.encode(json.decode(response.body)));
         return ReportModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load Busses');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -326,13 +358,13 @@ class OyaProvider {
   }
 
   Future<ConductorModel> fetchConductors(
-    String id,
-  ) async {
+      String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/conductors",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -340,8 +372,10 @@ class OyaProvider {
         saveStringShare(
             key: "conductors", data: json.encode(json.decode(response.body)));
         return ConductorModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load conductors');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -353,14 +387,13 @@ class OyaProvider {
     }
   }
 
-  Future<PortersModel> fetchPorters(
-    String id,
-  ) async {
+  Future<PortersModel> fetchPorters(String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/porters",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -368,8 +401,10 @@ class OyaProvider {
         saveStringShare(
             key: "porters", data: json.encode(json.decode(response.body)));
         return PortersModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load porters');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -382,13 +417,13 @@ class OyaProvider {
   }
 
   Future<LoadedBusModel> fetchLoadedBuses(
-    String id,
-  ) async {
+      String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/loaded_buses",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -396,8 +431,10 @@ class OyaProvider {
         saveStringShare(
             key: "loaded_buses", data: json.encode(json.decode(response.body)));
         return LoadedBusModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load porters');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -410,22 +447,25 @@ class OyaProvider {
   }
 
   Future<ScaledBusModel> fetchScaledBuses(
-    String id,
-  ) async {
+      String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$stationId/scaled_buses",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
-        print(response.body);
+        print(response.statusCode);
         saveStringShare(
             key: "scaled_buses", data: json.encode(json.decode(response.body)));
         return ScaledBusModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load porters');
+        
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -438,13 +478,13 @@ class OyaProvider {
   }
 
   Future<PriorityBusModel> fetchPriorityBus(
-    String id,
-  ) async {
+      String id, BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/priority_buses",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -453,8 +493,10 @@ class OyaProvider {
             key: "priority_buses",
             data: json.encode(json.decode(response.body)));
         return PriorityBusModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load porters');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -466,12 +508,13 @@ class OyaProvider {
     }
   }
 
-  Future<StationsModel> fetchStations() async {
+  Future<StationsModel> fetchStations(BuildContext context) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -479,8 +522,10 @@ class OyaProvider {
         saveStringShare(
             key: "stations", data: json.encode(json.decode(response.body)));
         return StationsModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load stations');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -492,12 +537,14 @@ class OyaProvider {
     }
   }
 
-  Future<ParcelSentUserModel> fetchParcelSentByPorter({String id}) async {
+  Future<ParcelSentUserModel> fetchParcelSentByPorter(
+      {String id, BuildContext context}) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/parcels_sent_by_porter",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -506,8 +553,10 @@ class OyaProvider {
             key: "parcelByPorter",
             data: json.encode(json.decode(response.body)));
         return ParcelSentUserModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load stations');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -519,12 +568,14 @@ class OyaProvider {
     }
   }
 
-  Future<ParcelRecievedModel> fetchParcelRecieved({String id}) async {
+  Future<ParcelRecievedModel> fetchParcelRecieved(
+      {String id, BuildContext context}) async {
     try {
       final response = await client.get(
         "$BASE_URL/stations/$id/parcels_received",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -533,8 +584,10 @@ class OyaProvider {
             key: "parcelRecieved",
             data: json.encode(json.decode(response.body)));
         return ParcelRecievedModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load stations');
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
@@ -546,12 +599,14 @@ class OyaProvider {
     }
   }
 
-  Future<TonwFromRegionModel> fetchTownByRegion({String id}) async {
+  Future<TonwFromRegionModel> fetchTownByRegion(
+      {String id, BuildContext context}) async {
     try {
       final response = await client.get(
         "$BASE_URL/regions/$id/towns",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -559,8 +614,41 @@ class OyaProvider {
         saveStringShare(
             key: "townByRegion", data: json.encode(json.decode(response.body)));
         return TonwFromRegionModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
-        throw Exception('Failed to load stations');
+        toastContainer(text: "Error has occured");
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ScheduledBusesModel> fetchScheduledBuses(
+      {String stationId, routeID, BuildContext context}) async {
+    try {
+      final response = await client.get(
+        "$BASE_URL/routes/$routeID/schedules/$stationId",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
+        },
+      ).timeout(Duration(seconds: 50));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "scheduledbuses",
+            data: json.encode(json.decode(response.body)));
+        return ScheduledBusesModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");

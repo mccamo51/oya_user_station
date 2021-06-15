@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
+import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/Conductor/conductorHome.dart';
 import 'package:oya_porter/pages/Driver/driverHome.dart';
@@ -213,7 +215,8 @@ class _MainHomePageState extends State<MainHomePage> {
       if (responseData['status'] == 200) {
         print(responseData['data']);
         carNumber = responseData['data']['bus']['reg_number'];
-        // scheduleID = responseData['data'];
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       }
     }
   }

@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/forgotPass/verifyOtpForgotPass.dart';
+import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/auth/secreteQuestion/secreteWidget/secreteWidget.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
@@ -57,10 +59,18 @@ class _SecreteQuestionState extends State<SecreteQuestion> {
         setState(() {
           isLoading = true;
         });
-        final response =
-            await http.post("$BASE_URL/account/check_phone", body: {
+
+        Map<String, dynamic> body = {
           'phone': phone,
-        }).timeout(Duration(seconds: 50));
+        };
+        final response = await http.post(
+          "$BASE_URL/account/check_phone",
+          body: json.encode(body),
+          headers: {
+            "Authorization": "Bearer $accessToken",
+            'Content-Type': 'application/json'
+          },
+        ).timeout(Duration(seconds: 50));
         if (response.statusCode == 200) {
           setState(() {
             isLoading = false;
@@ -77,6 +87,10 @@ class _SecreteQuestionState extends State<SecreteQuestion> {
           } else {
             toastContainer(text: responseData['message']);
           }
+        } else if (response.statusCode == 401) {
+          sessionExpired(context);
+        } else {
+          toastContainer(text: "Error has occured");
         }
       }
     } on TimeoutException catch (_) {

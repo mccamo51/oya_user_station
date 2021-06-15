@@ -7,6 +7,7 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/arrays.dart';
@@ -98,15 +99,21 @@ class _EditStaffState extends State<EditStaff> {
     setState(() {
       isLoading = true;
     });
-    final response = await http.put("$BASE_URL/staffs/$uid", headers: {
-      "Authorization": "Bearer $accessToken",
-    }, body: {
+    Map<String, dynamic> body = {
       'station_id': '$statID',
       'account_type_id': '$accoutId',
       'updated_by': '$userId',
-    }).timeout(
-      Duration(seconds: 50),
-    );
+    };
+    final response = await http
+        .put("$BASE_URL/staffs/$uid",
+            headers: {
+              "Authorization": "Bearer $accessToken",
+              'Content-Type': 'application/json'
+            },
+            body: json.encode(body))
+        .timeout(
+          Duration(seconds: 50),
+        );
     if (response.statusCode == 200) {
       setState(() {
         isLoading = false;
@@ -117,6 +124,10 @@ class _EditStaffState extends State<EditStaff> {
       } else {
         toastContainer(text: responseData['message']);
       }
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 

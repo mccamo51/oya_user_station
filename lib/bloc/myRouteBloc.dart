@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
 import 'package:oya_porter/models/ratingModel.dart';
@@ -11,8 +12,8 @@ class MyRouteBloc {
 
   Stream<MyRouteModel> get myroutes => _ratingFetcher.stream;
 
-  fetchAllStaffs(String id) async {
-    MyRouteModel timeResponse = await _repository.fetchMyRoute(id);
+  fetchAllStaffs(String id,BuildContext context) async {
+    MyRouteModel timeResponse = await _repository.fetchMyRoute(id, context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

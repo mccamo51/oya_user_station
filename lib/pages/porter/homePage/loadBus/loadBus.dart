@@ -7,6 +7,7 @@ import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -495,9 +496,10 @@ class _LoadBusesState extends State<LoadBuses> {
       });
       final response = await http.post(
         "$BASE_URL/schedules/$scheduleId/start",
-        body: {'pin': '$pin'},
+        body: json.encode({'pin': '$pin'}),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -516,6 +518,10 @@ class _LoadBusesState extends State<LoadBuses> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     }
   }
@@ -577,14 +583,15 @@ class _LoadBusesState extends State<LoadBuses> {
     final response = await http.post(
       "$BASE_URL/schedules/$scheduleId/manifest",
       body: showPhone && _character == BusType.Genral
-          ? general2
+          ? json.encode(general2)
           : _character == BusType.Genral
-              ? general
+              ? json.encode(general)
               : _character == BusType.NoPhone
-                  ? noPhone
-                  : noPhoneNoICE,
+                  ? json.encode(noPhone)
+                  : json.encode(noPhoneNoICE),
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(
       Duration(seconds: 50),
@@ -611,6 +618,10 @@ class _LoadBusesState extends State<LoadBuses> {
       } else {
         toastContainer(text: responseData['message']);
       }
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 
@@ -621,9 +632,10 @@ class _LoadBusesState extends State<LoadBuses> {
     try {
       final response = await http.post(
         "$BASE_URL/schedules/$scheduleId/search_manifest",
-        body: {'needle': phoneNo},
+        body: json.encode({'needle': phoneNo}),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -652,6 +664,10 @@ class _LoadBusesState extends State<LoadBuses> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       toastContainer(text: "Connetction timeout");

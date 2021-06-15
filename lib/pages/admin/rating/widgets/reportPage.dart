@@ -23,7 +23,7 @@ class _ReportPageState extends State<ReportPage> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    reportBloc.fetchDrivers(widget.id);
+    reportBloc.fetchDrivers(widget.id, context);
 
     return null;
   }
@@ -32,7 +32,7 @@ class _ReportPageState extends State<ReportPage> {
   void initState() {
     // TODO: implement initState
     loadReportOffline();
-    reportBloc.fetchDrivers(widget.id);
+    reportBloc.fetchDrivers(widget.id, context);
     super.initState();
   }
 

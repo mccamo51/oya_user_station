@@ -6,6 +6,8 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/bloc/priorityBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
+import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/priorityBusModel.dart';
@@ -30,13 +32,13 @@ class _PriorityBusesState extends State<PriorityBuses> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    priorityBusBloc.fetchPriorityBuses(widget.scheduleID);
+    priorityBusBloc.fetchPriorityBuses(widget.scheduleID, context);
 
     return null;
   }
 
   void initState() {
-    priorityBusBloc.fetchPriorityBuses(widget.scheduleID);
+    priorityBusBloc.fetchPriorityBuses(widget.scheduleID, context);
     loadPriorityBusOffline();
     super.initState();
   }
@@ -133,6 +135,7 @@ class _PriorityBusesState extends State<PriorityBuses> {
                                   "Do you want to maigrate passengers to a different bus?",
                               onMigrate: () {
                                 _migratePassenger(
+                                    context: context,
                                     busId: x.bus.id.toString(),
                                     scheduleID: x.id.toString());
                               },
@@ -175,16 +178,20 @@ class _PriorityBusesState extends State<PriorityBuses> {
   }
 }
 
-_migratePassenger({
-  @required String scheduleID,
-  @required String busId,
-}) async {
-  final response = await http
-      .post("$BASE_URL/schedules/$scheduleID/migrate_manifest", body: {
+_migratePassenger(
+    {@required String scheduleID,
+    @required String busId,
+    BuildContext context}) async {
+  Map<String, dynamic> body = {
     'to': '$busId',
-  }, headers: {
-    "Authorization": "Bearer $accessToken",
-  }).timeout(
+  };
+  final response = await http.post(
+      "$BASE_URL/schedules/$scheduleID/migrate_manifest",
+      body: json.encode(body),
+      headers: {
+        "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
+      }).timeout(
     Duration(seconds: 50),
   );
   if (response.statusCode == 200) {
@@ -193,6 +200,10 @@ _migratePassenger({
     if (responseData['status'] == 200) {
       print("Done");
     }
+  } else if (response.statusCode == 401) {
+    sessionExpired(context);
+  } else {
+    toastContainer(text: "Error has occured");
   }
 }
 

@@ -1,6 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
-import 'package:oya_porter/models/busTypeModel.dart';
-import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/townModle.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,8 +11,8 @@ class TownBloc {
 
   Stream<TownModel> get towns => _ratingFetcher.stream;
 
-  fetchTown() async {
-    TownModel timeResponse = await _repository.fetchTown();
+  fetchTown(BuildContext context) async {
+    TownModel timeResponse = await _repository.fetchTown(context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

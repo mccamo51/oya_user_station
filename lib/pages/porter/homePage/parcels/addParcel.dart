@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:oya_porter/config/functions.dart';
 import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -209,9 +210,9 @@ class _AddParcelState extends State<AddParcel> {
     );
   }
 
-  Widget allStations() {
+  Widget allStations(BuildContext context) {
     loadAllStaffOffline();
-    stationsBloc.fetchAllStations();
+    stationsBloc.fetchAllStations(context);
     return StreamBuilder<Object>(
       stream: stationsBloc.stations,
       initialData: stationsMapOffline == null
@@ -235,7 +236,7 @@ class _AddParcelState extends State<AddParcel> {
         builder: (BuildContext context) {
           return SimpleDialog(
             title: Text('$title'),
-            children: <Widget>[allStations()],
+            children: <Widget>[allStations(context)],
           );
         })) {
     }
@@ -267,7 +268,7 @@ class _AddParcelState extends State<AddParcel> {
       try {
         final response = await http.post(
           "$BASE_URL/parcels",
-          body: {
+          body: json.encode({
             'name': name,
             'description': descrip,
             'sender_name': senderName,
@@ -279,9 +280,10 @@ class _AddParcelState extends State<AddParcel> {
             'receiving_station_id': recStation,
             'recipient_phone': recPhone,
             'recipient_name': recName
-          },
+          }),
           headers: {
             "Authorization": "Bearer $accessToken",
+            'Content-Type': 'application/json'
           },
         ).timeout(
           Duration(seconds: 50),
@@ -300,6 +302,10 @@ class _AddParcelState extends State<AddParcel> {
           } else {
             toastContainer(text: responseData['message']);
           }
+        } else if (response.statusCode == 401) {
+          sessionExpired(context);
+        } else {
+          toastContainer(text: "Error has occured");
         }
       } on TimeoutException catch (_) {
         setState(() {
@@ -354,6 +360,7 @@ class _AddParcelState extends State<AddParcel> {
 
       Map<String, String> headers = {
         "Authorization": "Bearer $accessToken",
+        // 'Content-Type': 'application/json'
       };
       request.headers.addAll(headers);
 
@@ -387,6 +394,8 @@ class _AddParcelState extends State<AddParcel> {
           }
           print(data);
         });
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
       } else {
         setState(() {
           isLoading = false;

@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:oya_porter/components/alerts.dart';
+import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 void hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');
 
@@ -60,4 +65,41 @@ Future<String> checkSession() async {
     }
   });
   return auth;
+}
+
+Future<void> sessionExpired(BuildContext context) async {
+  toastContainer(text: "Session Expired, please login again");
+  await clearUser(context);
+}
+
+Future<void> allPost(
+    {Map body,
+    String url,
+    State state,
+    bool isLoad = false,
+    BuildContext context}) async {
+  final response = await http.post(
+    "$url",
+    body: json.encode(body),
+    headers: {
+      "Authorization": "Bearer $accessToken",
+      'Content-Type': 'application/json'
+    },
+  ).timeout(
+    Duration(seconds: 50),
+  );
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+
+    if (responseData['status'] == 200) {
+      toastContainer(text: responseData['message']);
+      Navigator.pop(context);
+    } else {
+      toastContainer(text: responseData['message']);
+    }
+  } else if (response.statusCode == 401) {
+    sessionExpired(context);
+  } else {
+    toastContainer(text: "Error has occured");
+  }
 }

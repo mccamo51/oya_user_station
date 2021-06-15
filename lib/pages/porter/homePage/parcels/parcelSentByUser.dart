@@ -24,7 +24,7 @@ class _ParcelRecievedState extends State<ParcelRecieved> {
 
   @override
   void initState() {
-    parcelRecievedBloc.fetchAllParcelRecieved(stationId);
+    parcelRecievedBloc.fetchAllParcelRecieved(stationId, context);
     loadParcelRecievedOffline();
     // TODO: implement initState
     super.initState();

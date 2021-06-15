@@ -8,6 +8,7 @@ import 'package:oya_porter/bloc/busesBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/busModel.dart';
@@ -31,7 +32,7 @@ class _BussesState extends State<Busses> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    busesBloc.fetchAllStaffs(widget.stationId);
+    busesBloc.fetchAllStaffs(widget.stationId, context);
 
     return null;
   }
@@ -39,7 +40,7 @@ class _BussesState extends State<Busses> {
   @override
   void initState() {
     // TODO: implement initState
-    busesBloc.fetchAllStaffs(widget.stationId);
+    busesBloc.fetchAllStaffs(widget.stationId, context);
     loadallAllBussesOffline();
     super.initState();
   }
@@ -143,6 +144,10 @@ class _BussesState extends State<Busses> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       setState(() {
@@ -166,18 +171,20 @@ class _BussesState extends State<Busses> {
     });
     try {
       print("$driverId");
+      Map<String, dynamic> body = {
+        'station_id': staId,
+        'bus_type_id': busId,
+        'reg_number': regNo,
+        'model': model,
+        'driver_id': driverId,
+        'image': ''
+      };
       final response = await http.post(
         "$BASE_URL/buses",
-        body: {
-          'station_id': staId,
-          'bus_type_id': busId,
-          'reg_number': regNo,
-          'model': model,
-          'driver_id': driverId,
-          'image': ''
-        },
+        body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -193,6 +200,10 @@ class _BussesState extends State<Busses> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       setState(() {

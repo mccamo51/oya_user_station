@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:oya_porter/bloc/busTypeBloc.dart';
 import 'package:oya_porter/bloc/driverBloc.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
@@ -125,20 +126,22 @@ class _AddBusState extends State<AddBus> {
       });
       try {
         print("$driverId");
+        Map<String, dynamic> body = {
+          'station_id': staId,
+          'bus_type_id': busId,
+          'reg_number': regNo,
+          'model': model,
+          'driver_id': driverId,
+          'rw_exp_date': '$road_exp_date',
+          'insurance_exp_date': '$ins_exp_date',
+          'image': ''
+        };
         final response = await http.post(
           "$BASE_URL/buses",
-          body: {
-            'station_id': staId,
-            'bus_type_id': busId,
-            'reg_number': regNo,
-            'model': model,
-            'driver_id': driverId,
-            'rw_exp_date': '$road_exp_date',
-            'insurance_exp_date': '$ins_exp_date',
-            'image': ''
-          },
+          body: json.encode(body),
           headers: {
             "Authorization": "Bearer $accessToken",
+            "Content-Type": "application/json",
           },
         ).timeout(
           Duration(seconds: 50),
@@ -154,6 +157,10 @@ class _AddBusState extends State<AddBus> {
           } else {
             toastContainer(text: responseData['message']);
           }
+        } else if (response.statusCode == 401) {
+          sessionExpired(context);
+        } else {
+          toastContainer(text: "Error has occured");
         }
       } on TimeoutException catch (e) {
         setState(() {
@@ -203,7 +210,7 @@ class _AddBusState extends State<AddBus> {
 
   Widget allBusType() {
     loadBusTypeModelOffline();
-    busTypeBloc.fetchDrivers();
+    busTypeBloc.fetchDrivers(context);
     return StreamBuilder<Object>(
       stream: busTypeBloc.busesType,
       initialData: busTypeModelMapOffline == null
@@ -269,7 +276,7 @@ class _AddBusState extends State<AddBus> {
 
   Widget allDrivers() {
     loadDriverOffline();
-    driverBloc.fetchDrivers(stationId);
+    driverBloc.fetchDrivers(stationId, context);
     return StreamBuilder<Object>(
       stream: driverBloc.drivers,
       initialData: driversMapOffline == null

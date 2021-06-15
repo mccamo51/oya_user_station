@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
-import 'package:oya_porter/models/driverModel.dart';
 import 'package:oya_porter/models/reportModel.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,8 +11,8 @@ class ReportBloc {
 
   Stream<ReportModel> get reports => _ratingFetcher.stream;
 
-  fetchDrivers(String id) async {
-    ReportModel timeResponse = await _repository.fetchReport(id);
+  fetchDrivers(String id, BuildContext context) async {
+    ReportModel timeResponse = await _repository.fetchReport(id, context);
     _ratingFetcher.sink.add(timeResponse);
   }
 
