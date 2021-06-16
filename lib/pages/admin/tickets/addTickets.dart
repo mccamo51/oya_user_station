@@ -11,6 +11,7 @@ import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
+import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
@@ -105,15 +106,6 @@ class _AddTicketState extends State<AddTicket> {
                       height: 10,
                     ),
                     textFormField(
-                      hintText: "Enter Reciepient Phone",
-                      controller: reciepeintPhoneController,
-                      inputType: TextInputType.phone,
-                      focusNode: null,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    textFormField(
                       hintText: "Minors",
                       controller: minorController,
                       inputType: TextInputType.number,
@@ -154,6 +146,15 @@ class _AddTicketState extends State<AddTicket> {
                       height: 10,
                     ),
                     textFormField(
+                      hintText: "Enter momo number",
+                      controller: reciepeintPhoneController,
+                      inputType: TextInputType.phone,
+                      focusNode: null,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    textFormField(
                       hintText: "Price",
                       controller: priceController,
                       focusNode: null,
@@ -181,7 +182,7 @@ class _AddTicketState extends State<AddTicket> {
                   price: priceController.text,
                   momoName: reciepeintNameController.text,
                   minor: minorController.text,
-                  mapymentMode: paymentModeController.text)),
+                  mapymentMode: network)),
         ),
       ),
     );
@@ -209,6 +210,7 @@ class _AddTicketState extends State<AddTicket> {
         'momo_name': '$momoName',
         'price': '$price',
       };
+      print(busID);
       final response = await http.post(
         "$BASE_URL/stations/$stationId/tickets",
         body: json.encode(body),
@@ -227,8 +229,7 @@ class _AddTicketState extends State<AddTicket> {
           isLoading = false;
         });
         if (responseData['status'] == 200) {
-          toastContainer(text: responseData['message']);
-          Navigator.pop(context);
+          paymentDialog(context, responseData["message"]);
         } else {
           toastContainer(text: responseData['message']);
         }
@@ -251,24 +252,39 @@ class _AddTicketState extends State<AddTicket> {
   }
   // }
 
+  Future<void> paymentDialog(BuildContext context, msg) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: SingleChildScrollView(
+            child: Text(
+              // 'Your ICE contact is needed for a variety of reasons.',
+              '$msg',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Go Home', style: TextStyle(color: PRIMARYCOLOR)),
+              onPressed: () {
+                navigation(context: context, pageName: "home");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   _onPaymentType(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
         title: Text('Select Payment Type'),
         children: [
-          ListTile(
-            title: Text('Cash', style: h3Black),
-            trailing: Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              Navigator.of(context).pop();
-              setState(() {
-                paymentTypeController.text = 'Cash';
-                payType = "cash";
-                showMomo = false;
-              });
-            },
-          ),
           ListTile(
             title: Text('Momo', style: h3Black),
             trailing: Icon(Icons.arrow_forward_ios),

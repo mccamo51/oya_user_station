@@ -39,7 +39,7 @@ class OyaProvider {
         "$BASE_URL/staffs/$id",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -71,7 +71,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/buses",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -125,6 +125,7 @@ class OyaProvider {
 
   Future<ScheduleModel> fetchSchedule(
       {String id, String routeID, BuildContext context}) async {
+    print(routeID);
     try {
       final response = await client.get(
         "$BASE_URL/routes/$routeID/schedules/$id",
@@ -132,9 +133,9 @@ class OyaProvider {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
         },
-      ).timeout(Duration(seconds: 30));
+      ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
-        // print(response.body);
+        print(response.body);
         saveStringShare(
             key: "allschedule", data: json.encode(json.decode(response.body)));
         return ScheduleModel.fromJson(json.decode(response.body));
@@ -159,7 +160,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/tickets",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -188,7 +189,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/routes",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -217,7 +218,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/drivers",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -246,7 +247,7 @@ class OyaProvider {
         "$BASE_URL/bus_types",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -275,7 +276,7 @@ class OyaProvider {
         "$BASE_URL/regions",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -304,7 +305,7 @@ class OyaProvider {
         "$BASE_URL/towns",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -333,7 +334,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/speed_reports",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -364,7 +365,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/conductors",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -393,7 +394,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/porters",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -423,7 +424,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/loaded_buses",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -455,7 +456,7 @@ class OyaProvider {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
         },
-      ).timeout(Duration(seconds: 30));
+      ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
         print(response.statusCode);
         saveStringShare(
@@ -464,7 +465,6 @@ class OyaProvider {
       } else if (response.statusCode == 401) {
         sessionExpired(context);
       } else {
-        
         toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (_) {
@@ -484,7 +484,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/priority_buses",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
@@ -514,7 +514,7 @@ class OyaProvider {
         "$BASE_URL/stations",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -544,7 +544,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/parcels_sent_by_porter",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -575,7 +575,7 @@ class OyaProvider {
         "$BASE_URL/stations/$id/parcels_received",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -606,7 +606,7 @@ class OyaProvider {
         "$BASE_URL/regions/$id/towns",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {
@@ -636,7 +636,7 @@ class OyaProvider {
         "$BASE_URL/routes/$routeID/schedules/$stationId",
         headers: {
           "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json'
         },
       ).timeout(Duration(seconds: 50));
       if (response.statusCode == 200) {

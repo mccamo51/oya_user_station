@@ -401,16 +401,16 @@ class Route {
 class From {
   int id;
   String name;
-  double latitude;
-  double longitude;
+  String latitude;
+  String longitude;
 
   From({this.id, this.name, this.latitude, this.longitude});
 
   From.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
+    latitude = json['latitude'].toString();
+    longitude = json['longitude'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -653,8 +653,8 @@ class Station {
     name = json['name'];
     location = json['location'];
     email = json['email'];
-    longitude = json['longitude'];
-    latitude = json['latitude'];
+    longitude = json['longitude'].toString();
+    latitude = json['latitude'].toString();
     busCompany = json['bus_company'] != null
         ? new BusCompany.fromJson(json['bus_company'])
         : null;

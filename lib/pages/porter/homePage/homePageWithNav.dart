@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:oya_porter/pages/admin/tickets/addTickets.dart';
 import 'package:oya_porter/pages/porter/homePage/account/account.dart';
 import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
 import 'package:oya_porter/pages/porter/homePage/parcels/parcels.dart';
@@ -18,6 +19,7 @@ class _PorterHomePageState extends State<PorterHomePage> {
     PorterSchedule(
       isSchedule: true,
     ),
+    AddTicket(),
     Parcels(),
     Account(),
   ];
@@ -43,6 +45,10 @@ class _PorterHomePageState extends State<PorterHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
             title: Text('Trips'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FeatherIcons.list),
+            title: Text('Ticket'),
           ),
           BottomNavigationBarItem(
             icon: Icon(FeatherIcons.box),
