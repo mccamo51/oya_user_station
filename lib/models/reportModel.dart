@@ -657,8 +657,8 @@ class Station {
     name = json['name'];
     location = json['location'];
     email = json['email'];
-    longitude = json['longitude'];
-    latitude = json['latitude'];
+    longitude = json['longitude'].toString();
+    latitude = json['latitude'].toString();
     busCompany = json['bus_company'] != null
         ? new BusCompany.fromJson(json['bus_company'])
         : null;

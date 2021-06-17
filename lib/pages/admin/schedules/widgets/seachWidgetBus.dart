@@ -32,7 +32,7 @@ class _SeachBusState extends State<SeachBus> {
 
   Widget allBus() {
     loadbusesOffline();
-    busesBloc.fetchAllStaffs(stationId);
+    busesBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: busesBloc.allBuses,
       initialData:

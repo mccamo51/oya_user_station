@@ -11,8 +11,9 @@ class ScheduleBloc {
 
   Stream<ScheduleModel> get allRating => _ratingFetcher.stream;
 
-  fetchAllStaffs(String id, String routeId) async {
-    ScheduleModel timeResponse = await _repository.fetchSchedule(routeId, id);
+  fetchAllStaffs({String id, String routeId}) async {
+    ScheduleModel timeResponse =
+        await _repository.fetchSchedule(routId: routeId, staffId: id);
     _ratingFetcher.sink.add(timeResponse);
   }
 

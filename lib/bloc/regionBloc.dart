@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/busTypeModel.dart';
 import 'package:oya_porter/models/regionModel.dart';
@@ -11,8 +12,8 @@ class RegionBloc {
 
   Stream<RegionModel> get regions => _ratingFetcher.stream;
 
-  fetchRegion() async {
-    RegionModel timeResponse = await _repository.fetchRegion();
+  fetchRegion(BuildContext context) async {
+    RegionModel timeResponse = await _repository.fetchRegion(context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

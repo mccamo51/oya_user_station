@@ -13,52 +13,62 @@ Widget addRouteWidget({
   @required Function onSelectTown,
   @required Function onSelectDestination,
   @required Function onAddROute,
+  @required Key formKey,
 }) {
   return Scaffold(
     appBar: appBar(title: "Add New Route"),
     body: Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: onSelectRegion,
-            child: textFormField(
-              hintText: "Select Region",
-              controller: regionController,
-              focusNode: null,
-              icon: Icons.arrow_drop_down,
-              enable: false,
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: onSelectRegion,
+              child: textFormField(
+                hintText: "Select Region",
+                controller: regionController,
+                validate: true,
+                validateMsg: "Select Region first",
+                focusNode: null,
+                icon: Icons.arrow_drop_down,
+                enable: false,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Visibility(
+            SizedBox(
+              height: 15,
+            ),
+            Visibility(
+                child: GestureDetector(
+              onTap: onSelectDestination,
+              child: textFormField(
+                hintText: "Select Source Town",
+                // validate: true,
+                // validateMsg: "Select Source Town",
+                controller: destinationController,
+                focusNode: null,
+                icon: Icons.arrow_drop_down,
+                enable: false,
+              ),
+            )),
+            SizedBox(
+              height: 15,
+            ),
+            Visibility(
               child: GestureDetector(
-            onTap: onSelectDestination,
-            child: textFormField(
-              hintText: "Select Source Town",
-              controller: destinationController,
-              focusNode: null,
-              icon: Icons.arrow_drop_down,
-              enable: false,
+                  child: textFormField(
+                    hintText: "Select Destination Town",
+                    controller: townController,
+                    // validate: true,
+                    // validateMsg: "Select Destination Town",
+                    focusNode: null,
+                    icon: Icons.arrow_drop_down,
+                    enable: false,
+                  ),
+                  onTap: onSelectTown),
             ),
-          )),
-          SizedBox(
-            height: 15,
-          ),
-          Visibility(
-            child: GestureDetector(
-                child: textFormField(
-                  hintText: "Select Destination Town",
-                  controller: townController,
-                  focusNode: null,
-                  icon: Icons.arrow_drop_down,
-                  enable: false,
-                ),
-                onTap: onSelectTown),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
     bottomNavigationBar: Container(

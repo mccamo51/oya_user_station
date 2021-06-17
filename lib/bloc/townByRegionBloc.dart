@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/townRegionModel.dart';
 import 'package:rxdart/subjects.dart';
@@ -10,8 +11,9 @@ class MyRouteBloc {
 
   Stream<TonwFromRegionModel> get townFromregion => _ratingFetcher.stream;
 
-  fetchTownByReg(String id) async {
-    TonwFromRegionModel timeResponse = await _repository.frechTownByRegion(id);
+  fetchTownByReg(String id, BuildContext context) async {
+    TonwFromRegionModel timeResponse =
+        await _repository.frechTownByRegion(id, context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

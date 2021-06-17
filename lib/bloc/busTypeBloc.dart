@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/busTypeModel.dart';
 import 'package:rxdart/subjects.dart';
@@ -10,8 +11,8 @@ class BusTypeBloc {
 
   Stream<BusTypeModel> get busesType => _ratingFetcher.stream;
 
-  fetchDrivers() async {
-    BusTypeModel timeResponse = await _repository.fetchBusType();
+  fetchDrivers(BuildContext context) async {
+    BusTypeModel timeResponse = await _repository.fetchBusType(context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

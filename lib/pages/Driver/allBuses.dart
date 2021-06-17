@@ -3,18 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/bloc/busesBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
-import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/offlineData.dart';
-import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/busModel.dart';
-import 'package:oya_porter/pages/admin/busses/add_buss.dart';
 import 'package:oya_porter/pages/admin/busses/widgets/bussesWidget.dart';
-import 'package:http/http.dart' as http;
-import 'package:oya_porter/pages/auth/login/login.dart';
 
 class Busses extends StatefulWidget {
   final stationId;
@@ -31,7 +25,7 @@ class _BussesState extends State<Busses> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    busesBloc.fetchAllStaffs(widget.stationId);
+    busesBloc.fetchAllStaffs(widget.stationId, context);
 
     return null;
   }
@@ -39,7 +33,7 @@ class _BussesState extends State<Busses> {
   @override
   void initState() {
     // TODO: implement initState
-    busesBloc.fetchAllStaffs(widget.stationId);
+    busesBloc.fetchAllStaffs(widget.stationId, context);
     loadallAllBussesOffline();
     super.initState();
   }

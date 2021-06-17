@@ -1,4 +1,4 @@
-
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:rxdart/subjects.dart';
@@ -11,8 +11,8 @@ class StaffBloc {
 
   Stream<StaffModel> get allStaff => _staffFetcher.stream;
 
-  fetchAllStaffs(String id) async {
-    StaffModel timeResponse = await _repository.fetchAllStaff(id);
+  fetchAllStaffs(String id, BuildContext context) async {
+    StaffModel timeResponse = await _repository.fetchAllStaff(id, context);
     _staffFetcher.sink.add(timeResponse);
   }
 

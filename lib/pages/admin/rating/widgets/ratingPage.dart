@@ -20,7 +20,7 @@ class _RatingPageState extends State<RatingPage> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    ratingBloc.fetchAllStaffs(widget.id);
+    ratingBloc.fetchAllStaffs(widget.id, context);
 
     return null;
   }
@@ -30,7 +30,7 @@ class _RatingPageState extends State<RatingPage> {
     // TODO: implement initState
     super.initState();
     loadAllRatingOffline();
-    ratingBloc.fetchAllStaffs(widget.id);
+    ratingBloc.fetchAllStaffs(widget.id, context);
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:oya_porter/bloc/myRouteBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
@@ -31,14 +32,14 @@ class _RoutesState extends State<Routes> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    myRouteBloc.fetchAllStaffs(widget.id);
+    myRouteBloc.fetchAllStaffs(widget.id, context);
 
     return null;
   }
 
   @override
   void initState() {
-    myRouteBloc.fetchAllStaffs(widget.id);
+    myRouteBloc.fetchAllStaffs(widget.id, context);
     loadMyRouteOffline();
     // TODO: implement initState
     super.initState();
@@ -80,6 +81,7 @@ class _RoutesState extends State<Routes> {
   }
 
   deleteRoute({
+    // ignore: non_constant_identifier_names
     String route_id,
   }) async {
     setState(() {
@@ -105,6 +107,10 @@ class _RoutesState extends State<Routes> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       setState(() {

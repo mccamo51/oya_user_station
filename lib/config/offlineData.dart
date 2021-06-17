@@ -7,7 +7,7 @@ Future<void> loadAllStaffOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey("allStaff")) {
     String encodeData = prefs.getString("allStaff");
-    print(encodeData);
+    // print(encodeData);
     Map<String, dynamic> decodeData = json.decode(encodeData);
     allStaffMapOffline = decodeData;
   } else
@@ -65,7 +65,7 @@ Future<void> loadMyRouteOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey("myroute")) {
     String encodeData = prefs.getString("myroute");
-    print(encodeData);
+    // print(encodeData);
     Map<String, dynamic> decodeData = json.decode(encodeData);
     myRouteMapOffline = decodeData;
   } else
@@ -185,7 +185,7 @@ Future<void> loadScaledBusOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey("scaled_buses")) {
     String encodeData = prefs.getString("scaled_buses");
-    print(encodeData);
+    // print(encodeData);
     Map<String, dynamic> decodeData = json.decode(encodeData);
     scaledBusMapOffline = decodeData;
   } else
@@ -204,7 +204,6 @@ Future<void> loadPriorityBusOffline() async {
     priorityBusMapOffline = null;
 }
 
-
 Map<String, dynamic> stationsMapOffline;
 Future<void> loadStationsOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -216,7 +215,6 @@ Future<void> loadStationsOffline() async {
   } else
     stationsMapOffline = null;
 }
-
 
 Map<String, dynamic> loadParcelSentMapOffline;
 Future<void> loadParcelSentOffline() async {
@@ -230,7 +228,6 @@ Future<void> loadParcelSentOffline() async {
     loadParcelSentMapOffline = null;
 }
 
-
 Map<String, dynamic> loadParcelRecievedMapOffline;
 Future<void> loadParcelRecievedOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -243,13 +240,26 @@ Future<void> loadParcelRecievedOffline() async {
     loadParcelRecievedMapOffline = null;
 }
 
-
 Map<String, dynamic> loadTownsByRegMapOffline;
 Future<void> loadTownsByRegOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey("townByRegion")) {
     String encodeData = prefs.getString("townByRegion");
-    print(encodeData);
+    // print(encodeData);all
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    loadParcelRecievedMapOffline = decodeData;
+  } else
+    loadParcelRecievedMapOffline = null;
+}
+
+
+
+Map<String, dynamic> loadScheduledBusesMapOffline;
+Future<void> loadScheduledBusesOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("scheduledbuses")) {
+    String encodeData = prefs.getString("scheduledbuses");
+    // print(encodeData);all
     Map<String, dynamic> decodeData = json.decode(encodeData);
     loadParcelRecievedMapOffline = decodeData;
   } else

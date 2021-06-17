@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
@@ -11,8 +12,8 @@ class TicketBloc {
 
   Stream<TicketsModel> get allTickets => _ratingFetcher.stream;
 
-  fetchAllTicket(String id) async {
-    TicketsModel timeResponse = await _repository.fetchTicket(id);
+  fetchAllTicket(String id,BuildContext context) async {
+    TicketsModel timeResponse = await _repository.fetchTicket(id, context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

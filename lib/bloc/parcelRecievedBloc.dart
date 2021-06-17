@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
 import 'package:oya_porter/models/parcerRecievedModel.dart';
@@ -12,9 +13,9 @@ class ParcelRecievedBloc {
 
   Stream<ParcelRecievedModel> get parcelsent => _parcelFetcher.stream;
 
-  fetchAllParcelRecieved(String id) async {
+  fetchAllParcelRecieved(String id, BuildContext context) async {
     ParcelRecievedModel timeResponse =
-        await _repository.fetchParcelsRecieved(id);
+        await _repository.fetchParcelsRecieved(id, context);
     _parcelFetcher.sink.add(timeResponse);
   }
 

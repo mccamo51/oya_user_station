@@ -24,14 +24,14 @@ class _TicketPageState extends State<TicketPage> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    ticketBloc.fetchAllTicket(widget.id);
+    ticketBloc.fetchAllTicket(widget.id, context);
 
     return null;
   }
 
   void initState() {
     // TODO: implement initState
-    ticketBloc.fetchAllTicket(widget.id);
+    ticketBloc.fetchAllTicket(widget.id, context);
     loadallTicketsOffline();
     super.initState();
   }

@@ -29,14 +29,14 @@ class _LoadedBusesState extends State<LoadedBuses> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    loadedBusBloc.fetchLoadedBuses(widget.stationId);
+    loadedBusBloc.fetchLoadedBuses(widget.stationId, context);
 
     return null;
   }
 
   @override
   void initState() {
-    loadedBusBloc.fetchLoadedBuses(widget.stationId);
+    loadedBusBloc.fetchLoadedBuses(widget.stationId, context);
     loadLoadedBusOffline();
     super.initState();
   }

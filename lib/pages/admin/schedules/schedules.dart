@@ -14,6 +14,7 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/PorterModel.dart';
@@ -246,7 +247,7 @@ class _SchedulesState extends State<Schedules> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("A low ticket sales?"),
+                          child: Text("Allow ticket sales?"),
                         ),
                         Row(
                           children: [
@@ -297,7 +298,7 @@ class _SchedulesState extends State<Schedules> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("A low mid route boarding?"),
+                          child: Text("Allow mid route boarding?"),
                         ),
                         Row(
                           children: [
@@ -421,28 +422,31 @@ class _SchedulesState extends State<Schedules> {
     });
     try {
       print("$routeId");
+      Map<String, dynamic> body = {
+        'route_id': routeId,
+        'station_id': stationId,
+        'bus_id': busId,
+        'conductor_id': conductorId,
+        'porter_id': porterId,
+        'driver_id': driverId,
+        'departure_date': depId,
+        'departure_time': arrialId,
+        'priority': priorityId,
+        'ticketing': ticketID,
+        'mid_route': midRute,
+        'price': price,
+      };
       final response = await http.post(
         "$BASE_URL/schedules",
-        body: {
-          'route_id': routeId,
-          'station_id': stationId,
-          'bus_id': busId,
-          'conductor_id': conductorId,
-          'porter_id': porterId,
-          'driver_id': driverId,
-          'departure_date': depId,
-          'departure_time': arrialId,
-          'priority': priorityId,
-          'ticketing': ticketID,
-          'mid_route': midRute,
-          'price': price,
-        },
+        body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
       );
+      print(response.body);
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         setState(() {
@@ -454,8 +458,16 @@ class _SchedulesState extends State<Schedules> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
+      print(e);
       setState(() {
         isLoading = false;
       });

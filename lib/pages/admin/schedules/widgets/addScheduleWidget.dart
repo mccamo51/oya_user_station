@@ -144,6 +144,7 @@ class _SchedulesState extends State<Schedules> {
                   controller: arrivalDateTimeController,
                   focusNode: null,
                   icon: Icons.arrow_drop_down,
+                  // validate: true
                   enable: false,
                 ),
               ),
@@ -156,6 +157,7 @@ class _SchedulesState extends State<Schedules> {
                   hintText: "Ticket Price",
                   controller: priceController,
                   focusNode: null,
+                  // validate: true
                   labelText: "Ticket Price",
                   inputType: TextInputType.number,
                   // icon: Icons.arrow_drop_down,
@@ -201,7 +203,7 @@ class _SchedulesState extends State<Schedules> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("A low ticket sales?"),
+                    child: Text("Allow ticket sales?"),
                   ),
                   Row(
                     children: [
@@ -240,7 +242,7 @@ class _SchedulesState extends State<Schedules> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("A low mid route boarding?"),
+                    child: Text("Allow mid route boarding?"),
                   ),
                   Row(
                     children: [
@@ -322,7 +324,7 @@ class _SchedulesState extends State<Schedules> {
 
   Widget allBus() {
     // loadAllCities();
-    busesBloc.fetchAllStaffs(stationId);
+    busesBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: busesBloc.allBuses,
       initialData:
@@ -388,7 +390,7 @@ class _SchedulesState extends State<Schedules> {
 
   Widget allRoute() {
     // loadAllCities();
-    myRouteBloc.fetchAllStaffs(stationId);
+    myRouteBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
       initialData: myRouteMapOffline == null
@@ -454,7 +456,7 @@ class _SchedulesState extends State<Schedules> {
 
   Widget allDriver() {
     loadDriverOffline();
-    driverBloc.fetchDrivers(stationId);
+    driverBloc.fetchDrivers(stationId, context);
     return StreamBuilder<Object>(
       stream: driverBloc.drivers,
       initialData: driversMapOffline == null
@@ -519,7 +521,7 @@ class _SchedulesState extends State<Schedules> {
 
   Widget allConductor() {
     loadconductorsOffline();
-    conductorBloc.fetchConductors(stationId);
+    conductorBloc.fetchConductors(stationId, context);
     return StreamBuilder<Object>(
       stream: conductorBloc.conductors,
       initialData: conductorsMapOffline == null
@@ -585,7 +587,7 @@ class _SchedulesState extends State<Schedules> {
 
   Widget allPorter() {
     loadportersOffline();
-    porterBloc.fetchPorters(stationId);
+    porterBloc.fetchPorters(stationId, context);
     return StreamBuilder<Object>(
       stream: porterBloc.porters,
       initialData: portersMapOffline == null

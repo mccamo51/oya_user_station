@@ -9,6 +9,7 @@ import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/arrays.dart';
@@ -164,15 +165,17 @@ class _AddStaffState extends State<AddStaff> {
       isLoading = true;
     });
     try {
+      Map<String, dynamic> body = {
+        'user_id': userId,
+        'account_type_id': accountId,
+        'station_id': staId,
+      };
       final response = await http.post(
         "$BASE_URL/staffs",
-        body: {
-          'user_id': userId,
-          'account_type_id': accountId,
-          'station_id': staId,
-        },
+        body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -195,6 +198,10 @@ class _AddStaffState extends State<AddStaff> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       setState(() {
@@ -216,6 +223,7 @@ class _AddStaffState extends State<AddStaff> {
         "$BASE_URL/search/users?needle=$phoneNo",
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -233,6 +241,10 @@ class _AddStaffState extends State<AddStaff> {
             uid = responseData['data']['id'].toString();
           });
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       toastContainer(text: "Connetction timeout");

@@ -7,13 +7,13 @@ import 'package:oya_porter/bloc/scaledBusBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/home/priorityBus.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/loadBus.dart';
-import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,14 +32,14 @@ class _ScaledBussesState extends State<ScaledBusses> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    scaledBloc.fetchScaledBuses(widget.scheduleID);
+    scaledBloc.fetchScaledBuses(widget.scheduleID, context);
 
     return null;
   }
 
   void initState() {
     // TODO: implement initState
-    scaledBloc.fetchScaledBuses(widget.scheduleID);
+    scaledBloc.fetchScaledBuses(widget.scheduleID, context);
     loadScaledBusOffline();
     super.initState();
   }
@@ -97,10 +97,23 @@ class _ScaledBussesState extends State<ScaledBusses> {
                       // color: PRIMARYCOLOR,
                       child: ListTile(
                         title: Text(
-                            "Bus No: ${x.bus.regNumber}[${x.code.toString()}]"),
+                            "Bus No: ${x.bus.regNumber} [${x.code.toString()}]"),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${x.bus.driver.station.name}",
+                                  style: h3Black,
+                                ),
+                                Text(
+                                  "${x.bus.regNumber}",
+                                  style: h3Black,
+                                ),
+                              ],
+                            ),
                             SizedBox(
                               height: 8,
                             ),
@@ -120,12 +133,9 @@ class _ScaledBussesState extends State<ScaledBusses> {
                             Icon(FeatherIcons.truck),
                           ],
                         ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("${x.bus.driver.station.name}"),
-                            Text("${x.bus.regNumber}"),
-                          ],
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
                         ),
                         onTap: () {
                           print(priorityLength.toString());
@@ -185,6 +195,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
       "$BASE_URL/stations/$stationId/priority_buses",
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(Duration(seconds: 30));
     if (response.statusCode == 200) {
@@ -221,27 +232,39 @@ class _ScaledBussesState extends State<ScaledBusses> {
         }
       }
       print(isLoading);
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      toastContainer(text: "Error has occured");
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
   _migratePassenger({
     @required String scheduleID,
     @required String busId,
   }) async {
-    final response = await http
-        .post("$BASE_URL/schedules/$scheduleID/migrate_manifest", body: {
+    Map<String, dynamic> body = {
       'to': '$busId',
-    }, headers: {
-      "Authorization": "Bearer $accessToken",
-    }).timeout(
+    };
+    final response = await http.post(
+        "$BASE_URL/schedules/$scheduleID/migrate_manifest",
+        body: json.encode(body),
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
+        }).timeout(
       Duration(seconds: 50),
     );
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       if (responseData['status'] == 200) {}
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/priorityBusModel.dart';
 import 'package:rxdart/subjects.dart';
@@ -10,8 +11,8 @@ class PriorityBusBloc {
 
   Stream<PriorityBusModel> get prioritybus => _busesFetcher.stream;
 
-  fetchPriorityBuses(String id) async {
-    PriorityBusModel timeResponse = await _repository.fetchPriorityBus(id);
+  fetchPriorityBuses(String id,BuildContext context) async {
+    PriorityBusModel timeResponse = await _repository.fetchPriorityBus(id, context);
     _busesFetcher.sink.add(timeResponse);
   }
 

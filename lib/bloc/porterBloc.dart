@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/PorterModel.dart';
 import 'package:oya_porter/models/conductorModel.dart';
@@ -12,8 +13,8 @@ class PortersBloc {
 
   Stream<PortersModel> get porters => _porterFetcher.stream;
 
-  fetchPorters(String id) async {
-    PortersModel timeResponse = await _repository.fetchPorter(id);
+  fetchPorters(String id,BuildContext context) async {
+    PortersModel timeResponse = await _repository.fetchPorter(id, context);
     _porterFetcher.sink.add(timeResponse);
   }
 

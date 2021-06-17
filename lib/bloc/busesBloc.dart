@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/busModel.dart';
 import 'package:rxdart/subjects.dart';
@@ -10,8 +11,8 @@ class BusesBloc {
 
   Stream<BussModel> get allBuses => _busesFetcher.stream;
 
-  fetchAllStaffs(String id) async {
-    BussModel timeResponse = await _repository.fetchBusses(id);
+  fetchAllStaffs(String id, BuildContext context) async {
+    BussModel timeResponse = await _repository.fetchBusses(id, context);
     _busesFetcher.sink.add(timeResponse);
   }
 

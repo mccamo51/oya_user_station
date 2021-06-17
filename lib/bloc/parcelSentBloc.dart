@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/parcelByPorter.dart';
 import 'package:rxdart/subjects.dart';
@@ -10,8 +11,8 @@ class ParcelSentBloc {
 
   Stream<ParcelSentUserModel> get parcelsent => _parcelFetcher.stream;
 
-  fetchAllParcelSent(String id) async {
-    ParcelSentUserModel timeResponse = await _repository.fetchParcelsSent(id);
+  fetchAllParcelSent(String id,BuildContext context) async {
+    ParcelSentUserModel timeResponse = await _repository.fetchParcelsSent(id, context);
     _parcelFetcher.sink.add(timeResponse);
   }
 

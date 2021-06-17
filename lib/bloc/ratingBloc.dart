@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/ratingModel.dart';
 import 'package:rxdart/subjects.dart';
@@ -10,8 +11,8 @@ class RatingBloc {
 
   Stream<RatingModel> get allRating => _ratingFetcher.stream;
 
-  fetchAllStaffs(String id) async {
-    RatingModel timeResponse = await _repository.fetchAllRating(id);
+  fetchAllStaffs(String id,BuildContext context) async {
+    RatingModel timeResponse = await _repository.fetchAllRating(id, context);
     _ratingFetcher.sink.add(timeResponse);
   }
 

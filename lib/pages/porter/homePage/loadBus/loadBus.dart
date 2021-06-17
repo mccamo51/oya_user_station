@@ -7,6 +7,7 @@ import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -140,11 +141,19 @@ class _LoadBusesState extends State<LoadBuses> {
                       ),
                       Text(
                         "${widget.passengerCount} Passengers onboard",
-                        style: h5ASH,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                          color: ASHDEEP,
+                        ),
                       ),
                       Text(
                         "${widget.minorCount} Minors",
-                        style: h5ASH,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                          color: ASHDEEP,
+                        ),
                       ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -233,6 +242,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                 controller: primaryICEphoneController,
                                 focusNode: icePhoneFocus,
                                 inputType: TextInputType.phone,
+                                textLength: 10,
                                 labelText: "ICE Phone number",
                               ),
                             ],
@@ -249,6 +259,7 @@ class _LoadBusesState extends State<LoadBuses> {
                               controller: phoneNumberController,
                               focusNode: phoneFocus,
                               inputType: TextInputType.phone,
+                              textLength: 10,
                               labelText: "Phone Number",
                             ),
                             SizedBox(
@@ -371,6 +382,7 @@ class _LoadBusesState extends State<LoadBuses> {
                                   controller: primaryICEphoneController,
                                   focusNode: icePhoneFocus,
                                   inputType: TextInputType.phone,
+                                  textLength: 10,
                                   labelText: "Primary Emergency phone (ICE)",
                                 ),
                               ],
@@ -401,6 +413,7 @@ class _LoadBusesState extends State<LoadBuses> {
                         height: 45,
                         child: primaryButton(
                             onFunction: () => _enroll(
+                                iceName: primaryICENameController.text,
                                 scheduleId: widget.scheduleId,
                                 icePhone: primaryICEphoneController.text,
                                 iceAddress: primaryICEAddressController.text,
@@ -483,9 +496,10 @@ class _LoadBusesState extends State<LoadBuses> {
       });
       final response = await http.post(
         "$BASE_URL/schedules/$scheduleId/start",
-        body: {'pin': '$pin'},
+        body: json.encode({'pin': '$pin'}),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -504,6 +518,10 @@ class _LoadBusesState extends State<LoadBuses> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     }
   }
@@ -525,6 +543,7 @@ class _LoadBusesState extends State<LoadBuses> {
     @required String minor,
     @required String phone,
     @required String name,
+    @required String iceName,
     @required String pin,
   }) async {
     setState(() {
@@ -554,7 +573,8 @@ class _LoadBusesState extends State<LoadBuses> {
     Map noPhoneNoICE = {
       'pin': '$pin',
       'minor_count': '$minor',
-      'ice1_name': '$name',
+      'ice1_name': '$iceName',
+      'name': '$name',
       'ice1_address': '$iceAddress',
       'type': 'c'
     };
@@ -563,14 +583,15 @@ class _LoadBusesState extends State<LoadBuses> {
     final response = await http.post(
       "$BASE_URL/schedules/$scheduleId/manifest",
       body: showPhone && _character == BusType.Genral
-          ? general2
+          ? json.encode(general2)
           : _character == BusType.Genral
-              ? general
+              ? json.encode(general)
               : _character == BusType.NoPhone
-                  ? noPhone
-                  : noPhoneNoICE,
+                  ? json.encode(noPhone)
+                  : json.encode(noPhoneNoICE),
       headers: {
         "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
       },
     ).timeout(
       Duration(seconds: 50),
@@ -597,6 +618,10 @@ class _LoadBusesState extends State<LoadBuses> {
       } else {
         toastContainer(text: responseData['message']);
       }
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
     }
   }
 
@@ -607,9 +632,10 @@ class _LoadBusesState extends State<LoadBuses> {
     try {
       final response = await http.post(
         "$BASE_URL/schedules/$scheduleId/search_manifest",
-        body: {'needle': phoneNo},
+        body: json.encode({'needle': phoneNo}),
         headers: {
           "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
         },
       ).timeout(
         Duration(seconds: 50),
@@ -638,6 +664,10 @@ class _LoadBusesState extends State<LoadBuses> {
         } else {
           toastContainer(text: responseData['message']);
         }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
     } on TimeoutException catch (e) {
       toastContainer(text: "Connetction timeout");

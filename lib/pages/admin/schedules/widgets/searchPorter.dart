@@ -148,7 +148,7 @@ class _SearchPorterState extends State<SearchPorter> {
 
   Widget allPorter() {
      loadportersOffline();
-    porterBloc.fetchPorters(stationId);
+    porterBloc.fetchPorters(stationId, context);
     return StreamBuilder<Object>(
        stream: porterBloc.porters,
       initialData: portersMapOffline == null

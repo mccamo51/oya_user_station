@@ -24,14 +24,14 @@ class _StaffsState extends State<Staffs> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    stafBloc.fetchAllStaffs(widget.id.toString());
+    stafBloc.fetchAllStaffs(widget.id.toString(), context);
 
     return null;
   }
 
   @override
   void initState() {
-    stafBloc.fetchAllStaffs(widget.id.toString());
+    stafBloc.fetchAllStaffs(widget.id.toString(), context);
     loadAllStaffOffline();
     // TODO: implement initState
     super.initState();
@@ -54,9 +54,9 @@ class _StaffsState extends State<Staffs> {
         onRefresh: refreshList,
         child: StreamBuilder(
           stream: stafBloc.allStaff,
-          initialData: allStaffMapOffline == null
-              ? null
-              : StaffModel.fromJson(allStaffMapOffline),
+          // initialData: allStaffMapOffline == null
+          //     ? null
+          //     : StaffModel.fromJson(allStaffMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

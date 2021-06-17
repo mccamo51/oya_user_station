@@ -8,6 +8,7 @@ import 'package:oya_porter/bloc/regionBloc.dart';
 import 'package:oya_porter/bloc/townBloc.dart';
 import 'package:oya_porter/bloc/townByRegionBloc.dart';
 import 'package:oya_porter/components/toast.dart';
+import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/townModle.dart';
@@ -30,24 +31,33 @@ class _AddRouteState extends State<AddRoute> {
   TextEditingController insExpController = TextEditingController();
   TextEditingController regNoController = TextEditingController();
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String townId, regionId, destId;
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: isLoading
           ? Center(
               child: CupertinoActivityIndicator(),
             )
           : addRouteWidget(
+              formKey: _formKey,
               context: context,
               destinationController: destinationController,
               regionController: regionController,
               townController: townController,
-              onSelectDestination: () => androidSelectSource(
-                context: context,
-                title: "Select Town",
-              ),
+              onSelectDestination: () {
+                if (_formKey.currentState.validate()) {
+                  androidSelectSource(
+                    context: context,
+                    title: "Select Town",
+                  );
+                }
+              },
               onAddROute: () =>
                   _onSave(destId: destId, regID: regionId, souId: townId),
               onSelectRegion: () => androidSelectRegion(
@@ -74,15 +84,17 @@ class _AddRouteState extends State<AddRoute> {
         isLoading = true;
       });
       try {
+        Map<String, dynamic> body = {
+          'source': souId,
+          'destination': destId,
+          'region_id': regID,
+        };
         final response = await http.post(
           "$BASE_URL/routes",
-          body: {
-            'source': souId,
-            'destination': destId,
-            'region_id': regID,
-          },
+          body: json.encode(body),
           headers: {
             "Authorization": "Bearer $accessToken",
+            'Content-Type': 'application/json'
           },
         ).timeout(
           Duration(seconds: 50),
@@ -98,6 +110,10 @@ class _AddRouteState extends State<AddRoute> {
           } else {
             toastContainer(text: responseData['message']);
           }
+        } else if (response.statusCode == 401) {
+          sessionExpired(context);
+        } else {
+          toastContainer(text: "Error has occured");
         }
       } on TimeoutException catch (e) {
         setState(() {
@@ -178,7 +194,7 @@ class _AddRouteState extends State<AddRoute> {
   }
 
   Widget allDestination2() {
-    townBloc.fetchTown();
+    townBloc.fetchTown(context);
     return StreamBuilder<Object>(
       stream: townBloc.towns,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -209,7 +225,7 @@ class _AddRouteState extends State<AddRoute> {
 
   Widget allSOurce() {
     print(regionId);
-    townsByRegBloc.fetchTownByReg(regionId);
+    townsByRegBloc.fetchTownByReg(regionId, context);
     return StreamBuilder<Object>(
       stream: townsByRegBloc.townFromregion,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -272,7 +288,7 @@ class _AddRouteState extends State<AddRoute> {
 
   Widget region() {
     // loadAllCities();
-    regionBloc.fetchRegion();
+    regionBloc.fetchRegion(context);
     return StreamBuilder<Object>(
       stream: regionBloc.regions,
       // initialData: allCities == null ? null : CitiesModel.fromJson(allCities),
