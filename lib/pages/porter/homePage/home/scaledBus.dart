@@ -138,7 +138,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                           size: 12,
                         ),
                         onTap: () {
-                          print(priorityLength.toString());
+                          print("${priorityLength.toString()}===========");
                           if (priorityLength > 0)
                             exceptionAlert(
                               context: context,

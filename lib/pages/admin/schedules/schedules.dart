@@ -35,8 +35,8 @@ enum SelectPriority { PRIORITY, NOTPRI }
 enum SelectTicket { YesTick, NoTick }
 enum SelectBoarding { YesBoard, NoBoard }
 SelectPriority _character = SelectPriority.NOTPRI;
-SelectTicket _characterT = SelectTicket.NoTick;
-SelectBoarding _characterB = SelectBoarding.NoBoard;
+SelectTicket _characterT = SelectTicket.YesTick;
+SelectBoarding _characterB = SelectBoarding.YesBoard;
 
 class Schedules extends StatefulWidget {
   @override
@@ -51,7 +51,7 @@ class _SchedulesState extends State<Schedules> {
   TextEditingController deptimeDateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
-  int priority = 0, board = 0, ticket = 0;
+  int priority = 0, board = 1, ticket = 1;
   String _searchText = "";
 
   bool isLoading = false;

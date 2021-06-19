@@ -75,8 +75,8 @@ class _LoginPageState extends State<LoginPage> {
           phone: _phoneController.text.trim(),
           password: _passwordController.text.trim());
     }
-    _phoneController.clear();
-    _passwordController.clear();
+    // _phoneController.clear();
+    // _passwordController.clear();
   }
 
   loginApi({

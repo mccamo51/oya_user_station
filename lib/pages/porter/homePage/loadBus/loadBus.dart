@@ -71,6 +71,8 @@ class _LoadBusesState extends State<LoadBuses> {
     searchFocus = FocusNode();
     pinFocus = FocusNode();
     minorFocus = FocusNode();
+    minorController.text = "0";
+
     // TODO: implement initState
     super.initState();
   }
@@ -139,14 +141,23 @@ class _LoadBusesState extends State<LoadBuses> {
                         "${widget.company}",
                         style: h3Black,
                       ),
-                      Text(
-                        "${widget.passengerCount} Passengers onboard",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400,
-                          color: ASHDEEP,
-                        ),
-                      ),
+                      widget.passengerCount == null
+                          ? Text(
+                              "0 Passengers onboard",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w400,
+                                color: ASHDEEP,
+                              ),
+                            )
+                          : Text(
+                              "${widget.passengerCount} Passengers onboard",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w400,
+                                color: ASHDEEP,
+                              ),
+                            ),
                       Text(
                         "${widget.minorCount} Minors",
                         style: TextStyle(

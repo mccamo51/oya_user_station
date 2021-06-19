@@ -90,6 +90,7 @@ class _TicketPageState extends State<TicketPage> {
                         depTime: x.busSchedule.departureTime,
                         depDate: x.busSchedule.departureDate,
                         regNo: x.busSchedule.bus.regNumber,
+                        paid: x.busSchedule.ticketing.toString(),
                         company: x.busSchedule.bus.busCompany.name)
                 ],
               ),
@@ -105,6 +106,7 @@ class _TicketPageState extends State<TicketPage> {
 _itemTile({
   String company,
   String from,
+  String paid,
   to,
   regNo,
   depTime,
@@ -129,7 +131,9 @@ _itemTile({
               Icons.delete_forever,
               color: RED,
             ),
-            onPressed: () {},
+            onPressed: () {
+              print(paid);
+            },
           ),
         ),
       ),
