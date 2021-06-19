@@ -32,14 +32,14 @@ class Data {
   String departureDate;
   String departureTime;
   String code;
-  int priority;
+  String priority;
   int scaled;
   int loaded;
   String loadedTime;
   String arrivalDate;
   String arrivalTime;
   int passengersCount;
-  int minors;
+  String minors;
   String createdAt;
   List<Staffs> staffs;
   String price;
@@ -77,14 +77,14 @@ class Data {
     departureDate = json['departure_date'];
     departureTime = json['departure_time'];
     code = json['code'];
-    priority = json['priority'];
+    priority = json['priority'].toString();
     scaled = json['scaled'];
     loaded = json['loaded'];
     loadedTime = json['loaded_time'];
     arrivalDate = json['arrival_date'];
     arrivalTime = json['arrival_time'];
     passengersCount = json['passengers_count'];
-    minors = json['minors'];
+    minors = json['minors'].toString();
     createdAt = json['created_at'];
     if (json['staffs'] != null) {
       staffs = new List<Staffs>();

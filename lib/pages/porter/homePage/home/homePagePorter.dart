@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
+import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
@@ -30,6 +32,9 @@ class _HomePagePorterState extends State<HomePagePorter> {
   int pri, sca;
 
   bool isLoading = false;
+  bool _isLoading = false;
+  bool isActive = false;
+  bool _connectionTime = false;
   @override
   void initState() {
     _getLoading();
@@ -54,7 +59,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
           },
         )
       ]),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CupertinoActivityIndicator(),
             )
@@ -86,23 +91,32 @@ class _HomePagePorterState extends State<HomePagePorter> {
                   height: 30,
                 ),
                 Center(
-                    child: carNumber == "" || carNumber == null
+                    child: isLoading
                         ? Text(
-                            "No Loading Bus",
+                            "Loading pls wait...",
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
                               color: RED,
                             ),
                           )
-                        : Text(
-                            "$carNumber (Scaled)",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: RED,
-                            ),
-                          )),
+                        : carNumber == "" || carNumber == null
+                            ? Text(
+                                "No Loading Bus",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: RED,
+                                ),
+                              )
+                            : Text(
+                                "$carNumber (Scaled)",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: RED,
+                                ),
+                              )),
                 SizedBox(
                   height: 30,
                 ),
@@ -113,6 +127,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
                     children: [
                       _cardItem(context, onContinue: () {
                         _checkPrio().whenComplete(() => {
+                              print("Helloooo"),
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -140,27 +155,41 @@ class _HomePagePorterState extends State<HomePagePorter> {
                           image: "assets/images/admin/bus.png"),
                     ],
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                _connectionTime
+                    ? Center(
+                        child: primaryButton(
+                            onFunction: () {
+                              _getLoading();
+                              setState(() {
+                                _connectionTime = false;
+                              });
+                            },
+                            title: "Try again"))
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      )
               ],
             ),
     );
   }
 
   Future<void> _checkMigrationScal() async {
-    setState(() {
-      isLoading = true;
-    });
+    // setState(() {
+    //   isLoading = true;
+    // });
     final response = await http.get(
       "$BASE_URL/stations/$stationId/scaled_buses",
       headers: {
         "Authorization": "Bearer $accessToken",
-        'Content-Type': 'application/json'
       },
-    ).timeout(Duration(seconds: 30));
+    ).timeout(Duration(seconds: 50));
+    print(response.body);
     if (response.statusCode == 200) {
-      setState(() {
-        isLoading = false;
-      });
       final responseData = json.decode(response.body);
       if (responseData['status'] == 200) {
         print("Data: $responseData");
@@ -170,7 +199,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
         });
         print("------------------$scaledLength");
       }
-    }else if (response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       sessionExpired(context);
     } else {
       toastContainer(text: "Error has occured");
@@ -178,58 +207,86 @@ class _HomePagePorterState extends State<HomePagePorter> {
   }
 
   Future<void> _checkPrio() async {
-    setState(() {
-      isLoading = true;
-    });
-    final response = await http.get(
-      "$BASE_URL/stations/$stationId/priority_buses",
-      headers: {
-        "Authorization": "Bearer $accessToken",
-        'Content-Type': 'application/json'
-      },
-    ).timeout(Duration(seconds: 30));
-    if (response.statusCode == 200) {
+    try {
       setState(() {
-        isLoading = false;
+        _isLoading = true;
       });
-      final responseData = json.decode(response.body);
-      if (responseData['status'] == 200) {
+      final response = await http.get(
+        "$BASE_URL/stations/$stationId/priority_buses",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      ).timeout(Duration(seconds: 50));
+      print(response.body);
+      if (response.statusCode == 200) {
         setState(() {
-          priorityLength = (responseData['data'][0]['passengers_count']);
+          _isLoading = false;
         });
-        print("-------------------$priorityLength");
+
+        toastContainer(text: "Worked");
+        final responseData = json.decode(response.body);
+        print(responseData);
+        if (responseData['status'] == 200) {
+          setState(() {
+            priorityLength = (responseData['data'][0]['passengers_count']);
+          });
+          print("-------------------$priorityLength");
+        }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        toastContainer(text: "Error has occured");
       }
-    }else if (response.statusCode == 401) {
-      sessionExpired(context);
-    } else {
-      toastContainer(text: "Error has occured");
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      toastContainer(text: "$e");
     }
   }
 
   _getLoading() async {
-    final response = await http.get(
-      "$BASE_URL/stations/$stationId/loading_bus",
-      headers: {
-        "Authorization": "Bearer $accessToken",
-        'Content-Type': 'application/json'
-      },
-    ).timeout(
-      Duration(seconds: 50),
-    );
-    if (response.statusCode == 200) {
-      setState(() => isLoading = false);
-      final responseData = json.decode(response.body);
-      if (responseData['status'] == 200 || responseData['data'] != null) {
-        print(responseData['data']);
-        carNumber = responseData['data']['bus']['reg_number'];
-        pri = responseData['data']['priority'];
-        sca = responseData['data']['scaled'];
-        setState(() {});
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final response = await http.get(
+        "$BASE_URL/stations/$stationId/loading_bus",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
+        },
+      ).timeout(
+        Duration(seconds: 50),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        setState(() => isLoading = false);
+        setState(() {
+          isActive = true;
+          _connectionTime = false;
+        });
+        final responseData = json.decode(response.body);
+        if (responseData['status'] == 200 || responseData['data'] != null) {
+          print(responseData['data']);
+          carNumber = responseData['data']['bus']['reg_number'];
+          pri = responseData['data']['priority'];
+          sca = responseData['data']['scaled'];
+        }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
-    }else if (response.statusCode == 401) {
-      sessionExpired(context);
-    } else {
-      toastContainer(text: "Error has occured");
+    } on TimeoutException catch (e) {
+      toastContainer(text: "Connection Timeout, please try agian");
+      setState(() {
+        _connectionTime = true;
+        isLoading = false;
+      });
     }
   }
 }
@@ -270,3 +327,8 @@ _cardItem(BuildContext context,
     ),
   );
 }
+
+
+// !isActive
+//                         ? () => toastContainer(text: "Loading...")
+//                         :

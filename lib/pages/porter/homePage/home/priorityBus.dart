@@ -91,22 +91,22 @@ class _PriorityBusesState extends State<PriorityBuses> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Column(
                 children: [
-                  for (var x in bussModel.data)
+                  for (int x = 0; x < bussModel.data.length; x++)
                     Card(
                       child: ListTile(
                         title: Text(
-                            "Bus No: ${x.bus.regNumber} [${x.code.toString()}]"),
+                            "Bus No: ${bussModel.data[x].bus.regNumber} [${bussModel.data[x].code.toString()}]"),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
                               height: 8,
                             ),
-                            Text("Driver: ${x.staffs[1].name}"),
+                            Text("Driver: ${bussModel.data[x].staffs[1].name}"),
                             SizedBox(
                               height: 8,
                             ),
-                            Text("Phone: ${x.staffs[1].phone}"),
+                            Text("Phone: ${bussModel.data[x].staffs[1].phone}"),
                             SizedBox(
                               height: 8,
                             ),
@@ -121,13 +121,14 @@ class _PriorityBusesState extends State<PriorityBuses> {
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("${x.bus.driver.station.name}"),
-                            Text("${x.bus.regNumber}"),
+                            Text(
+                                "${bussModel.data[x].bus.driver.station.name}"),
+                            Text("${bussModel.data[x].bus.regNumber}"),
                           ],
                         ),
                         onTap: () {
                           print(scaledLength);
-                          if (scaledLength > 0)
+                          if (scaledLength > 0) {
                             exceptionAlert(
                               context: context,
                               title: "Confimation",
@@ -136,22 +137,44 @@ class _PriorityBusesState extends State<PriorityBuses> {
                               onMigrate: () {
                                 _migratePassenger(
                                     context: context,
-                                    busId: x.bus.id.toString(),
-                                    scheduleID: x.id.toString());
+                                    busId: bussModel.data[x].bus.id.toString(),
+                                    scheduleID:
+                                        bussModel.data[x].id.toString());
                               },
                             );
-                          else
+                            // } else if (bussModel.data.length > 1) {
+                            //   if (bussModel.data[x+1].passengersCount > 0)
+                            //     exceptionAlert(
+                            //       context: context,
+                            //       title: "Confimation",
+                            //       message:
+                            //           "Do you want to maigrate passengers to a different bus?",
+                            //       onMigrate: () {
+                            //         _migratePassenger(
+                            //             context: context,
+                            //             busId:
+                            //                 bussModel.data[x].bus.id.toString(),
+                            //             scheduleID:
+                            //                 bussModel.data[x].id.toString());
+                            //       },
+                            //     );
+                            //
+                          } else
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => LoadBuses(
-                                  scheduleId: x.id.toString(),
-                                  minorCount: x.minors.toString(),
-                                  passengerCount: x.passengersCount.toString(),
-                                  from: x.route.from.name,
-                                  to: x.route.to.name,
-                                  carNo: x.bus.regNumber,
-                                  company: x.station.busCompany.name,
+                                  scheduleId: bussModel.data[x].id.toString(),
+                                  minorCount:
+                                      bussModel.data[x].minors.toString(),
+                                  passengerCount: bussModel
+                                      .data[x].passengersCount
+                                      .toString(),
+                                  from: bussModel.data[x].route.from.name,
+                                  to: bussModel.data[x].route.to.name,
+                                  carNo: bussModel.data[x].bus.regNumber,
+                                  company:
+                                      bussModel.data[x].station.busCompany.name,
                                 ),
                               ),
                             );
