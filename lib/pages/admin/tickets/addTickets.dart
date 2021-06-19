@@ -109,6 +109,7 @@ class _AddTicketState extends State<AddTicket> {
                       hintText: "Minors",
                       controller: minorController,
                       inputType: TextInputType.number,
+                      textLength: 3,
                       focusNode: null,
                     ),
                     SizedBox(
