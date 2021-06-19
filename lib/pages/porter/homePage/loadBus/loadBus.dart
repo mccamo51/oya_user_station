@@ -410,6 +410,7 @@ class _LoadBusesState extends State<LoadBuses> {
                               hintText: "Enter Minor",
                               controller: minorController,
                               focusNode: minorFocus,
+                              textLength: 3,
                               inputType: TextInputType.number,
                               labelText: "Minor",
                             ),
