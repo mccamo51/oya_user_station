@@ -78,8 +78,10 @@ Future<void> allPost(
     State state,
     bool isLoad = false,
     BuildContext context}) async {
+  final url = Uri.parse("");
+
   final response = await http.post(
-    "$url",
+    url,
     body: json.encode(body),
     headers: {
       "Authorization": "Bearer $accessToken",
@@ -103,3 +105,6 @@ Future<void> allPost(
     toastContainer(text: "Error has occured");
   }
 }
+
+
+

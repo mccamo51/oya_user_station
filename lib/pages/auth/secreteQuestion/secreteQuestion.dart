@@ -63,8 +63,10 @@ class _SecreteQuestionState extends State<SecreteQuestion> {
         Map<String, dynamic> body = {
           'phone': phone,
         };
+    final url = Uri.parse("$BASE_URL/account/check_phone");
+
         final response = await http.post(
-          "$BASE_URL/account/check_phone",
+          url,
           body: json.encode(body),
           headers: {
             "Authorization": "Bearer $accessToken",

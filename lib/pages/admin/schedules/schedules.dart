@@ -68,7 +68,7 @@ class _SchedulesState extends State<Schedules> {
     setCurrentTime();
     return Scaffold(
       appBar: appBar(
-        title: ("Schedules"),
+        title: ("Schedule a Bus"),
       ),
       body: isLoading
           ? Center(child: CupertinoActivityIndicator())
@@ -436,8 +436,10 @@ class _SchedulesState extends State<Schedules> {
         'mid_route': midRute,
         'price': price,
       };
+    final url = Uri.parse("$BASE_URL/schedules");
+
       final response = await http.post(
-        "$BASE_URL/schedules",
+        url,
         body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",

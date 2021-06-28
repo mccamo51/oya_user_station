@@ -83,7 +83,7 @@ _cardWidget({Function onTap, String image, String name}) {
     onTap: onTap,
     child: Card(
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(15),
         child: Column(
           children: [
             ClipOval(

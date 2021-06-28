@@ -1,0 +1,130 @@
+{
+  "project_info": {
+    "project_number": "495190055667",
+    "firebase_url": "https://oyaghana-default-rtdb.firebaseio.com",
+    "project_id": "oyaghana",
+    "storage_bucket": "oyaghana.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495190055667:android:9d2914147f2b91c07c3586",
+        "android_client_info": {
+          "package_name": "com.oyaghana.oyaapp_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495190055667-2mib283vo6bseen776dd7b77qstm6jb5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oyaghana.oyaapp_admin",
+            "certificate_hash": "3b15e3fa3e86cb5428c56dc94e963a9191ae815c"
+          }
+        },
+        {
+          "client_id": "495190055667-sddv5qduq7dh95hu7i4uvjim20aou6bk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMihqj_xqRyBGAMSwMAPSWf8ZXvasbKJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495190055667-sddv5qduq7dh95hu7i4uvjim20aou6bk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495190055667:android:3a910f40fca965817c3586",
+        "android_client_info": {
+          "package_name": "com.oyaghana.oyaapp_porter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495190055667-b8h4oc6bdntq10q8bdnqvvcaaom1etmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oyaghana.oyaapp_porter",
+            "certificate_hash": "3b15e3fa3e86cb5428c56dc94e963a9191ae815c"
+          }
+        },
+        {
+          "client_id": "495190055667-mss9jb81k3i27alvpst7qeqt26254dtv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oyaghana.oyaapp_porter",
+            "certificate_hash": "2859d79ff2e2c44d4fe60fc97227f86ad909cc15"
+          }
+        },
+        {
+          "client_id": "495190055667-sddv5qduq7dh95hu7i4uvjim20aou6bk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMihqj_xqRyBGAMSwMAPSWf8ZXvasbKJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495190055667-sddv5qduq7dh95hu7i4uvjim20aou6bk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495190055667:android:60b18492b05094197c3586",
+        "android_client_info": {
+          "package_name": "com.oyaghana.oyaapp_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495190055667-8sum3svn9as8gctei6pd80eb3f7eq1n8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oyaghana.oyaapp_user",
+            "certificate_hash": "3b15e3fa3e86cb5428c56dc94e963a9191ae815c"
+          }
+        },
+        {
+          "client_id": "495190055667-sddv5qduq7dh95hu7i4uvjim20aou6bk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMihqj_xqRyBGAMSwMAPSWf8ZXvasbKJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495190055667-sddv5qduq7dh95hu7i4uvjim20aou6bk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -92,12 +92,12 @@ class _ScaledBussesState extends State<ScaledBusses> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Column(
                 children: [
-                  for (var x in bussModel.data)
+                  for (int x = 0; x < bussModel.data.length; x++)
                     Card(
                       // color: PRIMARYCOLOR,
                       child: ListTile(
                         title: Text(
-                            "Bus No: ${x.bus.regNumber} [${x.code.toString()}]"),
+                            "Bus No: ${bussModel.data[x].bus.regNumber} [${bussModel.data[x].code.toString()}]"),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -105,11 +105,11 @@ class _ScaledBussesState extends State<ScaledBusses> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${x.bus.driver.station.name}",
+                                  "${bussModel.data[x].bus.driver.station.name}",
                                   style: h3Black,
                                 ),
                                 Text(
-                                  "${x.bus.regNumber}",
+                                  "${bussModel.data[x].bus.regNumber}",
                                   style: h3Black,
                                 ),
                               ],
@@ -117,11 +117,11 @@ class _ScaledBussesState extends State<ScaledBusses> {
                             SizedBox(
                               height: 8,
                             ),
-                            Text("Driver: ${x.staffs[1].name}"),
+                            Text("Driver: ${bussModel.data[x].staffs[1].name}"),
                             SizedBox(
                               height: 8,
                             ),
-                            Text("Phone: ${x.staffs[1].phone}"),
+                            Text("Phone: ${bussModel.data[x].staffs[1].phone}"),
                             SizedBox(
                               height: 8,
                             ),
@@ -139,33 +139,74 @@ class _ScaledBussesState extends State<ScaledBusses> {
                         ),
                         onTap: () {
                           print("${priorityLength.toString()}===========");
-                          if (priorityLength > 0)
+                          if (priorityLength > 0) {
                             exceptionAlert(
                               context: context,
                               title: "Confimation",
                               message:
-                                  "You are already loading bus# ${x.bus.regNumber}, Will you like to migrate to bus# ${x.bus.regNumber}",
+                                  "You are already loading bus# ${bussModel.data[x].bus.regNumber}, Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}",
                               onMigrate: () {
                                 _migratePassenger(
-                                    busId: x.bus.id.toString(),
-                                    scheduleID: x.id.toString());
+                                    busId: bussModel.data[x].bus.id.toString(),
+                                    scheduleID:
+                                        bussModel.data[x].id.toString());
                               },
                             );
-                          else
+                          } else if (bussModel.data.length > 1) {
+                            if (bussModel.data[x].passengersCount > 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoadBuses(
+                                    scheduleId: bussModel.data[x].id.toString(),
+                                    minorCount:
+                                        bussModel.data[x].minors.toString(),
+                                    passengerCount: bussModel
+                                        .data[x].passengersCount
+                                        .toString(),
+                                    from: bussModel.data[x].route.from.name,
+                                    to: bussModel.data[x].route.to.name,
+                                    carNo: bussModel.data[x].bus.regNumber,
+                                    company: bussModel
+                                        .data[x].station.busCompany.name,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              exceptionAlert(
+                                context: context,
+                                title: "Confimation",
+                                message:
+                                    "Do you want to maigrate passengers to a different bus?",
+                                onMigrate: () {
+                                  _migratePassenger(
+                                      busId:
+                                          bussModel.data[x].bus.id.toString(),
+                                      scheduleID:
+                                          bussModel.data[x].id.toString());
+                                },
+                              );
+                            }
+                          } else {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => LoadBuses(
-                                  scheduleId: x.id.toString(),
-                                  minorCount: x.minors.toString(),
-                                  passengerCount: x.passengersCount.toString(),
-                                  from: x.route.from.name,
-                                  to: x.route.to.name,
-                                  carNo: x.bus.regNumber,
-                                  company: x.station.busCompany.name,
+                                  scheduleId: bussModel.data[x].id.toString(),
+                                  minorCount:
+                                      bussModel.data[x].minors.toString(),
+                                  passengerCount: bussModel
+                                      .data[x].passengersCount
+                                      .toString(),
+                                  from: bussModel.data[x].route.from.name,
+                                  to: bussModel.data[x].route.to.name,
+                                  carNo: bussModel.data[x].bus.regNumber,
+                                  company:
+                                      bussModel.data[x].station.busCompany.name,
                                 ),
                               ),
                             );
+                          }
                         },
                       ),
                     )
@@ -191,8 +232,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
     setState(() {
       isLoading = true;
     });
+    final url = Uri.parse("$BASE_URL/stations/$stationId/priority_buses");
+
     final response = await http.get(
-      "$BASE_URL/stations/$stationId/priority_buses",
+      url,
       headers: {
         "Authorization": "Bearer $accessToken",
         'Content-Type': 'application/json'
@@ -249,13 +292,12 @@ class _ScaledBussesState extends State<ScaledBusses> {
     Map<String, dynamic> body = {
       'to': '$busId',
     };
-    final response = await http.post(
-        "$BASE_URL/schedules/$scheduleID/migrate_manifest",
-        body: json.encode(body),
-        headers: {
-          "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
-        }).timeout(
+    final url = Uri.parse("$BASE_URL/schedules/$scheduleID/migrate_manifest");
+
+    final response = await http.post(url, body: json.encode(body), headers: {
+      "Authorization": "Bearer $accessToken",
+      'Content-Type': 'application/json'
+    }).timeout(
       Duration(seconds: 50),
     );
     if (response.statusCode == 200) {
