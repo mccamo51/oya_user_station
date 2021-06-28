@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:oya_porter/models/BusByStationModel.dart';
 import 'package:oya_porter/models/PorterModel.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
-import 'package:oya_porter/models/allRouteModel.dart';
+import 'package:oya_porter/models/ticketModel.dart' as ticket;
 import 'package:oya_porter/models/busModel.dart';
 import 'package:oya_porter/models/busTypeModel.dart';
 import 'package:oya_porter/models/conductorModel.dart';
@@ -96,4 +95,9 @@ class Repository {
           String stationId, String routeId, BuildContext context) =>
       _myProvider.fetchScheduledBuses(
           routeID: routeId, stationId: stationId, context: context);
+
+  Future<ticket.PickupModel> fetchBusSchedulePickups(
+          {String scheduleId, BuildContext context}) =>
+      _myProvider.fetchBusSchedulePickups(
+          scheduleId: scheduleId, context: context);
 }

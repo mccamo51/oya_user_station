@@ -1,6 +1,5 @@
 import 'package:oya_porter/config/repository.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
-import 'package:oya_porter/models/ratingModel.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:rxdart/rxdart.dart';
 

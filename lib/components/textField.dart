@@ -25,6 +25,7 @@ Widget textFormField({
   TextInputAction inputAction,
   void Function() onEditingComplete,
   @required FocusNode focusNode,
+  initialValue,
 }) {
   return Container(
     width: width,
@@ -33,6 +34,7 @@ Widget textFormField({
         color: SECONDARYCOLOR, borderRadius: BorderRadius.circular(6)),
     // padding: EdgeInsets.all(3),
     child: TextFormField(
+      initialValue: initialValue,
       enabled: enable,
       enableSuggestions: suggestion,
       keyboardType: inputType,

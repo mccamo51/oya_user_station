@@ -25,6 +25,7 @@ import 'package:oya_porter/models/scheduledBusesModel.dart';
 import 'package:oya_porter/models/stationsModel.dart';
 import 'package:oya_porter/models/stuffModel.dart';
 import 'package:oya_porter/models/ticketModel.dart';
+import 'package:oya_porter/models/ticketModel.dart' as ticket;
 import 'package:oya_porter/models/townModle.dart';
 import 'package:oya_porter/models/townRegionModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -685,6 +686,39 @@ class OyaProvider {
             key: "scheduledbuses",
             data: json.encode(json.decode(response.body)));
         return ScheduledBusesModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
+      }
+    } on TimeoutException catch (_) {
+      // print("Exception occured: $error stackTrace: $stackTrace");
+      throw Exception("Timeout");
+    } on SocketException catch (_) {
+      throw Exception("No internet");
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ticket.PickupModel> fetchBusSchedulePickups(
+      {String scheduleId, BuildContext context}) async {
+    try {
+      final url = Uri.parse("$BASE_URL/schedules/$scheduleId/pickups");
+
+      final response = await client.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          // 'Content-Type': 'application/json'
+        },
+      ).timeout(Duration(seconds: 50));
+      if (response.statusCode == 200) {
+        print(response.body);
+        saveStringShare(
+            key: "schedulepickups",
+            data: json.encode(json.decode(response.body)));
+        return ticket.PickupModel.fromJson(json.decode(response.body));
       } else if (response.statusCode == 401) {
         sessionExpired(context);
       } else {

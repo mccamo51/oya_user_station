@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/bloc/ticketBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/models/ticketModel.dart';
 import 'package:oya_porter/spec/colors.dart';
-
 
 class TicketPage extends StatefulWidget {
   final id;

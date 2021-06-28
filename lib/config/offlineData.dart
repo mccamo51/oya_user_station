@@ -48,6 +48,18 @@ Future<void> loadallSchedulesOffline() async {
     schedulesMapOffline = null;
 }
 
+Map<String, dynamic> pickupsMapOffline;
+Future<void> loadallSchedulePickupsOffline() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey("schedulepickups")) {
+    String encodeData = prefs.getString("schedulepickups");
+    print(encodeData);
+    Map<String, dynamic> decodeData = json.decode(encodeData);
+    pickupsMapOffline = decodeData;
+  } else
+    pickupsMapOffline = null;
+}
+
 Map<String, dynamic> ticketMapOffline;
 Future<void> loadallTicketsOffline() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -251,8 +263,6 @@ Future<void> loadTownsByRegOffline() async {
   } else
     loadParcelRecievedMapOffline = null;
 }
-
-
 
 Map<String, dynamic> loadScheduledBusesMapOffline;
 Future<void> loadScheduledBusesOffline() async {

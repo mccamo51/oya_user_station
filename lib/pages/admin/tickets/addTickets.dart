@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/bloc/myRouteBloc.dart';
 import 'package:oya_porter/bloc/scheduleBloc.dart';
+import 'package:oya_porter/bloc/pickupBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/textField.dart';
@@ -16,10 +17,10 @@ import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
-import 'package:oya_porter/pages/admin/schedules/widgets/seachWidgetBus.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
+import 'package:oya_porter/models/ticketModel.dart' as ticket;
 import 'package:http/http.dart' as http;
 
 class AddTicket extends StatefulWidget {
@@ -30,18 +31,17 @@ class AddTicket extends StatefulWidget {
 class _AddTicketState extends State<AddTicket> {
   final _routeController = TextEditingController();
   final _busController = TextEditingController();
+  final _pickupController = TextEditingController();
 
   TextEditingController paymentModeController = TextEditingController();
   TextEditingController paymentTypeController = TextEditingController();
 
-  TextEditingController priceController = TextEditingController();
   TextEditingController reciepeintNameController = TextEditingController();
   TextEditingController reciepeintPhoneController = TextEditingController();
   TextEditingController minorController = TextEditingController();
-  // TextEditingController minorController = TextEditingController();
   String network, payType;
   bool showMomo = true;
-  String schedleId, routeID;
+  String schedleId, routeID, pickupId;
   bool isLoading = false;
 
   @override
@@ -90,6 +90,22 @@ class _AddTicketState extends State<AddTicket> {
                           enable: false),
                     ),
                     SizedBox(
+                      height: 15,
+                    ),
+                    GestureDetector(
+                      onTap: () => androidSelectPickups(
+                        context: context,
+                        title: "Mid Route Pickup",
+                      ),
+                      child: textFormField(
+                        hintText: "Mid Route Pickup",
+                        controller: _pickupController,
+                        focusNode: null,
+                        icon: Icons.directions_bus,
+                        enable: false,
+                      ),
+                    ),
+                    SizedBox(
                       height: 10,
                     ),
                     Divider(),
@@ -109,8 +125,9 @@ class _AddTicketState extends State<AddTicket> {
                       hintText: "Minors",
                       controller: minorController,
                       inputType: TextInputType.number,
-                      textLength: 3,
+                      textLength: 1,
                       focusNode: null,
+                      initialValue: 0,
                     ),
                     SizedBox(
                       height: 15,
@@ -153,16 +170,6 @@ class _AddTicketState extends State<AddTicket> {
                       focusNode: null,
                     ),
                     SizedBox(
-                      height: 15,
-                    ),
-                    textFormField(
-                      hintText: "Price",
-                      controller: priceController,
-                      focusNode: null,
-                      labelText: "Price",
-                      inputType: TextInputType.number,
-                    ),
-                    SizedBox(
                       height: 10,
                     ),
                   ],
@@ -174,16 +181,20 @@ class _AddTicketState extends State<AddTicket> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CupertinoButton(
-              color: PRIMARYCOLOR,
-              child: Text("Submit"),
-              onPressed: () => _onSave(
-                  busID: schedleId,
-                  phone: userphone,
-                  momoPhone: reciepeintPhoneController.text,
-                  price: priceController.text,
-                  momoName: reciepeintNameController.text,
-                  minor: minorController.text,
-                  mapymentMode: network)),
+            color: PRIMARYCOLOR,
+            child: Text("Submit"),
+            onPressed: isLoading
+                ? null
+                : () => _onSave(
+                      busID: schedleId,
+                      pickupId: pickupId,
+                      phone: userphone,
+                      momoPhone: reciepeintPhoneController.text,
+                      momoName: reciepeintNameController.text,
+                      minor: minorController.text,
+                      mapymentMode: network,
+                    ),
+          ),
         ),
       ),
     );
@@ -191,10 +202,10 @@ class _AddTicketState extends State<AddTicket> {
 
   _onSave(
       {String busID,
+      String pickupId,
       String phone,
       String minor,
       String momoName,
-      String price,
       String mapymentMode,
       String momoPhone}) async {
     print(phone);
@@ -205,12 +216,12 @@ class _AddTicketState extends State<AddTicket> {
       Map<String, dynamic> body = {
         'bus_schedule_id': busID,
         'phone': phone,
+        'pickup_id': pickupId,
         'minor_count': minor,
         'payment_type': payType,
         'payment_mode': mapymentMode,
         'momo_phone': momoPhone,
         'momo_name': '$momoName',
-        'price': '$price',
       };
       print(busID);
       final url = Uri.parse("$BASE_URL/stations/$stationId/tickets");
@@ -225,7 +236,6 @@ class _AddTicketState extends State<AddTicket> {
       ).timeout(
         Duration(seconds: 50),
       );
-      print(response.body);
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
@@ -417,6 +427,25 @@ class _AddTicketState extends State<AddTicket> {
     );
   }
 
+  Widget allPickups() {
+    // loadallSchedulePickupsOffline();
+    pickupBloc.fetchAllBusSchedulePickups(schedleId);
+    return StreamBuilder<Object>(
+      stream: pickupBloc.pickups,
+      initialData: pickupsMapOffline == null
+          ? null
+          : ticket.PickupModel.fromJson(pickupsMapOffline),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          return _mPickups(snapshot.data, context);
+        } else if (snapshot.hasError) {
+          return Text("Error");
+        }
+        return Center(child: CupertinoActivityIndicator(radius: 15));
+      },
+    );
+  }
+
   Widget allScheduled() {
     loadallSchedulesOffline();
     scheduleBloc.fetchAllStaffs(id: stationId, routeId: routeID);
@@ -447,6 +476,58 @@ class _AddTicketState extends State<AddTicket> {
           );
         })) {
     }
+  }
+
+  Future<void> androidSelectPickups(
+      {String title, BuildContext context}) async {
+    switch (await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text("$title"),
+            children: [allPickups()],
+          );
+        })) {
+    }
+  }
+
+  Widget _mPickups(ticket.PickupModel model, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var data in model.data) ...[
+          Platform.isIOS
+              ? CupertinoActionSheetAction(
+                  child: Text(
+                    '${data.name} - ${data.name}',
+                    style: TextStyle(color: BLACK),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      routeID = data.id.toString();
+
+                      _routeController.text = "${data.name} - ${data.name}";
+                    });
+
+                    Navigator.pop(context);
+                  },
+                )
+              : SimpleDialogOption(
+                  onPressed: () {
+                    routeID = data.id.toString();
+                    _routeController.text = "${data.name} - ${data.name}";
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "${data.name} - ${data.name}",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+          Divider(),
+        ]
+      ],
+    );
   }
 
   Widget _scheduleM(ScheduleModel model, BuildContext context) {
