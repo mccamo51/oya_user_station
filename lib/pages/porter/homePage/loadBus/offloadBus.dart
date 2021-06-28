@@ -104,8 +104,11 @@ class _OffloadBusState extends State<OffloadBus> {
     setState(() {
       isLoading = true;
     });
+    final url = Uri.parse(
+        "$BASE_URL/schedules/${widget.schedID}/manifest/${widget.manifestCode}");
+
     final response = await http.delete(
-      "$BASE_URL/schedules/${widget.schedID}/manifest/${widget.manifestCode}",
+      url,
       headers: {
         "Authorization": "Bearer $accessToken",
         'Content-Type': 'application/json'

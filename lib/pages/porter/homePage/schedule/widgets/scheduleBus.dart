@@ -79,33 +79,35 @@ class _ScheduledBusState extends State<ScheduledBus> {
               child: Column(
                 children: [
                   for (var x in bussModel.data)
-                    ListTile(
-                      title: Text("Bus: ${x.bus.busType.name}"),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text("Driver: ${x.staffs[1].name}"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                              "Departure: ${x.departureDate} @ ${x.departureTime}"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text("Arrival: ${x.arrivalDate} "),
-                        ],
+                    Card(
+                      child: ListTile(
+                        title: Text("Bus: ${x.bus.busType.name}"),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text("Driver: ${x.staffs[1].name}"),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                                "Departure: ${x.departureDate} @ ${x.departureTime}"),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text("Arrival: ${x.arrivalDate} "),
+                          ],
+                        ),
+                        leading: Icon(FeatherIcons.truck),
+                        // trailing: Column(
+                        //   children: [
+                        //     Text("${x.bus.driver.station.name}"),
+                        //     Text("${x.bus.regNumber}"),
+                        //   ],
+                        // ),
                       ),
-                      leading: Icon(FeatherIcons.truck),
-                      // trailing: Column(
-                      //   children: [
-                      //     Text("${x.bus.driver.station.name}"),
-                      //     Text("${x.bus.regNumber}"),
-                      //   ],
-                      // ),
                     )
                 ],
               ),

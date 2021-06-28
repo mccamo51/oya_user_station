@@ -48,6 +48,7 @@ class _LoadBusesState extends State<LoadBuses> {
   TextEditingController pinController = TextEditingController();
   TextEditingController minorController = TextEditingController();
   int minor = 0;
+  int passengerCount = 0;
   bool isSearch = false;
   bool isLoading = false;
   bool showPhone = false;
@@ -72,6 +73,7 @@ class _LoadBusesState extends State<LoadBuses> {
     pinFocus = FocusNode();
     minorFocus = FocusNode();
     minorController.text = "0";
+    passengerCount = int.parse(widget.passengerCount);
 
     // TODO: implement initState
     super.initState();
@@ -151,7 +153,7 @@ class _LoadBusesState extends State<LoadBuses> {
                               ),
                             )
                           : Text(
-                              "${widget.passengerCount} Passengers onboard",
+                              "$passengerCount Passengers onboard",
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
@@ -410,6 +412,7 @@ class _LoadBusesState extends State<LoadBuses> {
                               hintText: "Enter Minor",
                               controller: minorController,
                               focusNode: minorFocus,
+                              textLength: 3,
                               inputType: TextInputType.number,
                               labelText: "Minor",
                             ),
@@ -505,8 +508,10 @@ class _LoadBusesState extends State<LoadBuses> {
       setState(() {
         isLoading = true;
       });
+      final url = Uri.parse("$BASE_URL/schedules/$scheduleId/start");
+
       final response = await http.post(
-        "$BASE_URL/schedules/$scheduleId/start",
+        url,
         body: json.encode({'pin': '$pin'}),
         headers: {
           "Authorization": "Bearer $accessToken",
@@ -591,8 +596,10 @@ class _LoadBusesState extends State<LoadBuses> {
     };
     print(_character);
     print(showPhone);
+    final url = Uri.parse("$BASE_URL/schedules/$scheduleId/manifest");
+
     final response = await http.post(
-      "$BASE_URL/schedules/$scheduleId/manifest",
+      url,
       body: showPhone && _character == BusType.Genral
           ? json.encode(general2)
           : _character == BusType.Genral
@@ -615,10 +622,16 @@ class _LoadBusesState extends State<LoadBuses> {
       print(responseData);
 
       if (responseData['status'] == 200) {
-        setState(() {
-          widget.passengerCount =
-              responseData['data']['passengers_count'].toString();
-        });
+        if (responseData['data']['passengers_count'] == null) {
+          setState(() {
+            passengerCount++;
+          });
+        } else {
+          setState(() {
+            passengerCount = responseData['data']['passengers_count'];
+          });
+        }
+
         clearTextField();
         toastContainer(text: 'Passenger has been enrolled successfully');
       } else if (responseData['status'] == 203) {
@@ -641,8 +654,10 @@ class _LoadBusesState extends State<LoadBuses> {
       isLoading = true;
     });
     try {
+      final url = Uri.parse("$BASE_URL/schedules/$scheduleId/search_manifest");
+
       final response = await http.post(
-        "$BASE_URL/schedules/$scheduleId/search_manifest",
+        url,
         body: json.encode({'needle': phoneNo}),
         headers: {
           "Authorization": "Bearer $accessToken",

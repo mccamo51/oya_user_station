@@ -125,8 +125,10 @@ class _BussesState extends State<Busses> {
       isLoading = true;
     });
     try {
+      final url = Uri.parse("$BASE_URL/buses/$busId");
+
       final response = await http.delete(
-        "$BASE_URL/buses/$busId",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
         },
@@ -179,8 +181,10 @@ class _BussesState extends State<Busses> {
         'driver_id': driverId,
         'image': ''
       };
+      final url = Uri.parse("$BASE_URL/buses");
+
       final response = await http.post(
-        "$BASE_URL/buses",
+        url,
         body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",

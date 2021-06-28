@@ -35,8 +35,10 @@ class OyaProvider {
 
   Future<StaffModel> fetchAllStaffs(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/staffs/$id");
+
       final response = await client.get(
-        "$BASE_URL/staffs/$id",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -67,8 +69,10 @@ class OyaProvider {
 
   Future<BussModel> fetchBusses(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/buses");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/buses",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -96,8 +100,9 @@ class OyaProvider {
 
   Future<RatingModel> fetchRating(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/ratings");
       final response = await client.get(
-        "$BASE_URL/stations/$id/ratings",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
@@ -127,8 +132,9 @@ class OyaProvider {
       {String id, String routeID, BuildContext context}) async {
     print(routeID);
     try {
+      final url = Uri.parse("$BASE_URL/routes/$routeID/schedules/$id");
       final response = await client.get(
-        "$BASE_URL/routes/$routeID/schedules/$id",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
@@ -156,8 +162,10 @@ class OyaProvider {
 
   Future<TicketsModel> fetchTicket(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/tickets");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/tickets",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -185,8 +193,10 @@ class OyaProvider {
 
   Future<MyRouteModel> fetchMyRoute(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/routes");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/routes",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -214,8 +224,10 @@ class OyaProvider {
 
   Future<DriversModel> fetchDrivers(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/drivers");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/drivers",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -243,8 +255,10 @@ class OyaProvider {
 
   Future<BusTypeModel> fetchBusType(BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/bus_types");
+
       final response = await client.get(
-        "$BASE_URL/bus_types",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -272,8 +286,10 @@ class OyaProvider {
 
   Future<RegionModel> fetchRegion(BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/regions");
+
       final response = await client.get(
-        "$BASE_URL/regions",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -301,8 +317,10 @@ class OyaProvider {
 
   Future<TownModel> fetchTown(BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/towns");
+
       final response = await client.get(
-        "$BASE_URL/towns",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -330,8 +348,10 @@ class OyaProvider {
 
   Future<ReportModel> fetchReports(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/speed_reports");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/speed_reports",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -361,8 +381,10 @@ class OyaProvider {
   Future<ConductorModel> fetchConductors(
       String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/conductors");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/conductors",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -390,8 +412,10 @@ class OyaProvider {
 
   Future<PortersModel> fetchPorters(String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/porters");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/porters",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -420,8 +444,10 @@ class OyaProvider {
   Future<LoadedBusModel> fetchLoadedBuses(
       String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/loaded_buses");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/loaded_buses",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -450,8 +476,10 @@ class OyaProvider {
   Future<ScaledBusModel> fetchScaledBuses(
       String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$stationId/scaled_buses");
+
       final response = await client.get(
-        "$BASE_URL/stations/$stationId/scaled_buses",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
@@ -480,8 +508,10 @@ class OyaProvider {
   Future<PriorityBusModel> fetchPriorityBus(
       String id, BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/priority_buses");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/priority_buses",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -510,8 +540,10 @@ class OyaProvider {
 
   Future<StationsModel> fetchStations(BuildContext context) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations");
+
       final response = await client.get(
-        "$BASE_URL/stations",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -540,8 +572,10 @@ class OyaProvider {
   Future<ParcelSentUserModel> fetchParcelSentByPorter(
       {String id, BuildContext context}) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/parcels_sent_by_porter");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/parcels_sent_by_porter",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -571,8 +605,10 @@ class OyaProvider {
   Future<ParcelRecievedModel> fetchParcelRecieved(
       {String id, BuildContext context}) async {
     try {
+      final url = Uri.parse("$BASE_URL/stations/$id/parcels_received");
+
       final response = await client.get(
-        "$BASE_URL/stations/$id/parcels_received",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -602,8 +638,10 @@ class OyaProvider {
   Future<TonwFromRegionModel> fetchTownByRegion(
       {String id, BuildContext context}) async {
     try {
+      final url = Uri.parse("$BASE_URL/regions/$id/towns");
+
       final response = await client.get(
-        "$BASE_URL/regions/$id/towns",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'
@@ -632,8 +670,10 @@ class OyaProvider {
   Future<ScheduledBusesModel> fetchScheduledBuses(
       {String stationId, routeID, BuildContext context}) async {
     try {
+      final url = Uri.parse("$BASE_URL/routes/$routeID/schedules/$stationId");
+
       final response = await client.get(
-        "$BASE_URL/routes/$routeID/schedules/$stationId",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           // 'Content-Type': 'application/json'

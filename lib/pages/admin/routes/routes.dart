@@ -88,8 +88,10 @@ class _RoutesState extends State<Routes> {
       isLoading = true;
     });
     try {
+      final url = Uri.parse("$BASE_URL/routes/$route_id");
+
       final response = await http.delete(
-        "$BASE_URL/routes/$route_id",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
         },

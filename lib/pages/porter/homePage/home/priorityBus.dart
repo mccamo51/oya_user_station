@@ -142,23 +142,42 @@ class _PriorityBusesState extends State<PriorityBuses> {
                                         bussModel.data[x].id.toString());
                               },
                             );
-                            // } else if (bussModel.data.length > 1) {
-                            //   if (bussModel.data[x+1].passengersCount > 0)
-                            //     exceptionAlert(
-                            //       context: context,
-                            //       title: "Confimation",
-                            //       message:
-                            //           "Do you want to maigrate passengers to a different bus?",
-                            //       onMigrate: () {
-                            //         _migratePassenger(
-                            //             context: context,
-                            //             busId:
-                            //                 bussModel.data[x].bus.id.toString(),
-                            //             scheduleID:
-                            //                 bussModel.data[x].id.toString());
-                            //       },
-                            //     );
-                            //
+                          } else if (bussModel.data.length > 1) {
+                            if (bussModel.data[x].passengersCount > 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoadBuses(
+                                    scheduleId: bussModel.data[x].id.toString(),
+                                    minorCount:
+                                        bussModel.data[x].minors.toString(),
+                                    passengerCount: bussModel
+                                        .data[x].passengersCount
+                                        .toString(),
+                                    from: bussModel.data[x].route.from.name,
+                                    to: bussModel.data[x].route.to.name,
+                                    carNo: bussModel.data[x].bus.regNumber,
+                                    company: bussModel
+                                        .data[x].station.busCompany.name,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              exceptionAlert(
+                                context: context,
+                                title: "Confimation",
+                                message:
+                                    "Do you want to maigrate passengers to a different bus?",
+                                onMigrate: () {
+                                  _migratePassenger(
+                                      context: context,
+                                      busId:
+                                          bussModel.data[x].bus.id.toString(),
+                                      scheduleID:
+                                          bussModel.data[x].id.toString());
+                                },
+                              );
+                            }
                           } else
                             Navigator.push(
                               context,
@@ -208,13 +227,12 @@ _migratePassenger(
   Map<String, dynamic> body = {
     'to': '$busId',
   };
-  final response = await http.post(
-      "$BASE_URL/schedules/$scheduleID/migrate_manifest",
-      body: json.encode(body),
-      headers: {
-        "Authorization": "Bearer $accessToken",
-        'Content-Type': 'application/json'
-      }).timeout(
+  final url = Uri.parse("$BASE_URL/schedules/$scheduleID/migrate_manifest");
+
+  final response = await http.post(url, body: json.encode(body), headers: {
+    "Authorization": "Bearer $accessToken",
+    'Content-Type': 'application/json'
+  }).timeout(
     Duration(seconds: 50),
   );
   if (response.statusCode == 200) {

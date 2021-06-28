@@ -170,8 +170,10 @@ class _AddStaffState extends State<AddStaff> {
         'account_type_id': accountId,
         'station_id': staId,
       };
+      final url = Uri.parse("$BASE_URL/staffs");
+
       final response = await http.post(
-        "$BASE_URL/staffs",
+        url,
         body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",
@@ -219,8 +221,10 @@ class _AddStaffState extends State<AddStaff> {
       isLoading = true;
     });
     try {
+      final url = Uri.parse("$BASE_URL/search/users?needle=$phoneNo");
+
       final response = await http.get(
-        "$BASE_URL/search/users?needle=$phoneNo",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
@@ -241,7 +245,7 @@ class _AddStaffState extends State<AddStaff> {
             uid = responseData['data']['id'].toString();
           });
         }
-      }else if (response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
         sessionExpired(context);
       } else {
         toastContainer(text: "Error has occured");
