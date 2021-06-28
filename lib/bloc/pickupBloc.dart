@@ -6,12 +6,12 @@ import 'package:rxdart/rxdart.dart';
 class PickupBloc {
   Repository _repository = Repository();
 
-  final _pickupsFetcher = PublishSubject<Pickup>();
+  final _pickupsFetcher = PublishSubject<PickupModel>();
 
-  Stream<Pickup> get pickups => _pickupsFetcher.stream;
+  Stream<PickupModel> get pickups => _pickupsFetcher.stream;
 
   fetchAllBusSchedulePickups(String id) async {
-    Pickup timeResponse =
+    PickupModel timeResponse =
         await _repository.fetchBusSchedulePickups(scheduleId: id);
     _pickupsFetcher.sink.add(timeResponse);
   }
