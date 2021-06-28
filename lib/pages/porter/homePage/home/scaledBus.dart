@@ -139,7 +139,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                         ),
                         onTap: () {
                           print("${priorityLength.toString()}===========");
-                          if (priorityLength > 0)
+                          if (priorityLength > 0) {
                             exceptionAlert(
                               context: context,
                               title: "Confimation",
@@ -152,8 +152,8 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                         bussModel.data[x].id.toString());
                               },
                             );
-                          else if (bussModel.data.length > 1) {
-                            if (bussModel.data[x].passengersCount > 0)
+                          } else if (bussModel.data.length > 1) {
+                            if (bussModel.data[x].passengersCount > 0) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -172,7 +172,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                   ),
                                 ),
                               );
-                            else
+                            } else {
                               exceptionAlert(
                                 context: context,
                                 title: "Confimation",
@@ -186,6 +186,26 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                           bussModel.data[x].id.toString());
                                 },
                               );
+                            }
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoadBuses(
+                                  scheduleId: bussModel.data[x].id.toString(),
+                                  minorCount:
+                                      bussModel.data[x].minors.toString(),
+                                  passengerCount: bussModel
+                                      .data[x].passengersCount
+                                      .toString(),
+                                  from: bussModel.data[x].route.from.name,
+                                  to: bussModel.data[x].route.to.name,
+                                  carNo: bussModel.data[x].bus.regNumber,
+                                  company:
+                                      bussModel.data[x].station.busCompany.name,
+                                ),
+                              ),
+                            );
                           }
                         },
                       ),
