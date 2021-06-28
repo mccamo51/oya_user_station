@@ -1,5 +1,5 @@
-// const BASE_URL = "https://api.oyaghana.dev/api";
-const BASE_URL = "https://ussd.oyaghana.com/api";
+const BASE_URL = "https://api.oyaghana.dev/api";
+// const BASE_URL = "https://ussd.oyaghana.com/api";
 
 const LOGIN_URL = "$BASE_URL/login";
 const REGISTER_URL = "$BASE_URL/register";
