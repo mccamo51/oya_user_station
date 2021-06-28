@@ -72,8 +72,10 @@ class _VerifyOtpForgotPasswordState extends State<VerifyOtpForgotPassword> {
           'otp': otp,
           'new_pin': pin,
         };
+        final url = Uri.parse("$BASE_URL/account/pin/reset");
+
         final response = await http.put(
-          "$BASE_URL/account/pin/reset",
+          url,
           body: json.encode(body),
           headers: {
             "Authorization": "Bearer $accessToken",

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
+import 'package:oya_porter/config/firebase/firebaseAuth.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/mainHome.dart';
@@ -28,6 +29,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FireAuth _fireAuth = new FireAuth();
   // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _phoneController = new TextEditingController();
@@ -89,8 +91,10 @@ class _LoginPageState extends State<LoginPage> {
       });
       try {
         Map<String, dynamic> body = {'phone': phone, 'pin': password};
+        final url = Uri.parse("$LOGIN_URL");
+
         final response = await http.post(
-          "$LOGIN_URL",
+          url,
           body: json.encode(body),
           headers: {
             'Content-Type': 'application/json',
@@ -101,9 +105,6 @@ class _LoginPageState extends State<LoginPage> {
           final responseData = json.decode(response.body);
           if (responseData['status'] == 200) {
             if (responseData['data']['staffs'].length > 0) {
-              saveBoolShare(key: "auth", data: true);
-              saveStringShare(key: "userDetails", data: response.body);
-
               setState(() {
                 _isLoading = false;
                 accessToken = responseData["data"]["access_token"];
@@ -113,6 +114,14 @@ class _LoginPageState extends State<LoginPage> {
                 userICE2 = responseData["data"]["ice_secondary_phone"];
                 userRole = responseData["data"]["role"];
               });
+              await _fireAuth.signIn(
+                email: "$phone@gmail.com",
+                password: "12345678",
+                phone: phone,
+              );
+              saveBoolShare(key: "auth", data: true);
+              saveStringShare(key: "userDetails", data: response.body);
+
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(

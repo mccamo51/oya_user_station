@@ -89,8 +89,10 @@ class _AddRouteState extends State<AddRoute> {
           'destination': destId,
           'region_id': regID,
         };
+        final url = Uri.parse("$BASE_URL/routes");
+
         final response = await http.post(
-          "$BASE_URL/routes",
+          url,
           body: json.encode(body),
           headers: {
             "Authorization": "Bearer $accessToken",

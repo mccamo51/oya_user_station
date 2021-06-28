@@ -266,8 +266,10 @@ class _AddParcelState extends State<AddParcel> {
         isLoading = true;
       });
       try {
+        final url = Uri.parse("$BASE_URL/parcels");
+
         final response = await http.post(
-          "$BASE_URL/parcels",
+          url,
           body: json.encode({
             'name': name,
             'description': descrip,

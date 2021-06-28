@@ -1,16 +1,21 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/appBar.dart';
-import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/routes.dart';
+import 'package:oya_porter/main.dart';
+import 'package:oya_porter/models/checkInModel.dart';
 import 'package:oya_porter/pages/Conductor/conductorHome.dart';
 import 'package:oya_porter/pages/Driver/driverHome.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/generalManager/generalPage.dart';
 import 'package:oya_porter/pages/porter/homePage/homePageWithNav.dart';
+import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 import 'package:oya_porter/spec/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,9 +36,74 @@ class _MainHomePageState extends State<MainHomePage> {
   var data;
   @override
   void initState() {
+    _getTicketing();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        // checkin(context,
+        //     "${notification.body}, with 0541544404 has bought a ticket, Please check him in");
+
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+                channel.id, channel.name, channel.description,
+                playSound: true, icon: "@mipmap/ic_launcher"),
+          ),
+        );
+      }
+    });
     _getUserDetails();
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new messageOpenApp event was published');
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title),
+                content: Container(
+                  height: 200,
+                  child: Column(
+                    children: [Text(notification.body)],
+                  ),
+                ),
+              );
+            });
+      }
+    });
     // TODO: implement initState
     super.initState();
+  }
+
+  void _getTicketing() {
+    DatabaseReference reference =
+        FirebaseDatabase.instance.reference().child("Ticket").child(userphone);
+    reference.onValue.listen((event) {
+      // print(event.snapshot.value);
+      setState(() {
+        checkInModel = CheckInModel.fromJson(event.snapshot.value);
+        // print(checkInModel.data);
+        // for (int) {
+        if (checkInModel.data[0].porterId == "001" &&
+            checkInModel.data[0].read == false) {
+          checkin(context,
+              "Bismark Amo, with 0541544404 has bought a ticket, Please check him in");
+          print(checkInModel.data[0].phone);
+        }
+        //removing live marker and updating its location
+        // markers.removeWhere(
+        //   (m) => m.markerId.value == "${data.userId}",
+        // );
+
+        // }
+      });
+    });
   }
 
   _getUserDetails() async {
@@ -42,7 +112,7 @@ class _MainHomePageState extends State<MainHomePage> {
     if (prefs.containsKey("userDetails")) {
       String encodedData = prefs.getString("userDetails");
       var decodeData = json.decode(encodedData);
-      print(decodeData['data']['staffs'].length);
+      // print(decodeData['data']['staffs'].length);
       accessToken = decodeData['data']['access_token'];
       stationId = prefs.getString("stationId");
       setState(() {
@@ -202,8 +272,9 @@ class _MainHomePageState extends State<MainHomePage> {
   }
 
   _getLoading(stid) async {
+    final url = Uri.parse("$BASE_URL/stations/$stid/loading_bus");
     final response = await http.get(
-      "$BASE_URL/stations/$stid/loading_bus",
+      url,
       headers: {
         "Authorization": "Bearer $accessToken",
       },
@@ -213,11 +284,56 @@ class _MainHomePageState extends State<MainHomePage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       if (responseData['status'] == 200) {
-        print(responseData['data']);
+        // print(responseData['data']);
         carNumber = responseData['data']['bus']['reg_number'];
       } else if (response.statusCode == 401) {
         sessionExpired(context);
       }
     }
   }
+}
+
+Future<void> checkin(BuildContext context, msg) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        // title: Text('Rewind and remember'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                '$msg',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(PRIMARYCOLOR),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      // style: ButtonStyle(backgroundColor: MaterialColor.),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(PRIMARYCOLOR),
+                      ),
+                      onPressed: () {},
+                      child: Text("Check In")),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

@@ -206,14 +206,17 @@ class _AddTicketState extends State<AddTicket> {
         'bus_schedule_id': busID,
         'phone': phone,
         'minor_count': minor,
-        'payment_type': mapymentMode,
+        'payment_type': payType,
+        'payment_mode': mapymentMode,
         'momo_phone': momoPhone,
         'momo_name': '$momoName',
         'price': '$price',
       };
       print(busID);
+      final url = Uri.parse("$BASE_URL/stations/$stationId/tickets");
+
       final response = await http.post(
-        "$BASE_URL/stations/$stationId/tickets",
+        url,
         body: json.encode(body),
         headers: {
           "Authorization": "Bearer $accessToken",

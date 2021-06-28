@@ -136,8 +136,10 @@ class _AddBusState extends State<AddBus> {
           'insurance_exp_date': '$ins_exp_date',
           'image': ''
         };
+      final url = Uri.parse( "$BASE_URL/buses");
+
         final response = await http.post(
-          "$BASE_URL/buses",
+         url,
           body: json.encode(body),
           headers: {
             "Authorization": "Bearer $accessToken",

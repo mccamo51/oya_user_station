@@ -182,8 +182,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
     // setState(() {
     //   isLoading = true;
     // });
+    final url = Uri.parse("$BASE_URL/stations/$stationId/scaled_buses");
+
     final response = await http.get(
-      "$BASE_URL/stations/$stationId/scaled_buses",
+      url,
       headers: {
         "Authorization": "Bearer $accessToken",
       },
@@ -211,8 +213,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
       setState(() {
         _isLoading = true;
       });
+      final url = Uri.parse("$BASE_URL/stations/$stationId/priority_buses");
+
       final response = await http.get(
-        "$BASE_URL/stations/$stationId/priority_buses",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
         },
@@ -223,7 +227,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
           _isLoading = false;
         });
 
-        toastContainer(text: "Worked");
+        // toastContainer(text: "Worked");
         final responseData = json.decode(response.body);
         print(responseData);
         if (responseData['status'] == 200) {
@@ -240,11 +244,11 @@ class _HomePagePorterState extends State<HomePagePorter> {
         });
         toastContainer(text: "Error has occured");
       }
-    } catch (e) {
+    } on TimeoutException catch (e) {
       setState(() {
         _isLoading = false;
       });
-      toastContainer(text: "$e");
+      toastContainer(text: "Connection Timeout");
     }
   }
 
@@ -253,8 +257,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
       isLoading = true;
     });
     try {
+      final url = Uri.parse("$BASE_URL/stations/$stationId/loading_bus");
+
       final response = await http.get(
-        "$BASE_URL/stations/$stationId/loading_bus",
+        url,
         headers: {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'

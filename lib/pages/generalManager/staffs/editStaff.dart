@@ -104,8 +104,10 @@ class _EditStaffState extends State<EditStaff> {
       'account_type_id': '$accoutId',
       'updated_by': '$userId',
     };
+    final url = Uri.parse("$BASE_URL/staffs/$uid");
+
     final response = await http
-        .put("$BASE_URL/staffs/$uid",
+        .put(url,
             headers: {
               "Authorization": "Bearer $accessToken",
               'Content-Type': 'application/json'
