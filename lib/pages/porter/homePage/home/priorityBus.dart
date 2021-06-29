@@ -142,43 +142,45 @@ class _PriorityBusesState extends State<PriorityBuses> {
                                         bussModel.data[x].id.toString());
                               },
                             );
-                          } else if (bussModel.data.length > 1) {
-                            if (bussModel.data[x].passengersCount > 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoadBuses(
-                                    scheduleId: bussModel.data[x].id.toString(),
-                                    minorCount:
-                                        bussModel.data[x].minors.toString(),
-                                    passengerCount: bussModel
-                                        .data[x].passengersCount
-                                        .toString(),
-                                    from: bussModel.data[x].route.from.name,
-                                    to: bussModel.data[x].route.to.name,
-                                    carNo: bussModel.data[x].bus.regNumber,
-                                    company: bussModel
-                                        .data[x].station.busCompany.name,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              exceptionAlert(
-                                context: context,
-                                title: "Confimation",
-                                message:
-                                    "Do you want to maigrate passengers to a different bus?",
-                                onMigrate: () {
-                                  _migratePassenger(
-                                      context: context,
-                                      busId:
-                                          bussModel.data[x].bus.id.toString(),
-                                      scheduleID:
-                                          bussModel.data[x].id.toString());
-                                },
-                              );
-                            }
-                          } else
+                          }
+                          //  else if (bussModel.data.length > 1) {
+                          //   if (bussModel.data[x].passengersCount > 0) {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => LoadBuses(
+                          //           scheduleId: bussModel.data[x].id.toString(),
+                          //           minorCount:
+                          //               bussModel.data[x].minors.toString(),
+                          //           passengerCount: bussModel
+                          //               .data[x].passengersCount
+                          //               .toString(),
+                          //           from: bussModel.data[x].route.from.name,
+                          //           to: bussModel.data[x].route.to.name,
+                          //           carNo: bussModel.data[x].bus.regNumber,
+                          //           company: bussModel
+                          //               .data[x].station.busCompany.name,
+                          //         ),
+                          //       ),
+                          //     );
+                          //   } else {
+                          //     exceptionAlert(
+                          //       context: context,
+                          //       title: "Confimation",
+                          //       message:
+                          //           "Do you want to maigrate passengers to a different bus?",
+                          //       onMigrate: () {
+                          //         _migratePassenger(
+                          //             context: context,
+                          //             busId:
+                          //                 bussModel.data[x].bus.id.toString(),
+                          //             scheduleID:
+                          //                 bussModel.data[x].id.toString());
+                          //       },
+                          //     );
+                          //   }
+                          // }
+                          else
                             Navigator.push(
                               context,
                               MaterialPageRoute(
