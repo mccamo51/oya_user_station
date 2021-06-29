@@ -23,6 +23,9 @@ import 'package:oya_porter/spec/styles.dart';
 import 'package:oya_porter/models/ticketModel.dart' as ticket;
 import 'package:http/http.dart' as http;
 
+enum PickUp { Yes, No }
+PickUp _pickUp = PickUp.No;
+
 class AddTicket extends StatefulWidget {
   @override
   _AddTicketState createState() => _AddTicketState();
@@ -42,10 +45,11 @@ class _AddTicketState extends State<AddTicket> {
   String network, payType;
   bool showMomo = true;
   String schedleId, routeID, pickupId;
-  bool isLoading = false;
+  bool isLoading = false, selectPickup = false;
 
   @override
   void initState() {
+    minorController.text = "0";
     super.initState();
     loadMyRouteOffline();
     myRouteBloc.fetchAllStaffs(stationId, context);
@@ -92,17 +96,67 @@ class _AddTicketState extends State<AddTicket> {
                     SizedBox(
                       height: 15,
                     ),
-                    GestureDetector(
-                      onTap: () => androidSelectPickups(
-                        context: context,
-                        title: "Mid Route Pickup",
-                      ),
-                      child: textFormField(
-                        hintText: "Mid Route Pickup",
-                        controller: _pickupController,
-                        focusNode: null,
-                        icon: Icons.directions_bus,
-                        enable: false,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Select Mid Route Pickup",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600))
+                      ],
+                    ),
+                    Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Radio(
+                                activeColor: PRIMARYCOLOR,
+                                value: PickUp.No,
+                                groupValue: _pickUp,
+                                onChanged: (PickUp value) {
+                                  setState(() {
+                                    _pickUp = value;
+                                    selectPickup = false;
+                                  });
+                                },
+                              ),
+                              Text("No"),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 50,
+                          ),
+                          Row(
+                            children: [
+                              Radio(
+                                activeColor: PRIMARYCOLOR,
+                                value: PickUp.Yes,
+                                groupValue: _pickUp,
+                                onChanged: (PickUp value) {
+                                  setState(() {
+                                    _pickUp = value;
+                                    selectPickup = true;
+                                  });
+                                },
+                              ),
+                              Text("Yes"),
+                            ],
+                          ),
+                        ]),
+                    Visibility(
+                      visible: selectPickup,
+                      child: GestureDetector(
+                        onTap: () => androidSelectPickups(
+                          context: context,
+                          title: "Mid Route Pickup",
+                        ),
+                        child: textFormField(
+                          hintText: "Mid Route Pickup",
+                          controller: _pickupController,
+                          focusNode: null,
+                          icon: Icons.directions_bus,
+                          enable: false,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -127,7 +181,7 @@ class _AddTicketState extends State<AddTicket> {
                       inputType: TextInputType.number,
                       textLength: 1,
                       focusNode: null,
-                      initialValue: 0,
+                      // initialValue: "0",
                     ),
                     SizedBox(
                       height: 15,
@@ -492,42 +546,53 @@ class _AddTicketState extends State<AddTicket> {
   }
 
   Widget _mPickups(ticket.PickupModel model, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var data in model.data) ...[
-          Platform.isIOS
-              ? CupertinoActionSheetAction(
-                  child: Text(
-                    '${data.name} - ${data.name}',
-                    style: TextStyle(color: BLACK),
-                  ),
-                  onPressed: () {
-                    setState(() {
+    if (model.data != null)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var data in model.data) ...[
+            Platform.isIOS
+                ? CupertinoActionSheetAction(
+                    child: Text(
+                      '${data.name} - ${data.name}',
+                      style: TextStyle(color: BLACK),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        routeID = data.id.toString();
+
+                        _routeController.text = "${data.name} - ${data.name}";
+                      });
+
+                      Navigator.pop(context);
+                    },
+                  )
+                : SimpleDialogOption(
+                    onPressed: () {
                       routeID = data.id.toString();
-
                       _routeController.text = "${data.name} - ${data.name}";
-                    });
-
-                    Navigator.pop(context);
-                  },
-                )
-              : SimpleDialogOption(
-                  onPressed: () {
-                    routeID = data.id.toString();
-                    _routeController.text = "${data.name} - ${data.name}";
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    "${data.name} - ${data.name}",
-                    style: TextStyle(fontSize: 20),
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "${data.name} - ${data.name}",
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
-                ),
-          Divider(),
-        ]
-      ],
-    );
+            Divider(),
+          ]
+        ],
+      );
+    else
+      return Container(
+          height: 50,
+          child: Center(
+            child: Text("No Midroute",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red)),
+          ));
   }
 
   Widget _scheduleM(ScheduleModel model, BuildContext context) {
