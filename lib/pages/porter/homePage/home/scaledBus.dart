@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,13 +46,13 @@ class _ScaledBussesState extends State<ScaledBusses> {
     super.initState();
   }
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(title: "Scaled Buses"),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CupertinoActivityIndicator(),
             )
@@ -152,44 +154,42 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                         bussModel.data[x].id.toString());
                               },
                             );
-                          }
-                          //  else if (bussModel.data.length > 1) {
-                          //   if (bussModel.data[x].passengersCount > 0) {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) => LoadBuses(
-                          //           scheduleId: bussModel.data[x].id.toString(),
-                          //           minorCount:
-                          //               bussModel.data[x].minors.toString(),
-                          //           passengerCount: bussModel
-                          //               .data[x].passengersCount
-                          //               .toString(),
-                          //           from: bussModel.data[x].route.from.name,
-                          //           to: bussModel.data[x].route.to.name,
-                          //           carNo: bussModel.data[x].bus.regNumber,
-                          //           company: bussModel
-                          //               .data[x].station.busCompany.name,
-                          //         ),
-                          //       ),
-                          //     );
-                          //   } else {
-                          //     exceptionAlert(
-                          //       context: context,
-                          //       title: "Confimation",
-                          //       message:
-                          //           "Do you want to maigrate passengers to a different bus?",
-                          //       onMigrate: () {
-                          //         _migratePassenger(
-                          //             busId:
-                          //                 bussModel.data[x].bus.id.toString(),
-                          //             scheduleID:
-                          //                 bussModel.data[x].id.toString());
-                          //       },
-                          //     );
-                          //   }
-                          // }
-                          else {
+                          } else if (bussModel.data.length > 1) {
+                            if (bussModel.data[x].passengersCount > 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoadBuses(
+                                    scheduleId: bussModel.data[x].id.toString(),
+                                    minorCount:
+                                        bussModel.data[x].minors.toString(),
+                                    passengerCount: bussModel
+                                        .data[x].passengersCount
+                                        .toString(),
+                                    from: bussModel.data[x].route.from.name,
+                                    to: bussModel.data[x].route.to.name,
+                                    carNo: bussModel.data[x].bus.regNumber,
+                                    company: bussModel
+                                        .data[x].station.busCompany.name,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              exceptionAlert(
+                                context: context,
+                                title: "Confimation",
+                                message:
+                                    "Do you want to maigrate passengers to a from ${bussModel.data[0].bus.regNumber} to ${bussModel.data[x].bus.regNumber} bus?",
+                                onMigrate: () {
+                                  _migratePassenger(
+                                      busId:
+                                          bussModel.data[x].bus.id.toString(),
+                                      scheduleID:
+                                          bussModel.data[x].id.toString());
+                                },
+                              );
+                            }
+                          } else {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -232,7 +232,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
       regNumber,
       busCompany}) async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     final url = Uri.parse("$BASE_URL/stations/$stationId/priority_buses");
 
@@ -245,7 +245,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
     ).timeout(Duration(seconds: 30));
     if (response.statusCode == 200) {
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
       final responseData = json.decode(response.body);
       if (responseData['status'] == 200) {
@@ -276,39 +276,82 @@ class _ScaledBussesState extends State<ScaledBusses> {
           );
         }
       }
-      print(isLoading);
+      print(_isLoading);
     } else if (response.statusCode == 401) {
       sessionExpired(context);
     } else {
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
       toastContainer(text: "Error has occured");
     }
   }
 
-  _migratePassenger({
-    @required String scheduleID,
-    @required String busId,
-  }) async {
+  _migratePassenger(
+      {@required String scheduleID,
+      @required String busId,
+      BuildContext context}) async {
+    setState(() {
+      _isLoading = true;
+    });
     Map<String, dynamic> body = {
       'to': '$busId',
     };
     final url = Uri.parse("$BASE_URL/schedules/$scheduleID/migrate_manifest");
 
-    final response = await http.post(url, body: json.encode(body), headers: {
-      "Authorization": "Bearer $accessToken",
-      'Content-Type': 'application/json'
-    }).timeout(
-      Duration(seconds: 50),
-    );
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      if (responseData['status'] == 200) {}
-    } else if (response.statusCode == 401) {
-      sessionExpired(context);
-    } else {
-      toastContainer(text: "Error has occured");
+    try {
+      final response = await http.post(url, body: json.encode(body), headers: {
+        "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
+      }).timeout(
+        Duration(seconds: 50),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData);
+        if (responseData['status'] == 200) {
+          setState(() {
+            _isLoading = false;
+          });
+          // print(responseData);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoadBuses(
+                scheduleId: responseData['data'].id.toString(),
+                minorCount: responseData['data'].minors.toString(),
+                passengerCount: responseData['data'].passengersCount.toString(),
+                from: responseData['data'].route.from.name,
+                to: responseData['data'].route.to.name,
+                carNo: responseData['data'].bus.regNumber,
+                company: responseData['data'].station.busCompany.name,
+              ),
+            ),
+          );
+        }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        toastContainer(text: "Error has occured");
+      }
+    } on TimeoutException catch (e) {
+      print(e);
+      setState(() {
+        _isLoading = false;
+      });
+    } on SocketException catch (f) {
+      print(f);
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (g) {
+      print(g);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 }
