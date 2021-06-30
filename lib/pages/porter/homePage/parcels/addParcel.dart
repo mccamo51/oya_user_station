@@ -211,7 +211,7 @@ class _AddParcelState extends State<AddParcel> {
   }
 
   Widget allStations(BuildContext context) {
-    loadAllStaffOffline();
+    loadStationsOffline();
     stationsBloc.fetchAllStations(context);
     return StreamBuilder<Object>(
       stream: stationsBloc.stations,

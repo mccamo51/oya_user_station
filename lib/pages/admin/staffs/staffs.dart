@@ -32,7 +32,7 @@ class _StaffsState extends State<Staffs> {
   @override
   void initState() {
     stafBloc.fetchAllStaffs(widget.id.toString(), context);
-    loadAllStaffOffline();
+    // loadAllStaffOffline();
     // TODO: implement initState
     super.initState();
   }

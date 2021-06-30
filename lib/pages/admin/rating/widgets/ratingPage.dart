@@ -29,7 +29,7 @@ class _RatingPageState extends State<RatingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadAllRatingOffline();
+    // loadAllRatingOffline();
     ratingBloc.fetchAllStaffs(widget.id, context);
   }
 
@@ -40,9 +40,9 @@ class _RatingPageState extends State<RatingPage> {
       key: refreshKey,
       child: StreamBuilder(
         stream: ratingBloc.allRating,
-        initialData: allRatingMapOffline == null
-            ? null
-            : RatingModel.fromJson(allRatingMapOffline),
+        // initialData: allRatingMapOffline == null
+        //     ? null
+        //     : RatingModel.fromJson(allRatingMapOffline),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           print("snapshot: ${snapshot.data}");
           if (snapshot.hasData) {

@@ -16,6 +16,7 @@ import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/home/priorityBus.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/loadBus.dart';
+import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
@@ -42,7 +43,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
   void initState() {
     // TODO: implement initState
     scaledBloc.fetchScaledBuses(widget.scheduleID, context);
-    loadScaledBusOffline();
+    // loadScaledBusOffline();
     super.initState();
   }
 
@@ -61,9 +62,9 @@ class _ScaledBussesState extends State<ScaledBusses> {
               key: refreshKey,
               child: StreamBuilder(
                 stream: scaledBloc.scaledBuses,
-                initialData: scaledBusMapOffline == null
-                    ? null
-                    : ScaledBusModel.fromJson(scaledBusMapOffline),
+                // initialData: scaledBusMapOffline == null
+                //     ? null
+                //     : ScaledBusModel.fromJson(scaledBusMapOffline),
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   print("snapshot: ${snapshot.data}");
@@ -131,8 +132,22 @@ class _ScaledBussesState extends State<ScaledBusses> {
                         ),
                         leading: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(FeatherIcons.truck),
+                            Icon(
+                              FeatherIcons.truck,
+                              color: PRIMARYCOLOR,
+                            ),
+                            SizedBox(height: 10),
+                            bussModel.data[x].passengersCount > 0
+                                ? Text("Loading",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: PRIMARYCOLOR))
+                                : Text("Scaled",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: RED))
                           ],
                         ),
                         trailing: Icon(

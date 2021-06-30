@@ -73,8 +73,8 @@ class Station {
   String name;
   String location;
   String email;
-  Null longitude;
-  Null latitude;
+  String longitude;
+  String latitude;
   BusCompany busCompany;
   Region region;
 
@@ -95,10 +95,10 @@ class Station {
     phone = json['phone'];
     code = json['code'];
     name = json['name'];
-    location = json['location'];
+    location = json['location'].toString();
     email = json['email'];
-    longitude = json['longitude'];
-    latitude = json['latitude'];
+    longitude = json['longitude'].toString();
+    latitude = json['latitude'].toString();
     busCompany = json['bus_company'] != null
         ? new BusCompany.fromJson(json['bus_company'])
         : null;
@@ -131,7 +131,7 @@ class BusCompany {
   String name;
   String phone;
   String email;
-  Null logo;
+  String logo;
   String contactName;
   String contactPhone;
   int status;
@@ -224,14 +224,14 @@ class User {
   int id;
   String phone;
   String name;
-  Null email;
+  String email;
   String ice1Phone;
   String ice2Phone;
   String verifiedAt;
   String code;
   String expiration;
   int accountStatus;
-  Null specialHireCode;
+  String specialHireCode;
 
   User(
       {this.id,
@@ -257,7 +257,7 @@ class User {
     code = json['code'];
     expiration = json['expiration'];
     accountStatus = json['account_status'];
-    specialHireCode = json['special_hire_code'];
+    specialHireCode = json['special_hire_code'].toString();
   }
 
   Map<String, dynamic> toJson() {

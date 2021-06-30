@@ -30,7 +30,7 @@ class _ViewStaffsState extends State<ViewStaffs> {
   @override
   void initState() {
     stafBloc.fetchAllStaffs(widget.id.toString(), context);
-    loadAllStaffOffline();
+    // loadAllStaffOffline();
     // TODO: implement initState
     super.initState();
   }
@@ -45,9 +45,9 @@ class _ViewStaffsState extends State<ViewStaffs> {
         onRefresh: refreshList,
         child: StreamBuilder(
           stream: stafBloc.allStaff,
-          initialData: allStaffMapOffline == null
-              ? null
-              : StaffModel.fromJson(allStaffMapOffline),
+          // initialData: allStaffMapOffline == null
+          //     ? null
+          //     : StaffModel.fromJson(allStaffMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

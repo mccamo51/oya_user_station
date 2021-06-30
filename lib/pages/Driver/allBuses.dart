@@ -34,7 +34,7 @@ class _BussesState extends State<Busses> {
   void initState() {
     // TODO: implement initState
     busesBloc.fetchAllStaffs(widget.stationId, context);
-    loadallAllBussesOffline();
+    // loadallAllBussesOffline();
     super.initState();
   }
 
@@ -54,9 +54,9 @@ class _BussesState extends State<Busses> {
               key: refreshKey,
               child: StreamBuilder(
                 stream: busesBloc.allBuses,
-                initialData: alBussesMapOffline == null
-                    ? null
-                    : BussModel.fromJson(alBussesMapOffline),
+                // initialData: alBussesMapOffline == null
+                //     ? null
+                //     : BussModel.fromJson(alBussesMapOffline),
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   print("snapshot: ${snapshot.data}");

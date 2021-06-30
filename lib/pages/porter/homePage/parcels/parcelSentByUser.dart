@@ -25,7 +25,7 @@ class _ParcelRecievedState extends State<ParcelRecieved> {
   @override
   void initState() {
     parcelRecievedBloc.fetchAllParcelRecieved(stationId, context);
-    loadParcelRecievedOffline();
+    // loadParcelRecievedOffline();
     // TODO: implement initState
     super.initState();
   }
@@ -41,9 +41,9 @@ class _ParcelRecievedState extends State<ParcelRecieved> {
         onRefresh: refreshList,
         child: StreamBuilder(
           stream: parcelRecievedBloc.parcelsent,
-          initialData: loadParcelRecievedMapOffline == null
-              ? null
-              : ParcelRecievedModel.fromJson(loadParcelRecievedMapOffline),
+          // initialData: loadParcelRecievedMapOffline == null
+          //     ? null
+          //     : ParcelRecievedModel.fromJson(loadParcelRecievedMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

@@ -40,7 +40,7 @@ class _RoutesState extends State<Routes> {
   @override
   void initState() {
     myRouteBloc.fetchAllStaffs(widget.id, context);
-    loadMyRouteOffline();
+    // loadMyRouteOffline();
     // TODO: implement initState
     super.initState();
   }
@@ -61,9 +61,9 @@ class _RoutesState extends State<Routes> {
         key: refreshKey,
         child: StreamBuilder(
           stream: myRouteBloc.myroutes,
-          initialData: myRouteMapOffline == null
-              ? null
-              : MyRouteModel.fromJson(myRouteMapOffline),
+          // initialData: myRouteMapOffline == null
+          //     ? null
+          //     : MyRouteModel.fromJson(myRouteMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

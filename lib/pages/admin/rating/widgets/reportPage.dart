@@ -31,7 +31,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   void initState() {
     // TODO: implement initState
-    loadReportOffline();
+    // loadReportOffline();
     reportBloc.fetchDrivers(widget.id, context);
     super.initState();
   }
@@ -43,9 +43,9 @@ class _ReportPageState extends State<ReportPage> {
       key: refreshKey,
           child: StreamBuilder(
         stream: reportBloc.reports,
-        initialData: reportMapOffline == null
-            ? null
-            : ReportModel.fromJson(reportMapOffline),
+        // initialData: reportMapOffline == null
+        //     ? null
+        //     : ReportModel.fromJson(reportMapOffline),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           print("snapshot: ${snapshot.data}");
           if (snapshot.hasData) {

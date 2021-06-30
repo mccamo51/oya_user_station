@@ -41,7 +41,7 @@ class _PriorityBusesState extends State<PriorityBuses> {
 
   void initState() {
     priorityBusBloc.fetchPriorityBuses(widget.scheduleID, context);
-    loadPriorityBusOffline();
+    // loadPriorityBusOffline();
     super.initState();
   }
 
@@ -60,9 +60,9 @@ class _PriorityBusesState extends State<PriorityBuses> {
                 key: refreshKey,
                 child: StreamBuilder(
                   stream: priorityBusBloc.prioritybus,
-                  initialData: priorityBusMapOffline == null
-                      ? null
-                      : PriorityBusModel.fromJson(priorityBusMapOffline),
+                  // initialData: priorityBusMapOffline == null
+                  //     ? null
+                  //     : PriorityBusModel.fromJson(priorityBusMapOffline),
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     print("snapshot: ${snapshot.data}");
@@ -118,6 +118,9 @@ class _PriorityBusesState extends State<PriorityBuses> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(FeatherIcons.truck),
+                            bussModel.data[x].passengersCount > 0
+                                ? Text("Loading")
+                                : Text("Priority")
                           ],
                         ),
                         trailing: Column(

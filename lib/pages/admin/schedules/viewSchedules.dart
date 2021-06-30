@@ -36,7 +36,7 @@ class _ViewSchedulesState extends State<ViewSchedules> {
       routeId: widget.routeId,
       id: widget.statiionId,
     );
-    loadallSchedulesOffline();
+    // loadallSchedulesOffline();
     // TODO: implement initState
     super.initState();
   }
@@ -59,9 +59,9 @@ class _ViewSchedulesState extends State<ViewSchedules> {
         key: refreshKey,
         child: StreamBuilder(
           stream: scheduleBloc.allRating,
-          initialData: schedulesMapOffline == null
-              ? null
-              : ScheduleModel.fromJson(schedulesMapOffline),
+          // initialData: schedulesMapOffline == null
+          //     ? null
+          //     : ScheduleModel.fromJson(schedulesMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

@@ -30,7 +30,7 @@ class _ParcelSentState extends State<ParcelSent> {
   @override
   void initState() {
     parcelSentBloc.fetchAllParcelSent(stationId, context);
-    loadParcelSentOffline();
+    // loadParcelSentOffline();
     // TODO: implement initState
     super.initState();
   }
@@ -46,9 +46,9 @@ class _ParcelSentState extends State<ParcelSent> {
         onRefresh: refreshList,
         child: StreamBuilder(
           stream: parcelSentBloc.parcelsent,
-          initialData: loadParcelSentMapOffline == null
-              ? null
-              : ParcelSentUserModel.fromJson(loadParcelSentMapOffline),
+          // initialData: loadParcelSentMapOffline == null
+          //     ? null
+          //     : ParcelSentUserModel.fromJson(loadParcelSentMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {
