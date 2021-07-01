@@ -51,7 +51,7 @@ class _AddTicketState extends State<AddTicket> {
   void initState() {
     minorController.text = "0";
     super.initState();
-    loadMyRouteOffline();
+    // loadMyRouteOffline();
     myRouteBloc.fetchAllStaffs(stationId, context);
   }
 
@@ -467,9 +467,9 @@ class _AddTicketState extends State<AddTicket> {
   Widget ticketFromFuture() {
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
-      initialData: myRouteMapOffline == null
-          ? null
-          : MyRouteModel.fromJson(myRouteMapOffline),
+      // initialData: myRouteMapOffline == null
+      //     ? null
+      //     : MyRouteModel.fromJson(myRouteMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data != null) return _mRoute(snapshot.data, context);
@@ -486,9 +486,9 @@ class _AddTicketState extends State<AddTicket> {
     pickupBloc.fetchAllBusSchedulePickups(schedleId);
     return StreamBuilder<Object>(
       stream: pickupBloc.pickups,
-      initialData: pickupsMapOffline == null
-          ? null
-          : ticket.PickupModel.fromJson(pickupsMapOffline),
+      // initialData: pickupsMapOffline == null
+      //     ? null
+      //     : ticket.PickupModel.fromJson(pickupsMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mPickups(snapshot.data, context);
@@ -501,13 +501,13 @@ class _AddTicketState extends State<AddTicket> {
   }
 
   Widget allScheduled() {
-    loadallSchedulesOffline();
+    // loadallSchedulesOffline();
     scheduleBloc.fetchAllStaffs(id: stationId, routeId: routeID);
     return StreamBuilder<Object>(
       stream: scheduleBloc.allRating,
-      initialData: schedulesMapOffline == null
-          ? null
-          : ScheduleModel.fromJson(schedulesMapOffline),
+      // initialData: schedulesMapOffline == null
+      //     ? null
+      //     : ScheduleModel.fromJson(schedulesMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _scheduleM(snapshot.data, context);

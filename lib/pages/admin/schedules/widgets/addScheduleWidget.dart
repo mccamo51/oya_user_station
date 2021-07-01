@@ -327,8 +327,8 @@ class _SchedulesState extends State<Schedules> {
     busesBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: busesBloc.allBuses,
-      initialData:
-          busesMapOffline == null ? null : BussModel.fromJson(busesMapOffline),
+      // initialData:
+          // busesMapOffline == null ? null : BussModel.fromJson(busesMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mBusT(snapshot.data, context);
@@ -393,9 +393,9 @@ class _SchedulesState extends State<Schedules> {
     myRouteBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
-      initialData: myRouteMapOffline == null
-          ? null
-          : MyRouteModel.fromJson(myRouteMapOffline),
+      // initialData: myRouteMapOffline == null
+      //     ? null
+      //     : MyRouteModel.fromJson(myRouteMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mRoute(snapshot.data, context);
@@ -455,13 +455,13 @@ class _SchedulesState extends State<Schedules> {
   }
 
   Widget allDriver() {
-    loadDriverOffline();
+    // loadDriverOffline();
     driverBloc.fetchDrivers(stationId, context);
     return StreamBuilder<Object>(
       stream: driverBloc.drivers,
-      initialData: driversMapOffline == null
-          ? null
-          : DriversModel.fromJson(driversMapOffline),
+      // initialData: driversMapOffline == null
+      //     ? null
+      //     : DriversModel.fromJson(driversMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mDriver(snapshot.data, context);
@@ -520,13 +520,13 @@ class _SchedulesState extends State<Schedules> {
   }
 
   Widget allConductor() {
-    loadconductorsOffline();
+    // loadconductorsOffline();
     conductorBloc.fetchConductors(stationId, context);
     return StreamBuilder<Object>(
       stream: conductorBloc.conductors,
-      initialData: conductorsMapOffline == null
-          ? null
-          : ConductorModel.fromJson(conductorsMapOffline),
+      // initialData: conductorsMapOffline == null
+      //     ? null
+      //     : ConductorModel.fromJson(conductorsMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mConductor(snapshot.data, context);
@@ -586,13 +586,13 @@ class _SchedulesState extends State<Schedules> {
   }
 
   Widget allPorter() {
-    loadportersOffline();
+    // loadportersOffline();
     porterBloc.fetchPorters(stationId, context);
     return StreamBuilder<Object>(
       stream: porterBloc.porters,
-      initialData: portersMapOffline == null
-          ? null
-          : PortersModel.fromJson(portersMapOffline),
+      // initialData: portersMapOffline == null
+      //     ? null
+      //     : PortersModel.fromJson(portersMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mPorter(snapshot.data, context);

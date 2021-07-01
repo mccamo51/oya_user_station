@@ -29,7 +29,7 @@ class _TicketPageState extends State<TicketPage> {
   void initState() {
     // TODO: implement initState
     ticketBloc.fetchAllTicket(widget.id, context);
-    loadallTicketsOffline();
+    // loadallTicketsOffline();
     super.initState();
   }
 
@@ -44,9 +44,9 @@ class _TicketPageState extends State<TicketPage> {
         key: refreshKey,
         child: StreamBuilder(
           stream: ticketBloc.allTickets,
-          initialData: ticketMapOffline == null
-              ? null
-              : TicketsModel.fromJson(ticketMapOffline),
+          // initialData: ticketMapOffline == null
+          //     ? null
+          //     : TicketsModel.fromJson(ticketMapOffline),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             print("snapshot: ${snapshot.data}");
             if (snapshot.hasData) {

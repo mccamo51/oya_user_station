@@ -211,13 +211,13 @@ class _AddParcelState extends State<AddParcel> {
   }
 
   Widget allStations(BuildContext context) {
-    loadStationsOffline();
+    // loadStationsOffline();
     stationsBloc.fetchAllStations(context);
     return StreamBuilder<Object>(
       stream: stationsBloc.stations,
-      initialData: stationsMapOffline == null
-          ? null
-          : StationsModel.fromJson(stationsMapOffline),
+      // initialData: stationsMapOffline == null
+      //     ? null
+      //     : StationsModel.fromJson(stationsMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mStation(snapshot.data, context);
