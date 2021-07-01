@@ -147,13 +147,13 @@ class _SearchPorterState extends State<SearchPorter> {
   }
 
   Widget allPorter() {
-     loadportersOffline();
+    //  loadportersOffline();
     porterBloc.fetchPorters(stationId, context);
     return StreamBuilder<Object>(
        stream: porterBloc.porters,
-      initialData: portersMapOffline == null
-          ? null
-          : PortersModel.fromJson(portersMapOffline),
+      // initialData: portersMapOffline == null
+      //     ? null
+      //     : PortersModel.fromJson(portersMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mRoute(snapshot.data, context);

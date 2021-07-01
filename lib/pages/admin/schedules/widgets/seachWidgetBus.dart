@@ -10,7 +10,7 @@ import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
 
 TextEditingController busController = TextEditingController();
-String busId, routId, driverId, conductorId, porterId,bus_schedle_id;
+String busId, routId, driverId, conductorId, porterId, bus_schedle_id;
 TextEditingController driverController = TextEditingController();
 
 class SeachBus extends StatefulWidget {
@@ -31,12 +31,12 @@ class _SeachBusState extends State<SeachBus> {
   }
 
   Widget allBus() {
-    loadbusesOffline();
+    // loadbusesOffline();
     busesBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: busesBloc.allBuses,
-      initialData:
-          busesMapOffline == null ? null : BussModel.fromJson(busesMapOffline),
+      // initialData:
+      // busesMapOffline == null ? null : BussModel.fromJson(busesMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mBusT(snapshot.data, context);
@@ -99,8 +99,13 @@ class _SeachBusState extends State<SeachBus> {
                               // _toCode = data.id;
                               busId = (data.id).toString();
                               busController.text = data.regNumber;
-                              driverController.text = data.driver.user.name;
-                              driverId = data.driver.id.toString();
+                              // data.driver.user.name != null
+                              //     ? driverController.text =
+                              //         data.driver.user.name
+                              //     : driverController.text = "Select Driver";
+                              // data.driver.id != null
+                              //     ? driverId = data.driver.id.toString()
+                              //     : "";
                             });
 
                             Navigator.pop(context);
@@ -114,12 +119,18 @@ class _SeachBusState extends State<SeachBus> {
                         width: double.infinity,
                         child: SimpleDialogOption(
                           onPressed: () {
-                            busId = (data.id).toString();
-                            busController.text = data.regNumber;
-
-                            driverController.text = data.driver.user.name;
-                            driverId = data.driver.id.toString();
-                            Navigator.pop(context);
+                            try {
+                              busId = (data.id).toString();
+                              busController.text = data.regNumber;
+                              driverController.text = data.driver.user.name;
+                              driverId = data.driver.id.toString();
+                              Navigator.pop(context);
+                            } catch (e) {
+                              print(e);
+                              busId = (data.id).toString();
+                              busController.text = data.regNumber;
+                              Navigator.pop(context);
+                            }
                           },
                           child: Text("${data.regNumber}",
                               style: TextStyle(fontSize: 20)),

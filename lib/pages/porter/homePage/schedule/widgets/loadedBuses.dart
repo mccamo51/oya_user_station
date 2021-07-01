@@ -37,7 +37,7 @@ class _LoadedBusesState extends State<LoadedBuses> {
   @override
   void initState() {
     loadedBusBloc.fetchLoadedBuses(widget.stationId, context);
-    loadLoadedBusOffline();
+    // loadLoadedBusOffline();
     super.initState();
   }
 
@@ -53,9 +53,9 @@ class _LoadedBusesState extends State<LoadedBuses> {
               key: refreshKey,
               child: StreamBuilder(
                 stream: loadedBusBloc.loadedbuses,
-                initialData: loadedbusesMapOffline == null
-                    ? null
-                    : LoadedBusModel.fromJson(loadedbusesMapOffline),
+                // initialData: loadedbusesMapOffline == null
+                //     ? null
+                //     : LoadedBusModel.fromJson(loadedbusesMapOffline),
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   print("snapshot: ${snapshot.data}");

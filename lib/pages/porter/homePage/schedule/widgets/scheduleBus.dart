@@ -28,7 +28,7 @@ class _ScheduledBusState extends State<ScheduledBus> {
   @override
   void initState() {
     scaledBloc.fetchScaledBuses(widget.stationId, context);
-    loadScaledBusOffline();
+    // loadScaledBusOffline();
     super.initState();
   }
 
@@ -45,9 +45,9 @@ class _ScheduledBusState extends State<ScheduledBus> {
               key: refreshKey,
               child: StreamBuilder(
                 stream: scaledBloc.scaledBuses,
-                initialData: scaledBusMapOffline == null
-                    ? null
-                    : ScaledBusModel.fromJson(scaledBusMapOffline),
+                // initialData: scaledBusMapOffline == null
+                //     ? null
+                //     : ScaledBusModel.fromJson(scaledBusMapOffline),
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   print("snapshot: ${snapshot.data}");

@@ -211,13 +211,13 @@ class _AddBusState extends State<AddBus> {
   }
 
   Widget allBusType() {
-    loadBusTypeModelOffline();
+    // loadBusTypeModelOffline();
     busTypeBloc.fetchDrivers(context);
     return StreamBuilder<Object>(
       stream: busTypeBloc.busesType,
-      initialData: busTypeModelMapOffline == null
-          ? null
-          : BusTypeModel.fromJson(busTypeModelMapOffline),
+      // initialData: busTypeModelMapOffline == null
+      //     ? null
+      //     : BusTypeModel.fromJson(busTypeModelMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mBusT(snapshot.data, context);
@@ -277,13 +277,13 @@ class _AddBusState extends State<AddBus> {
   }
 
   Widget allDrivers() {
-    loadDriverOffline();
+    // loadDriverOffline();
     driverBloc.fetchDrivers(stationId, context);
     return StreamBuilder<Object>(
       stream: driverBloc.drivers,
-      initialData: driversMapOffline == null
-          ? null
-          : DriversModel.fromJson(driversMapOffline),
+      // initialData: driversMapOffline == null
+      //     ? null
+      //     : DriversModel.fromJson(driversMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mDriver(snapshot.data, context);

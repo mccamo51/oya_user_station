@@ -148,13 +148,13 @@ class _SearchDiverState extends State<SearchDiver> {
   }
 
   Widget allRoute() {
-    loadDriverOffline();
+    // loadDriverOffline();
     driverBloc.fetchDrivers(stationId, context);
     return StreamBuilder<Object>(
       stream: driverBloc.drivers,
-      initialData: driversMapOffline == null
-          ? null
-          : DriversModel.fromJson(driversMapOffline),
+      // initialData: driversMapOffline == null
+      //     ? null
+      //     : DriversModel.fromJson(driversMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mRoute(snapshot.data, context);

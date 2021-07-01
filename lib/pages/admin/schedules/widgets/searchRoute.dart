@@ -152,13 +152,13 @@ class _SearchRouteState extends State<SearchRoute> {
   }
 
   Widget allRoute() {
-    loadMyRouteOffline();
+    // loadMyRouteOffline();
     myRouteBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
-      initialData: myRouteMapOffline == null
-          ? null
-          : MyRouteModel.fromJson(myRouteMapOffline),
+      // initialData: myRouteMapOffline == null
+      //     ? null
+      //     : MyRouteModel.fromJson(myRouteMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mRoute(snapshot.data, context);

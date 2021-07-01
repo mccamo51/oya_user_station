@@ -152,13 +152,13 @@ class _SearchConductorState extends State<SearchConductor> {
   }
 
   Widget allRoute() {
-  loadconductorsOffline();
+  // loadconductorsOffline();
     conductorBloc.fetchConductors(stationId, context);
     return StreamBuilder<Object>(
       stream: conductorBloc.conductors,
-      initialData: conductorsMapOffline == null
-          ? null
-          : ConductorModel.fromJson(conductorsMapOffline),
+      // initialData: conductorsMapOffline == null
+      //     ? null
+      //     : ConductorModel.fromJson(conductorsMapOffline),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return _mRoute(snapshot.data, context);
