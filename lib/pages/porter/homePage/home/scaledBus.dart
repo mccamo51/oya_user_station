@@ -165,8 +165,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
                               onMigrate: () {
                                 _migratePassenger(
                                     busId: bussModel.data[x].bus.id.toString(),
+                                    context: context,
                                     scheduleID:
                                         bussModel.data[x].id.toString());
+                                Navigator.pop(context);
                               },
                             );
                           } else if (bussModel.data.length > 1) {
@@ -199,8 +201,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                   _migratePassenger(
                                       busId:
                                           bussModel.data[x].bus.id.toString(),
+                                      context: context,
                                       scheduleID:
                                           bussModel.data[x].id.toString());
+                                  Navigator.pop(context);
                                 },
                               );
                             }
@@ -271,7 +275,8 @@ class _ScaledBussesState extends State<ScaledBusses> {
             title: "Confimation",
             message: "Do you want to maigrate passengers to a different bus?",
             onMigrate: () {
-              _migratePassenger(busId: busId, scheduleID: id);
+              _migratePassenger(busId: busId, scheduleID: id, context: context);
+              Navigator.pop(context);
             },
           );
         } else {
@@ -306,9 +311,9 @@ class _ScaledBussesState extends State<ScaledBusses> {
       {@required String scheduleID,
       @required String busId,
       BuildContext context}) async {
-    setState(() {
-      _isLoading = true;
-    });
+    // setState(() {
+    //   _isLoading = true;
+    // });
     Map<String, dynamic> body = {
       'to': '$busId',
     };
@@ -323,23 +328,24 @@ class _ScaledBussesState extends State<ScaledBusses> {
       );
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        print(responseData);
+        print("======================$responseData");
         if (responseData['status'] == 200) {
-          setState(() {
-            _isLoading = false;
-          });
-          // print(responseData);
+          // setState(() {
+          //   _isLoading = false;
+          // });
+          print(responseData['data']);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => LoadBuses(
-                scheduleId: responseData['data'].id.toString(),
-                minorCount: responseData['data'].minors.toString(),
-                passengerCount: responseData['data'].passengersCount.toString(),
-                from: responseData['data'].route.from.name,
-                to: responseData['data'].route.to.name,
-                carNo: responseData['data'].bus.regNumber,
-                company: responseData['data'].station.busCompany.name,
+                scheduleId: responseData['data']['id'].toString(),
+                minorCount: responseData['data']['minors'].toString(),
+                passengerCount:
+                    responseData['data']['passengers_count'].toString(),
+                from: responseData['data']['route']['from']['name'],
+                to: responseData['data']['route']['to']['name'],
+                carNo: responseData['data']['bus']['reg_number'],
+                company: responseData['data']['station']['bus_company']['name'],
               ),
             ),
           );

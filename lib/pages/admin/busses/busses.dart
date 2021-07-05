@@ -103,7 +103,7 @@ class _BussesState extends State<Busses> {
               child: Column(
                 children: [
                   for (var x in bussModel.data)
-                    itemTile(
+                    itemTileB(
                         carNumber: x.regNumber,
                         seater: x.busType.minCapacity.toString(),
                         onDelete: () {

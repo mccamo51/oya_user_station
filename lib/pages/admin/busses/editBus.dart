@@ -14,17 +14,17 @@ import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/busTypeModel.dart';
 import 'package:oya_porter/models/driverModel.dart';
+import 'package:oya_porter/pages/admin/busses/widgets/editBusWidget.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
-import 'widgets/addbusWidget.dart';
 import 'package:http/http.dart' as http;
 
-class AddBus extends StatefulWidget {
+class EditBus extends StatefulWidget {
   @override
-  _AddBusState createState() => _AddBusState();
+  _EditBusState createState() => _EditBusState();
 }
 
-class _AddBusState extends State<AddBus> {
+class _EditBusState extends State<EditBus> {
   TextEditingController busTypeController = TextEditingController();
   TextEditingController busModelController = TextEditingController();
   TextEditingController busDriverController2 = TextEditingController();
@@ -50,7 +50,7 @@ class _AddBusState extends State<AddBus> {
           ? Center(
               child: CupertinoActivityIndicator(),
             )
-          : addBusWidget(
+          : editBusWidget(
               onRoadWorthy: () => _pickDate(roadWorthyExpController),
               onInsurance: () => _pickDate(insExpController),
               context: context,

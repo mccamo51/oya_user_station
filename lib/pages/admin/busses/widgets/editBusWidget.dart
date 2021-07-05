@@ -4,7 +4,7 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/spec/colors.dart';
 
-Widget addBusWidget({
+Widget editBusWidget({
   @required BuildContext context,
   @required TextEditingController regNoController,
   @required TextEditingController busModelController,
@@ -107,7 +107,7 @@ Widget addBusWidget({
         padding: const EdgeInsets.all(8.0),
         child: CupertinoButton(
           color: PRIMARYCOLOR,
-          child: Text("Add Bus"),
+          child: Text("Save "),
           onPressed: onSave,
         ),
       ),
