@@ -28,7 +28,8 @@ class HomePagePorter extends StatefulWidget {
 class _HomePagePorterState extends State<HomePagePorter> {
   List firstName = userName.split(" ");
 
-  String scheduleID;
+  // String scheduleID;
+  String busID;
   int pri, sca;
 
   bool isLoading = false;
@@ -110,7 +111,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
                                 ),
                               )
                             : Text(
-                                "$carNumber (Scaled)",
+                                "$carNumber (Loading)",
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w500,
@@ -127,12 +128,13 @@ class _HomePagePorterState extends State<HomePagePorter> {
                     children: [
                       _cardItem(context, onContinue: () {
                         _checkPrio().whenComplete(() => {
-                              print("Helloooo"),
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ScaledBusses(
                                     scheduleID: stationId,
+                                    busID: busID,
+                                    busNo: carNumber,
                                   ),
                                 ),
                               )
@@ -146,6 +148,8 @@ class _HomePagePorterState extends State<HomePagePorter> {
                                 MaterialPageRoute(
                                   builder: (context) => PriorityBuses(
                                     scheduleID: stationId,
+                                      busID: busID,
+                                    busNo: carNumber,
                                   ),
                                 ),
                               )
@@ -277,10 +281,13 @@ class _HomePagePorterState extends State<HomePagePorter> {
         });
         final responseData = json.decode(response.body);
         if (responseData['status'] == 200 || responseData['data'] != null) {
-          print(responseData['data']);
-          carNumber = responseData['data']['bus']['reg_number'];
-          pri = responseData['data']['priority'];
-          sca = responseData['data']['scaled'];
+          setState(() {
+            print(responseData['data']['bus']['id']);
+            carNumber = responseData['data']['bus']['reg_number'];
+            pri = responseData['data']['priority'];
+            sca = responseData['data']['scaled'];
+            busID = responseData['data']['bus']['id'].toString();
+          });
         }
       } else if (response.statusCode == 401) {
         sessionExpired(context);

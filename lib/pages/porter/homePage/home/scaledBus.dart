@@ -10,10 +10,10 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
-import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
+import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
 import 'package:oya_porter/pages/porter/homePage/home/priorityBus.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/loadBus.dart';
 import 'package:oya_porter/spec/colors.dart';
@@ -21,8 +21,9 @@ import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
 class ScaledBusses extends StatefulWidget {
-  final scheduleID;
-  ScaledBusses({@required this.scheduleID});
+  final scheduleID, busID, busNo;
+  ScaledBusses(
+      {@required this.scheduleID, @required this.busID, @required this.busNo});
 
   @override
   _ScaledBussesState createState() => _ScaledBussesState();
@@ -84,6 +85,8 @@ class _ScaledBussesState extends State<ScaledBusses> {
 
   Widget _mainContent(ScaledBusModel bussModel) {
     // print(bussModel.data);
+    print("==============${bussModel.data[0].loading}");
+
     if (bussModel.data != null && bussModel.data.length > 0)
       return SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -99,80 +102,82 @@ class _ScaledBussesState extends State<ScaledBusses> {
                     Card(
                       // color: PRIMARYCOLOR,
                       child: ListTile(
-                        title: Text(
-                            "Bus No: ${bussModel.data[x].bus.regNumber} [${bussModel.data[x].code.toString()}]"),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${bussModel.data[x].bus.driver.station.name}",
-                                  style: h3Black,
-                                ),
-                                Text(
-                                  "${bussModel.data[x].bus.regNumber}",
-                                  style: h3Black,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text("Driver: ${bussModel.data[x].staffs[1].name}"),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text("Phone: ${bussModel.data[x].staffs[1].phone}"),
-                            SizedBox(
-                              height: 8,
-                            ),
-                          ],
-                        ),
-                        leading: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              FeatherIcons.truck,
-                              color: PRIMARYCOLOR,
-                            ),
-                            SizedBox(height: 10),
-                            bussModel.data[x].passengersCount > 0
-                                ? Text("Loading",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: PRIMARYCOLOR))
-                                : Text("Scaled",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: RED))
-                          ],
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 12,
-                        ),
-                        onTap: () {
-                          print("${priorityLength.toString()}===========");
-                          if (priorityLength > 0) {
-                            exceptionAlert(
-                              context: context,
-                              title: "Confimation",
-                              message:
-                                  "You are already loading bus# ${bussModel.data[x].bus.regNumber}, Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}",
-                              onMigrate: () {
-                                _migratePassenger(
-                                    busId: bussModel.data[x].bus.id.toString(),
-                                    context: context,
-                                    scheduleID:
-                                        bussModel.data[x].id.toString());
-                                Navigator.pop(context);
-                              },
-                            );
-                          } else if (bussModel.data.length > 1) {
-                            if (bussModel.data[x].passengersCount > 0) {
+                          title: Text(
+                              "Bus No: ${bussModel.data[x].bus.regNumber} [${bussModel.data[x].code.toString()}]"),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${bussModel.data[x].bus.driver.station.name}",
+                                    style: h3Black,
+                                  ),
+                                  Text(
+                                    "${bussModel.data[x].bus.regNumber}",
+                                    style: h3Black,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                  "Driver: ${bussModel.data[x].staffs[1].name}"),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                  "Phone: ${bussModel.data[x].staffs[1].phone}"),
+                              SizedBox(
+                                height: 8,
+                              ),
+                            ],
+                          ),
+                          leading: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FeatherIcons.truck,
+                                color: PRIMARYCOLOR,
+                              ),
+                              SizedBox(height: 10),
+                              bussModel.data[x].passengersCount > 0
+                                  ? Text("Loading",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: PRIMARYCOLOR))
+                                  : Text("Scaled",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: RED))
+                            ],
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
+                          ),
+                          onTap: () {
+                            if (priorityLength > 0) {
+                              exceptionAlert(
+                                context: context,
+                                title: "Confimation",
+                                message:
+                                    "You are already loading bus# $carNumber, Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
+                                onMigrate: () {
+                                  _migratePassenger(
+                                      busId:
+                                          bussModel.data[x].bus.id.toString(),
+                                      context: context,
+                                      scheduleID:
+                                          bussModel.data[x].id.toString());
+                                  Navigator.pop(context);
+                                },
+                              );
+                            } else if (widget.busID ==
+                                bussModel.data[x].bus.id.toString()) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -196,7 +201,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                 context: context,
                                 title: "Confimation",
                                 message:
-                                    "Do you want to maigrate passengers to a from ${bussModel.data[0].bus.regNumber} to ${bussModel.data[x].bus.regNumber} bus?",
+                                    "You are already loading bus# ${widget.busNo} Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
                                 onMigrate: () {
                                   _migratePassenger(
                                       busId:
@@ -208,28 +213,29 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                 },
                               );
                             }
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoadBuses(
-                                  scheduleId: bussModel.data[x].id.toString(),
-                                  minorCount:
-                                      bussModel.data[x].minors.toString(),
-                                  passengerCount: bussModel
-                                      .data[x].passengersCount
-                                      .toString(),
-                                  from: bussModel.data[x].route.from.name,
-                                  to: bussModel.data[x].route.to.name,
-                                  carNo: bussModel.data[x].bus.regNumber,
-                                  company:
-                                      bussModel.data[x].station.busCompany.name,
-                                ),
-                              ),
-                            );
                           }
-                        },
-                      ),
+                          // else {
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => LoadBuses(
+                          //         scheduleId: bussModel.data[x].id.toString(),
+                          //         minorCount:
+                          //             bussModel.data[x].minors.toString(),
+                          //         passengerCount: bussModel
+                          //             .data[x].passengersCount
+                          //             .toString(),
+                          //         from: bussModel.data[x].route.from.name,
+                          //         to: bussModel.data[x].route.to.name,
+                          //         carNo: bussModel.data[x].bus.regNumber,
+                          //         company:
+                          //             bussModel.data[x].station.busCompany.name,
+                          //       ),
+                          //     ),
+                          //   );
+                          // }
+                          // },
+                          ),
                     )
                 ],
               ),
