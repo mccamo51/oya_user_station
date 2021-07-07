@@ -21,9 +21,12 @@ import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
 class ScaledBusses extends StatefulWidget {
-  final scheduleID, busID, busNo;
+  final scheduleID, busID, busNo, staionId;
   ScaledBusses(
-      {@required this.scheduleID, @required this.busID, @required this.busNo});
+      {@required this.scheduleID,
+      @required this.busID,
+      @required this.busNo,
+      @required this.staionId});
 
   @override
   _ScaledBussesState createState() => _ScaledBussesState();
@@ -36,14 +39,14 @@ class _ScaledBussesState extends State<ScaledBusses> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 3));
-    scaledBloc.fetchScaledBuses(widget.scheduleID, context);
+    scaledBloc.fetchScaledBuses(widget.staionId, context);
 
     return null;
   }
 
   void initState() {
     // TODO: implement initState
-    scaledBloc.fetchScaledBuses(widget.scheduleID, context);
+    scaledBloc.fetchScaledBuses(widget.staionId, context);
     // loadScaledBusOffline();
     super.initState();
   }
@@ -160,6 +163,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                             size: 12,
                           ),
                           onTap: () {
+                            print(bussModel.data[x].id);
                             if (priorityLength > 0) {
                               exceptionAlert(
                                 context: context,
@@ -168,11 +172,9 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                     "You are already loading bus# $carNumber, Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
                                 onMigrate: () {
                                   _migratePassenger(
-                                      busId:
-                                          bussModel.data[x].bus.id.toString(),
+                                      to: bussModel.data[x].id.toString(),
                                       context: context,
-                                      scheduleID:
-                                          bussModel.data[x].id.toString());
+                                      scheduleID: widget.scheduleID);
                                   Navigator.pop(context);
                                 },
                               );
@@ -197,6 +199,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                 ),
                               );
                             } else {
+                              print("From:${widget.scheduleID}");
+                              print("To:${bussModel.data[x].id}");
+                              // print("ScheduleID:${bussModel.data[x].id}");
+
                               exceptionAlert(
                                 context: context,
                                 title: "Confimation",
@@ -204,11 +210,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                     "You are already loading bus# ${widget.busNo} Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
                                 onMigrate: () {
                                   _migratePassenger(
-                                      busId:
-                                          bussModel.data[x].bus.id.toString(),
-                                      context: context,
-                                      scheduleID:
-                                          bussModel.data[x].id.toString());
+                                    to: bussModel.data[x].id.toString(),
+                                    context: context,
+                                    scheduleID: widget.scheduleID,
+                                  );
                                   Navigator.pop(context);
                                 },
                               );
@@ -281,7 +286,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
             title: "Confimation",
             message: "Do you want to maigrate passengers to a different bus?",
             onMigrate: () {
-              _migratePassenger(busId: busId, scheduleID: id, context: context);
+              _migratePassenger(to: busId, scheduleID: id, context: context);
               Navigator.pop(context);
             },
           );
@@ -315,13 +320,13 @@ class _ScaledBussesState extends State<ScaledBusses> {
 
   _migratePassenger(
       {@required String scheduleID,
-      @required String busId,
+      @required String to,
       BuildContext context}) async {
     // setState(() {
     //   _isLoading = true;
     // });
     Map<String, dynamic> body = {
-      'to': '$busId',
+      'to': '$to',
     };
     final url = Uri.parse("$BASE_URL/schedules/$scheduleID/migrate_manifest");
 

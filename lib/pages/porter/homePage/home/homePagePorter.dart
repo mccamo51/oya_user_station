@@ -28,7 +28,7 @@ class HomePagePorter extends StatefulWidget {
 class _HomePagePorterState extends State<HomePagePorter> {
   List firstName = userName.split(" ");
 
-  // String scheduleID;
+  String scheduleID;
   String busID;
   int pri, sca;
 
@@ -132,9 +132,10 @@ class _HomePagePorterState extends State<HomePagePorter> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ScaledBusses(
-                                    scheduleID: stationId,
+                                    scheduleID: scheduleID,
                                     busID: busID,
                                     busNo: carNumber,
+                                    staionId: stationId,
                                   ),
                                 ),
                               )
@@ -148,7 +149,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
                                 MaterialPageRoute(
                                   builder: (context) => PriorityBuses(
                                     scheduleID: stationId,
-                                      busID: busID,
+                                    busID: busID,
                                     busNo: carNumber,
                                   ),
                                 ),
@@ -286,6 +287,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
             carNumber = responseData['data']['bus']['reg_number'];
             pri = responseData['data']['priority'];
             sca = responseData['data']['scaled'];
+            scheduleID = responseData['data']['id'].toString();
             busID = responseData['data']['bus']['id'].toString();
           });
         }
