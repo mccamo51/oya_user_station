@@ -52,7 +52,6 @@ class _AddTicketState extends State<AddTicket> {
     minorController.text = "0";
     super.initState();
     // loadMyRouteOffline();
-    myRouteBloc.fetchAllStaffs(stationId, context);
   }
 
   @override
@@ -415,6 +414,7 @@ class _AddTicketState extends State<AddTicket> {
   }
 
   Widget _mRoute(MyRouteModel model, BuildContext context) {
+    print(model.data[0]);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,6 +465,7 @@ class _AddTicketState extends State<AddTicket> {
   }
 
   Widget ticketFromFuture() {
+    myRouteBloc.fetchAllStaffs(stationId, context);
     return StreamBuilder<Object>(
       stream: myRouteBloc.myroutes,
       // initialData: myRouteMapOffline == null
