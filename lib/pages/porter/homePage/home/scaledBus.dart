@@ -199,8 +199,8 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                 ),
                               );
                             } else {
-                              print("From:${widget.scheduleID}");
-                              print("To:${bussModel.data[x].id}");
+                              // print("From:${widget.scheduleID}");
+                              // print("To:${bussModel.data[x].id}");
                               // print("ScheduleID:${bussModel.data[x].id}");
 
                               exceptionAlert(
