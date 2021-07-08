@@ -79,240 +79,143 @@ class _LoadBusesState extends State<LoadBuses> {
     super.initState();
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text(
+              'Are you sure?',
+            ),
+            content: new Text(
+              'This action will take you home.',
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text(
+                  'No',
+                  style: TextStyle(color: PRIMARYCOLOR),
+                ),
+              ),
+              TextButton(
+                onPressed: () => navigation(context: context, pageName: "home"),
+                child: new Text('Yes', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: isSearch
-            ? textFormField2(
-                hintText: "Search",
-                controller: searchController,
-                focusNode: searchFocus,
-                inputType: TextInputType.phone,
-                onEditingComplete: () =>
-                    onSearch(phoneNo: searchController.text),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: isSearch
+              ? textFormField2(
+                  hintText: "Search",
+                  controller: searchController,
+                  focusNode: searchFocus,
+                  inputType: TextInputType.phone,
+                  onEditingComplete: () =>
+                      onSearch(phoneNo: searchController.text),
+                )
+              : Text("Load Bus"),
+          elevation: 0.3,
+          centerTitle: true,
+          actions: [
+            IconButton(
+                icon: isSearch
+                    ? Icon(
+                        Icons.search,
+                        color: PRIMARYCOLOR,
+                      )
+                    : Icon(Icons.search),
+                onPressed: () {
+                  setState(() {
+                    isSearch = !isSearch;
+                    !isSearch
+                        ? onSearch(
+                            phoneNo: searchController.text,
+                            scheduleId: widget.scheduleId,
+                          )
+                        : null;
+                  });
+                })
+          ],
+        ),
+        body: isLoading
+            ? Center(
+                child: CupertinoActivityIndicator(),
               )
-            : Text("Load Bus"),
-        elevation: 0.3,
-        centerTitle: true,
-        actions: [
-          IconButton(
-              icon: isSearch
-                  ? Icon(
-                      Icons.search,
-                      color: PRIMARYCOLOR,
-                    )
-                  : Icon(Icons.search),
-              onPressed: () {
-                setState(() {
-                  isSearch = !isSearch;
-                  !isSearch
-                      ? onSearch(
-                          phoneNo: searchController.text,
-                          scheduleId: widget.scheduleId,
-                        )
-                      : null;
-                });
-              })
-        ],
-      ),
-      body: isLoading
-          ? Center(
-              child: CupertinoActivityIndicator(),
-            )
-          : Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Bus Details",
-                        style: h2Black,
-                      ),
-                      Text(
-                        "${widget.company} (${widget.carNo})",
-                        style: h3Black,
-                      ),
-                      Text(
-                        "From: ${widget.from} - ${widget.to}",
-                        style: h4Black,
-                      ),
-                      Text(
-                        "${widget.company}",
-                        style: h3Black,
-                      ),
-                      widget.passengerCount == null
-                          ? Text(
-                              "0 Passengers onboard",
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w400,
-                                color: ASHDEEP,
-                              ),
-                            )
-                          : Text(
-                              "$passengerCount Passengers onboard",
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w400,
-                                color: ASHDEEP,
-                              ),
-                            ),
-                      Text(
-                        "${widget.minorCount} Minors",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400,
-                          color: ASHDEEP,
+            : Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Bus Details",
+                          style: h2Black,
                         ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            Row(
-                              children: [
-                                Radio(
-                                  activeColor: Colors.blue,
-                                  value: BusType.Genral,
-                                  groupValue: _character,
-                                  onChanged: (BusType value) {
-                                    setState(() {
-                                      _character = value;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  "General",
-                                  style: TextStyle(color: BLACK),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio(
-                                  activeColor: Colors.blue,
-                                  value: BusType.NoPhone,
-                                  groupValue: _character,
-                                  onChanged: (BusType value) {
-                                    setState(() {
-                                      _character = value;
-                                      showPhone = false;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  "No Phone",
-                                  style: TextStyle(color: BLACK),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio(
-                                  activeColor: Colors.blue,
-                                  value: BusType.WithPhone,
-                                  groupValue: _character,
-                                  onChanged: (BusType value) {
-                                    setState(() {
-                                      _character = value;
-                                      showPhone = false;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  "No Phone, No ICE Phone",
-                                  style: TextStyle(color: BLACK),
-                                ),
-                              ],
-                            ),
-                          ],
+                        Text(
+                          "${widget.company} (${widget.carNo})",
+                          style: h3Black,
                         ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Visibility(
-                          visible: showPhone,
-                          child: Column(
-                            children: [
-                              textFormField(
-                                hintText: "Enter Full Name",
-                                controller: fullNameController,
-                                focusNode: fullNameFocus,
-                                labelText: "Full name",
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              textFormField(
-                                hintText: "Enter ICE Phone number",
-                                controller: primaryICEphoneController,
-                                focusNode: icePhoneFocus,
-                                inputType: TextInputType.phone,
-                                textLength: 10,
-                                labelText: "ICE Phone number",
-                              ),
-                            ],
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Visibility(
-                        visible: _character == BusType.Genral ? true : false,
-                        child: Column(
-                          children: [
-                            textFormField(
-                              hintText: "Enter Phone Number",
-                              controller: phoneNumberController,
-                              focusNode: phoneFocus,
-                              inputType: TextInputType.phone,
-                              textLength: 10,
-                              labelText: "Phone Number",
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            textFormField(
-                              hintText: "Enter Ticket Number",
-                              controller: ticketController,
-                              focusNode: ticktFocus,
-                              labelText: "Ticket Number",
-                            ),
-                          ],
+                        Text(
+                          "From: ${widget.from} - ${widget.to}",
+                          style: h4Black,
                         ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Are you travelling with minor?"),
-                          Row(
+                        Text(
+                          "${widget.company}",
+                          style: h3Black,
+                        ),
+                        widget.passengerCount == null
+                            ? Text(
+                                "0 Passengers onboard",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  color: ASHDEEP,
+                                ),
+                              )
+                            : Text(
+                                "$passengerCount Passengers onboard",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  color: ASHDEEP,
+                                ),
+                              ),
+                        Text(
+                          "${widget.minorCount} Minors",
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w400,
+                            color: ASHDEEP,
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
                             children: [
                               Row(
                                 children: [
                                   Radio(
                                     activeColor: Colors.blue,
-                                    value: TravelWithMinor.Yes,
-                                    groupValue: _characterT,
-                                    onChanged: (TravelWithMinor value) {
+                                    value: BusType.Genral,
+                                    groupValue: _character,
+                                    onChanged: (BusType value) {
                                       setState(() {
-                                        _characterT = value;
-                                        // show = true;
-
-                                        minor = 1;
+                                        _character = value;
                                       });
                                     },
                                   ),
                                   Text(
-                                    "Yes",
+                                    "General",
                                     style: TextStyle(color: BLACK),
                                   ),
                                 ],
@@ -321,28 +224,51 @@ class _LoadBusesState extends State<LoadBuses> {
                                 children: [
                                   Radio(
                                     activeColor: Colors.blue,
-                                    value: TravelWithMinor.No,
-                                    groupValue: _characterT,
-                                    onChanged: (TravelWithMinor value) {
+                                    value: BusType.NoPhone,
+                                    groupValue: _character,
+                                    onChanged: (BusType value) {
                                       setState(() {
-                                        _characterT = value;
-                                        // show = true;
-
-                                        minor = 0;
+                                        _character = value;
+                                        showPhone = false;
                                       });
                                     },
                                   ),
-                                  Text("No")
+                                  Text(
+                                    "No Phone",
+                                    style: TextStyle(color: BLACK),
+                                  ),
                                 ],
-                              )
+                              ),
+                              Row(
+                                children: [
+                                  Radio(
+                                    activeColor: Colors.blue,
+                                    value: BusType.WithPhone,
+                                    groupValue: _character,
+                                    onChanged: (BusType value) {
+                                      setState(() {
+                                        _character = value;
+                                        showPhone = false;
+                                      });
+                                    },
+                                  ),
+                                  Text(
+                                    "No Phone, No ICE Phone",
+                                    style: TextStyle(color: BLACK),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                          Visibility(
-                            visible: _character == BusType.Genral
-                                ? false
-                                : _character == BusType.NoPhone
-                                    ? false
-                                    : true,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Visibility(
+                            visible: showPhone,
                             child: Column(
                               children: [
                                 textFormField(
@@ -352,109 +278,214 @@ class _LoadBusesState extends State<LoadBuses> {
                                   labelText: "Full name",
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 8,
                                 ),
                                 textFormField(
-                                  hintText: "Enter ICE name",
-                                  controller: primaryICENameController,
-                                  focusNode: iceNameFocus,
-                                  labelText: "ICE name",
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                textFormField(
-                                  hintText: "Enter ICE address",
-                                  controller: primaryICEAddressController,
-                                  focusNode: iceAddressFocus,
-                                  labelText: "ICE address",
-                                ),
-                              ],
-                            ),
-                          ),
-                          Visibility(
-                            visible: _character == BusType.Genral
-                                ? false
-                                : _character == BusType.NoPhone
-                                    ? true
-                                    : false,
-                            child: Column(
-                              children: [
-                                textFormField(
-                                  hintText: "Enter Full Name",
-                                  controller: fullNameController,
-                                  focusNode: fullNameFocus,
-                                  labelText: "Full name",
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                textFormField(
-                                  hintText:
-                                      "Enter Primary Emergency phone (ICE)",
+                                  hintText: "Enter ICE Phone number",
                                   controller: primaryICEphoneController,
                                   focusNode: icePhoneFocus,
                                   inputType: TextInputType.phone,
                                   textLength: 10,
-                                  labelText: "Primary Emergency phone (ICE)",
+                                  labelText: "ICE Phone number",
                                 ),
                               ],
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Visibility(
+                          visible: _character == BusType.Genral ? true : false,
+                          child: Column(
+                            children: [
+                              textFormField(
+                                hintText: "Enter Phone Number",
+                                controller: phoneNumberController,
+                                focusNode: phoneFocus,
+                                inputType: TextInputType.phone,
+                                textLength: 10,
+                                labelText: "Phone Number",
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              textFormField(
+                                hintText: "Enter Ticket Number",
+                                controller: ticketController,
+                                focusNode: ticktFocus,
+                                labelText: "Ticket Number",
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Are you travelling with minor?"),
+                            Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Radio(
+                                      activeColor: Colors.blue,
+                                      value: TravelWithMinor.Yes,
+                                      groupValue: _characterT,
+                                      onChanged: (TravelWithMinor value) {
+                                        setState(() {
+                                          _characterT = value;
+                                          // show = true;
+
+                                          minor = 1;
+                                        });
+                                      },
+                                    ),
+                                    Text(
+                                      "Yes",
+                                      style: TextStyle(color: BLACK),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Radio(
+                                      activeColor: Colors.blue,
+                                      value: TravelWithMinor.No,
+                                      groupValue: _characterT,
+                                      onChanged: (TravelWithMinor value) {
+                                        setState(() {
+                                          _characterT = value;
+                                          // show = true;
+
+                                          minor = 0;
+                                        });
+                                      },
+                                    ),
+                                    Text("No")
+                                  ],
+                                )
+                              ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Visibility(
-                            visible: _characterT == TravelWithMinor.Yes
-                                ? true
-                                : false,
-                            child: textFormField(
-                              hintText: "Enter Minor",
-                              controller: minorController,
-                              focusNode: minorFocus,
-                              textLength: 3,
-                              inputType: TextInputType.number,
-                              labelText: "Minor",
+                            Visibility(
+                              visible: _character == BusType.Genral
+                                  ? false
+                                  : _character == BusType.NoPhone
+                                      ? false
+                                      : true,
+                              child: Column(
+                                children: [
+                                  textFormField(
+                                    hintText: "Enter Full Name",
+                                    controller: fullNameController,
+                                    focusNode: fullNameFocus,
+                                    labelText: "Full name",
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  textFormField(
+                                    hintText: "Enter ICE name",
+                                    controller: primaryICENameController,
+                                    focusNode: iceNameFocus,
+                                    labelText: "ICE name",
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  textFormField(
+                                    hintText: "Enter ICE address",
+                                    controller: primaryICEAddressController,
+                                    focusNode: iceAddressFocus,
+                                    labelText: "ICE address",
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 45,
-                        child: primaryButton(
-                            onFunction: () => _enroll(
-                                iceName: primaryICENameController.text,
-                                scheduleId: widget.scheduleId,
-                                icePhone: primaryICEphoneController.text,
-                                iceAddress: primaryICEAddressController.text,
-                                minor: minor == 1
-                                    ? minorController.text
-                                    : minor.toString(),
-                                phone: phoneNumberController.text,
-                                name: fullNameController.text,
-                                pin: pinController.text),
-                            title: "Enroll Passenger"),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 45,
-                        child: primaryButton(
-                            onFunction: () => awayBusDialog(context),
-                            title: "Away Bus (Done Loading)",
-                            color: Colors.red),
-                      )
-                    ],
+                            Visibility(
+                              visible: _character == BusType.Genral
+                                  ? false
+                                  : _character == BusType.NoPhone
+                                      ? true
+                                      : false,
+                              child: Column(
+                                children: [
+                                  textFormField(
+                                    hintText: "Enter Full Name",
+                                    controller: fullNameController,
+                                    focusNode: fullNameFocus,
+                                    labelText: "Full name",
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  textFormField(
+                                    hintText:
+                                        "Enter Primary Emergency phone (ICE)",
+                                    controller: primaryICEphoneController,
+                                    focusNode: icePhoneFocus,
+                                    inputType: TextInputType.phone,
+                                    textLength: 10,
+                                    labelText: "Primary Emergency phone (ICE)",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Visibility(
+                              visible: _characterT == TravelWithMinor.Yes
+                                  ? true
+                                  : false,
+                              child: textFormField(
+                                hintText: "Enter Minor",
+                                controller: minorController,
+                                focusNode: minorFocus,
+                                textLength: 3,
+                                inputType: TextInputType.number,
+                                labelText: "Minor",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: primaryButton(
+                              onFunction: () => _enroll(
+                                  iceName: primaryICENameController.text,
+                                  scheduleId: widget.scheduleId,
+                                  icePhone: primaryICEphoneController.text,
+                                  iceAddress: primaryICEAddressController.text,
+                                  minor: minor == 1
+                                      ? minorController.text
+                                      : minor.toString(),
+                                  phone: phoneNumberController.text,
+                                  name: fullNameController.text,
+                                  pin: pinController.text),
+                              title: "Enroll Passenger"),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: primaryButton(
+                              onFunction: () => awayBusDialog(context),
+                              title: "Away Bus (Done Loading)",
+                              color: Colors.red),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 

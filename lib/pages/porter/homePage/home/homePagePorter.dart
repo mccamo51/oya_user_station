@@ -12,12 +12,13 @@ import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/porter/homePage/home/priorityBus.dart';
 import 'package:oya_porter/pages/porter/homePage/home/scaledBus.dart';
-import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
+// import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/spec/strings.dart';
 import 'package:oya_porter/spec/styles.dart';
 
+  String scheduleID;
 String carNumber = "";
 
 class HomePagePorter extends StatefulWidget {
@@ -28,7 +29,6 @@ class HomePagePorter extends StatefulWidget {
 class _HomePagePorterState extends State<HomePagePorter> {
   List firstName = userName.split(" ");
 
-  String scheduleID;
   String busID;
   int pri, sca;
 
@@ -127,12 +127,14 @@ class _HomePagePorterState extends State<HomePagePorter> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _cardItem(context, onContinue: () {
+                        print(scheduleID);
+
                         _checkPrio().whenComplete(() => {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ScaledBusses(
-                                    scheduleID: scheduleID,
+                                    // scheduleID: scheduleID,
                                     busID: busID,
                                     busNo: carNumber,
                                     staionId: stationId,

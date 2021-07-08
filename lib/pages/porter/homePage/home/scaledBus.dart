@@ -10,6 +10,7 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
+import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/scaledBusModel.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -21,12 +22,9 @@ import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
 class ScaledBusses extends StatefulWidget {
-  String scheduleID, busID, busNo, staionId;
+  String busID, busNo, staionId;
   ScaledBusses(
-      {@required this.scheduleID,
-      @required this.busID,
-      @required this.busNo,
-      @required this.staionId});
+      {@required this.busID, @required this.busNo, @required this.staionId});
 
   @override
   _ScaledBussesState createState() => _ScaledBussesState();
@@ -52,55 +50,50 @@ class _ScaledBussesState extends State<ScaledBusses> {
   }
 
   bool _isLoading = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(
-        title: "Scaled Buses",
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {
-        //         scaledBloc.fetchScaledBuses(widget.staionId, context);
-        //         print(widget.scheduleID);
-        //       },
-        //       icon: Icon(
-        //         Icons.refresh_outlined,
-        //       ))
-        // ]
-      ),
-      body: _isLoading
-          ? Center(
-              child: CupertinoActivityIndicator(),
-            )
-          : RefreshIndicator(
-              onRefresh: refreshList,
-              key: refreshKey,
-              child: StreamBuilder(
-                stream: scaledBloc.scaledBuses,
-                // initialData: scaledBusMapOffline == null
-                //     ? null
-                //     : ScaledBusModel.fromJson(scaledBusMapOffline),
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  print("snapshot: ${snapshot.data}");
-                  if (snapshot.hasData) {
-                    return _mainContent(snapshot.data);
-                  } else if (snapshot.hasError) {
-                    return Scaffold(body: emptyBox(context));
-                  }
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                },
-              ),
-            ),
-    );
+        appBar: appBar(title: "Scaled Buses", actions: [
+          IconButton(
+              onPressed: () {
+                scaledBloc.fetchScaledBuses(widget.staionId, context);
+                print(scheduleID);
+              },
+              icon: Icon(
+                Icons.refresh_outlined,
+              ))
+        ]),
+        body: _isLoading
+            ? Center(
+                child: CupertinoActivityIndicator(),
+              )
+            : RefreshIndicator(
+                onRefresh: refreshList,
+                key: refreshKey,
+                child: StreamBuilder(
+                  stream: scaledBloc.scaledBuses,
+                  // initialData: scaledBusMapOffline == null
+                  //     ? null
+                  //     : ScaledBusModel.fromJson(scaledBusMapOffline),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    print("snapshot: ${snapshot.data}");
+                    if (snapshot.hasData) {
+                      return _mainContent(snapshot.data);
+                    } else if (snapshot.hasError) {
+                      return Scaffold(body: emptyBox(context));
+                    }
+                    return Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  },
+                ),
+              ));
   }
 
   Widget _mainContent(ScaledBusModel bussModel) {
     // print(bussModel.data);
-    print("==============${bussModel.data[0].loading}");
+    // print("==============${bussModel.data[0].loading}");
 
     if (bussModel.data != null && bussModel.data.length > 0)
       return SingleChildScrollView(
@@ -175,7 +168,8 @@ class _ScaledBussesState extends State<ScaledBusses> {
                             size: 12,
                           ),
                           onTap: () {
-                            print(bussModel.data[x].id);
+                            print("========OLD$scheduleID}");
+                            print("========New  ${bussModel.data[x].id}");
                             if (priorityLength > 0) {
                               exceptionAlert(
                                 context: context,
@@ -186,7 +180,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                   _migratePassenger(
                                       to: bussModel.data[x].id.toString(),
                                       context: context,
-                                      scheduleID: widget.scheduleID);
+                                      scheduleID: scheduleID);
                                   Navigator.pop(context);
                                 },
                               );
@@ -244,7 +238,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                   _migratePassenger(
                                     to: bussModel.data[x].id.toString(),
                                     context: context,
-                                    scheduleID: widget.scheduleID,
+                                    scheduleID: scheduleID,
                                   );
                                   Navigator.pop(context);
                                 },
@@ -375,11 +369,13 @@ class _ScaledBussesState extends State<ScaledBusses> {
         if (responseData['status'] == 200) {
           // setState(() {
           //   _isLoading = false;
-          // });
-          print(responseData['data']['id']);
+          // // });
+          // print("New======== ${responseData['data']['id']}");
+          // navigation(context: context, pageName: "home");
           // setState(() {
-          //   widget.scheduleID = responseData['data']['id'].toString();
+          //   scheduleID = responseData['data']['id'].toString();
           // });
+
           Navigator.push(
             context,
             MaterialPageRoute(
