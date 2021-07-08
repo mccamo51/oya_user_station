@@ -44,7 +44,7 @@ class Data {
   String createdAt;
   List<Staffs> staffs;
   String price;
-  int midRoute;
+  String midRoute;
   Bus bus;
   Route route;
   Station station;
@@ -95,7 +95,7 @@ class Data {
       });
     }
     price = json['price'].toString();
-    midRoute = json['mid_route'];
+    midRoute = json['mid_route'].toString();
     bus = json['bus'] != null ? new Bus.fromJson(json['bus']) : null;
     route = json['route'] != null ? new Route.fromJson(json['route']) : null;
     station =
@@ -556,7 +556,7 @@ class From {
 class InsurancePolicy {
   int id;
   String name;
-  int price;
+  String price;
   String policyCode;
   int addedBy;
   String createdAt;
@@ -576,7 +576,7 @@ class InsurancePolicy {
   InsurancePolicy.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    price = json['price'];
+    price = json['price'].toString();
     policyCode = json['policy_code'];
     addedBy = json['added_by'];
     createdAt = json['created_at'];
@@ -655,7 +655,7 @@ class Tickets {
     pickupTime = json['pickup_time'];
     boardingType = json['boarding_type'];
     status = json['status'];
-    price = json['price'];
+    price = json['price'].toString();
     updatedBy = json['updated_by'];
     deletedBy = json['deleted_by'];
     checkedIn = json['checked_in'];
