@@ -21,7 +21,7 @@ import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
 class ScaledBusses extends StatefulWidget {
-  final scheduleID, busID, busNo, staionId;
+  String scheduleID, busID, busNo, staionId;
   ScaledBusses(
       {@required this.scheduleID,
       @required this.busID,
@@ -56,7 +56,19 @@ class _ScaledBussesState extends State<ScaledBusses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: "Scaled Buses"),
+      appBar: appBar(
+        title: "Scaled Buses",
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         scaledBloc.fetchScaledBuses(widget.staionId, context);
+        //         print(widget.scheduleID);
+        //       },
+        //       icon: Icon(
+        //         Icons.refresh_outlined,
+        //       ))
+        // ]
+      ),
       body: _isLoading
           ? Center(
               child: CupertinoActivityIndicator(),
@@ -177,6 +189,26 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                       scheduleID: widget.scheduleID);
                                   Navigator.pop(context);
                                 },
+                              );
+                            } else if (widget.busID == null ||
+                                widget.busID == "") {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoadBuses(
+                                    scheduleId: bussModel.data[x].id.toString(),
+                                    minorCount:
+                                        bussModel.data[x].minors.toString(),
+                                    passengerCount: bussModel
+                                        .data[x].passengersCount
+                                        .toString(),
+                                    from: bussModel.data[x].route.from.name,
+                                    to: bussModel.data[x].route.to.name,
+                                    carNo: bussModel.data[x].bus.regNumber,
+                                    company: bussModel
+                                        .data[x].station.busCompany.name,
+                                  ),
+                                ),
                               );
                             } else if (widget.busID ==
                                 bussModel.data[x].bus.id.toString()) {
@@ -339,12 +371,15 @@ class _ScaledBussesState extends State<ScaledBusses> {
       );
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        print("======================$responseData");
+        // print("======================$responseData");
         if (responseData['status'] == 200) {
           // setState(() {
           //   _isLoading = false;
           // });
-          print(responseData['data']);
+          print(responseData['data']['id']);
+          // setState(() {
+          //   widget.scheduleID = responseData['data']['id'].toString();
+          // });
           Navigator.push(
             context,
             MaterialPageRoute(
