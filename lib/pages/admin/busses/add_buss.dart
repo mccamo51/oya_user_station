@@ -39,8 +39,6 @@ class _AddBusState extends State<AddBus> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    busTypeBloc.fetchDrivers(context);
   }
 
   @override
@@ -219,7 +217,7 @@ class _AddBusState extends State<AddBus> {
   }
 
   Widget allBusType() {
-    // loadBusTypeModelOffline();
+    busTypeBloc.fetchDrivers(context);
     return StreamBuilder<Object>(
       stream: busTypeBloc.busesType,
       // initialData: busTypeModelMapOffline == null
