@@ -188,13 +188,13 @@ class _AddStaffState extends State<AddStaff> {
         setState(() => isLoading = false);
 
         final responseData = json.decode(response.body);
-        // print(responseData);
+        print(responseData);
         if (responseData['status'] == 200) {
           setState(() {
             show = true;
-            name = responseData['data']['name'];
-            phone = responseData['data']['phone'];
-            uid = responseData['data']['id'];
+            name = responseData['data']['user']['name'];
+            phone = responseData['data']['user']['phone'];
+            uid = responseData['data']['user']['id'];
           });
           toastContainer(text: "New Staff Added Successfully");
           Navigator.pop(context);
