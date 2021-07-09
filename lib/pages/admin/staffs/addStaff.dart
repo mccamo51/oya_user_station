@@ -53,6 +53,7 @@ class _AddStaffState extends State<AddStaff> {
                       inputType: TextInputType.phone,
                       icon: Icons.search,
                       iconColor: BLACK,
+                      onIconTap: () => onSearch(phoneNo: searchController.text),
                       onEditingComplete: () =>
                           onSearch(phoneNo: searchController.text),
                       labelText: "Search"),
