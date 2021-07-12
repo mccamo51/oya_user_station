@@ -20,6 +20,23 @@ import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
 
 class EditBus extends StatefulWidget {
+  String busType,
+      busModel,
+      busDriver,
+      insurance,
+      regNo,
+      roadWeathy,
+      id,
+      driverID;
+  EditBus(
+      {@required this.busDriver,
+      @required this.busModel,
+      @required this.busType,
+      @required this.insurance,
+      @required this.regNo,
+      @required this.id,
+      @required this.driverID,
+      @required this.roadWeathy});
   @override
   _EditBusState createState() => _EditBusState();
 }
@@ -32,15 +49,19 @@ class _EditBusState extends State<EditBus> {
   TextEditingController regNoController = TextEditingController();
   TextEditingController roadWorthyExpController = TextEditingController();
 
-  String busId, driverId;
+  String busTypeId, driverId;
   bool isLoading = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    busTypeBloc.fetchDrivers(context);
+    busTypeController.text = widget.busType;
+    busModelController.text = widget.busModel;
+    busDriverController2.text = widget.busDriver;
+    insExpController.text = widget.insurance;
+    regNoController.text = widget.regNo;
+    roadWorthyExpController.text = widget.roadWeathy;
   }
 
   @override
@@ -58,13 +79,14 @@ class _EditBusState extends State<EditBus> {
               busTypeController: busTypeController,
               busTypeController2: busDriverController2,
               insExpController: insExpController,
-              onSave: () => _onSave(
-                  busId: busId,
-                  driverId: driverId,
+              onSave: () => _editBus(
+                  busId: widget.id,
+                  busTypeId: busTypeId,
                   regNo: regNoController.text,
                   model: busModelController.text,
-                  road_exp_date: roadWorthyExpController.text,
                   ins_exp_date: insExpController.text,
+                  road_exp_date: roadWorthyExpController.text,
+                  driverId: driverId,
                   staId: stationId),
               regNoController: regNoController,
               roadWorthyExpController: roadWorthyExpController,
@@ -118,70 +140,66 @@ class _EditBusState extends State<EditBus> {
             ));
   }
 
-  _onSave(
+  _editBus(
       {String staId,
       String busId,
+      String busTypeId,
       String regNo,
-      String ins_exp_date,
-      String road_exp_date,
       String model,
-      String driverId}) async {
-    if (regNo.isEmpty || road_exp_date.isEmpty || ins_exp_date.isEmpty) {
-      toastContainer(text: "All this fields are required");
-    } else {
-      setState(() {
-        isLoading = true;
-      });
-      try {
-        print("$driverId");
-        Map<String, dynamic> body = {
-          'station_id': staId,
-          'bus_type_id': busId,
-          'reg_number': regNo,
-          'model': model,
-          'driver_id': driverId,
-          'rw_exp_date': '$road_exp_date',
-          'insurance_exp_date': '$ins_exp_date',
-          'image': ''
-        };
-      final url = Uri.parse( "$BASE_URL/buses");
+      driverId,
+      road_exp_date,
+      ins_exp_date}) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      print("$driverId");
+      Map<String, dynamic> body = {
+        'station_id': staId,
+        'bus_type_id': busTypeId,
+        'reg_number': regNo,
+        'model': model,
+        'driver_id': driverId,
+        'rw_exp_date': '$road_exp_date',
+        'insurance_exp_date': '$ins_exp_date',
+      };
+      final url = Uri.parse("$BASE_URL/buses/$busId");
 
-        final response = await http.post(
-         url,
-          body: json.encode(body),
-          headers: {
-            "Authorization": "Bearer $accessToken",
-            "Content-Type": "application/json",
-          },
-        ).timeout(
-          Duration(seconds: 50),
-        );
-        if (response.statusCode == 200) {
-          final responseData = json.decode(response.body);
-          setState(() {
-            isLoading = false;
-          });
-          if (responseData['status'] == 200) {
-            toastContainer(text: responseData['message']);
-            Navigator.pop(context);
-          } else {
-            toastContainer(text: responseData['message']);
-          }
-        } else if (response.statusCode == 401) {
-          sessionExpired(context);
+      final response = await http.put(
+        url,
+        body: json.encode(body),
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
+        },
+      ).timeout(
+        Duration(seconds: 50),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        setState(() {
+          isLoading = false;
+        });
+        if (responseData['status'] == 200) {
+          toastContainer(text: responseData['message']);
+          Navigator.pop(context);
         } else {
-          toastContainer(text: "Error has occured");
+          toastContainer(text: responseData['message']);
         }
-      } on TimeoutException catch (e) {
-        setState(() {
-          isLoading = false;
-        });
-      } catch (e) {
-        print(e);
-        setState(() {
-          isLoading = false;
-        });
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      } else {
+        toastContainer(text: "Error has occured");
       }
+    } on TimeoutException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -197,7 +215,7 @@ class _EditBusState extends State<EditBus> {
                   onPressed: () {
                     setState(() {
                       // _toCode = data.id;
-                      busId = (data.id).toString();
+                      busTypeId = (data.id).toString();
                       busTypeController.text = data.name;
                     });
 
@@ -206,7 +224,7 @@ class _EditBusState extends State<EditBus> {
                 )
               : SimpleDialogOption(
                   onPressed: () {
-                    busId = (data.id).toString();
+                    busTypeId = (data.id).toString();
                     busTypeController.text = data.name;
                     Navigator.pop(context);
                   },
@@ -220,6 +238,8 @@ class _EditBusState extends State<EditBus> {
 
   Widget allBusType() {
     // loadBusTypeModelOffline();
+    busTypeBloc.fetchDrivers(context);
+
     return StreamBuilder<Object>(
       stream: busTypeBloc.busesType,
       // initialData: busTypeModelMapOffline == null

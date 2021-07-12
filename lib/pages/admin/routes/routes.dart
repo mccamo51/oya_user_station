@@ -166,13 +166,13 @@ _itemTile({String from, String to, Function onDelete}) {
         child: ListTile(
           leading: Icon(FeatherIcons.mapPin),
           title: Text("From: $from   -   $to"),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.delete_forever,
-              color: RED,
-            ),
-            onPressed: onDelete,
-          ),
+          // trailing: IconButton(
+          //   icon: Icon(
+          //     Icons.delete_forever,
+          //     color: RED,
+          //   ),
+          //   onPressed: onDelete,
+          // ),
         ),
       ),
       Padding(

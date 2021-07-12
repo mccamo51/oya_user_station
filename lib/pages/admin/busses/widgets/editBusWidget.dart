@@ -19,7 +19,7 @@ Widget editBusWidget({
   @required Function onRoadWorthy,
 }) {
   return Scaffold(
-    appBar: appBar(title: "Add New Bus"),
+    appBar: appBar(title: "Edit Bus Record"),
     body: Padding(
       padding: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(

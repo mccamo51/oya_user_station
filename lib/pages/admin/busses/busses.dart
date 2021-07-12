@@ -13,6 +13,7 @@ import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/busModel.dart';
 import 'package:oya_porter/pages/admin/busses/add_buss.dart';
+import 'package:oya_porter/pages/admin/busses/editBus.dart';
 import 'package:oya_porter/pages/admin/busses/widgets/bussesWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -106,6 +107,19 @@ class _BussesState extends State<Busses> {
                     itemTileB(
                         carNumber: x.regNumber,
                         seater: x.busType.minCapacity.toString(),
+                        onEdit: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditBus(
+                                      busDriver: x.driver.user.name,
+                                      busModel: x.model,
+                                      busType: x.busType.name,
+                                      insurance: x.insuranceExpDate,
+                                      regNo: x.regNumber,
+                                      roadWeathy: x.rwExpDate,
+                                      id: x.id.toString(),
+                                      driverID: x.driver.user.id.toString(),
+                                    ))),
                         onDelete: () {
                           deleteBus(busId: x.id.toString());
                         })
@@ -162,62 +176,4 @@ class _BussesState extends State<Busses> {
     }
   }
 
-  _editBus(
-      {String staId,
-      String busId,
-      String regNo,
-      String model,
-      String driverId}) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      print("$driverId");
-      Map<String, dynamic> body = {
-        'station_id': staId,
-        'bus_type_id': busId,
-        'reg_number': regNo,
-        'model': model,
-        'driver_id': driverId,
-        'image': ''
-      };
-      final url = Uri.parse("$BASE_URL/buses");
-
-      final response = await http.post(
-        url,
-        body: json.encode(body),
-        headers: {
-          "Authorization": "Bearer $accessToken",
-          'Content-Type': 'application/json'
-        },
-      ).timeout(
-        Duration(seconds: 50),
-      );
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        setState(() {
-          isLoading = false;
-        });
-        if (responseData['status'] == 200) {
-          toastContainer(text: responseData['message']);
-          Navigator.pop(context);
-        } else {
-          toastContainer(text: responseData['message']);
-        }
-      } else if (response.statusCode == 401) {
-        sessionExpired(context);
-      } else {
-        toastContainer(text: "Error has occured");
-      }
-    } on TimeoutException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print(e);
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-}
+ }

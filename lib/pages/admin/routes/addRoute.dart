@@ -38,6 +38,8 @@ class _AddRouteState extends State<AddRoute> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    print(stationId);
+
     return Scaffold(
       key: _scaffoldKey,
       body: isLoading
@@ -106,6 +108,7 @@ class _AddRouteState extends State<AddRoute> {
           setState(() {
             isLoading = false;
           });
+          print(responseData);
           if (responseData['status'] == 200) {
             Navigator.pop(context);
             toastContainer(text: responseData['message']);
