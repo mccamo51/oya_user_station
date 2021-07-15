@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/buttons.dart';
+import 'package:oya_porter/components/phoneNumberText.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
@@ -280,14 +281,16 @@ class _LoadBusesState extends State<LoadBuses> {
                                 SizedBox(
                                   height: 8,
                                 ),
-                                textFormField(
-                                  hintText: "Enter ICE Phone number",
+                                newCountrySelect(
                                   controller: primaryICEphoneController,
-                                  focusNode: icePhoneFocus,
-                                  inputType: TextInputType.phone,
-                                  textLength: 10,
-                                  labelText: "ICE Phone number",
+                                  hintText: "Enter ICE Phone number",
                                 ),
+                                // textFormField(
+                                //   focusNode: icePhoneFocus,
+                                //   inputType: TextInputType.phone,
+                                //   textLength: 10,
+                                //   labelText: "ICE Phone number",
+                                // ),
                               ],
                             )),
                         SizedBox(
@@ -297,14 +300,18 @@ class _LoadBusesState extends State<LoadBuses> {
                           visible: _character == BusType.Genral ? true : false,
                           child: Column(
                             children: [
-                              textFormField(
-                                hintText: "Enter Phone Number",
+                              newCountrySelect(
                                 controller: phoneNumberController,
-                                focusNode: phoneFocus,
-                                inputType: TextInputType.phone,
-                                textLength: 10,
-                                labelText: "Phone Number",
+                                hintText: "Enter Phone Number",
                               ),
+                              // textFormField(
+                              //     hintText: "Enter ICE Phone number",
+                              //   labelText: "Phone Number",
+                              //   controller: phoneNumberController,
+                              //   focusNode: phoneFocus,
+                              //   inputType: TextInputType.phone,
+                              //   textLength: 10,
+                              // ),
                               SizedBox(
                                 height: 8,
                               ),
@@ -419,15 +426,20 @@ class _LoadBusesState extends State<LoadBuses> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  textFormField(
+                                  newCountrySelect(
+                                    controller: primaryICEphoneController,
                                     hintText:
                                         "Enter Primary Emergency phone (ICE)",
-                                    controller: primaryICEphoneController,
-                                    focusNode: icePhoneFocus,
-                                    inputType: TextInputType.phone,
-                                    textLength: 10,
-                                    labelText: "Primary Emergency phone (ICE)",
                                   ),
+                                  // textFormField(
+                                  //   hintText:
+                                  //       "Enter Primary Emergency phone (ICE)",
+                                  //   controller: primaryICEphoneController,
+                                  //   focusNode: icePhoneFocus,
+                                  //   inputType: TextInputType.phone,
+                                  //   textLength: 10,
+                                  //   labelText: "Primary Emergency phone (ICE)",
+                                  // ),
                                 ],
                               ),
                             ),
@@ -598,22 +610,22 @@ class _LoadBusesState extends State<LoadBuses> {
     });
     Map general = {
       'pin': '$pin',
-      'phone': '$phone',
+      'phone': '+${countryCode + phone}',
       'minor_count': '$minor',
       'type': 'a'
     };
     Map general2 = {
       'pin': '$pin',
-      'phone': '$phone',
+      'phone': '+${countryCode + phone}',
       'minor_count': '$minor',
       'name': '$name',
-      'ice1_phone': '$icePhone',
+      'ice1_phone': '+${countryCode + icePhone}',
       'type': 'a'
     };
     Map noPhone = {
       'pin': '$pin',
       'minor_count': '$minor',
-      'ice1_phone': '$icePhone',
+      'ice1_phone': '+${countryCode + icePhone}',
       'name': '$name',
       'type': 'b'
     };

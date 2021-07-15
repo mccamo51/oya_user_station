@@ -166,7 +166,7 @@ class User {
   int id;
   String phone;
   String name;
-  Null email;
+  String email;
   String ice1Phone;
   String ice2Phone;
   String verifiedAt;

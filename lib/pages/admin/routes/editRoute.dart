@@ -13,31 +13,50 @@ import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/regionModel.dart';
 import 'package:oya_porter/models/townModle.dart';
 import 'package:oya_porter/models/townRegionModel.dart';
+import 'package:oya_porter/pages/admin/routes/widgets/editRouteWidget.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
 
 import 'widgets/addRouteWidget.dart';
 
-class AddRoute extends StatefulWidget {
-  final stationID;
-  AddRoute({@required this.stationID});
+class EditRoute extends StatefulWidget {
+  String stationID, destination, town, region, desId, townID, regId;
+  EditRoute(
+      {@required this.stationID,
+      @required this.destination,
+      @required this.region,
+      @required this.desId,
+      @required this.regId,
+      @required this.townID,
+      @required this.town});
   @override
-  _AddRouteState createState() => _AddRouteState();
+  _EditRouteState createState() => _EditRouteState();
 }
 
-class _AddRouteState extends State<AddRoute> {
+class _EditRouteState extends State<EditRoute> {
   TextEditingController destinationController = TextEditingController();
   TextEditingController townController = TextEditingController();
   TextEditingController regionController = TextEditingController();
-  TextEditingController insExpController = TextEditingController();
-  TextEditingController regNoController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String townId, regionId, destId;
   bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    destinationController.text = widget.destination;
+    townController.text = widget.town;
+    regionController.text = widget.region;
+    townId = widget.townID;
+    regionId = widget.regId;
+    destId = widget.desId;
+  }
+
   @override
   Widget build(BuildContext context) {
     print(stationId);
@@ -48,7 +67,7 @@ class _AddRouteState extends State<AddRoute> {
           ? Center(
               child: CupertinoActivityIndicator(),
             )
-          : addRouteWidget(
+          : editRouteWidget(
               formKey: _formKey,
               context: context,
               destinationController: destinationController,
@@ -95,7 +114,7 @@ class _AddRouteState extends State<AddRoute> {
         };
         final url = Uri.parse("$BASE_URL/stations/${widget.stationID}/routes");
 
-        final response = await http.post(
+        final response = await http.put(
           url,
           body: json.encode(body),
           headers: {

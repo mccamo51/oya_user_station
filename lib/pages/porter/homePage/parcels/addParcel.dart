@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:oya_porter/components/phoneNumberText.dart';
 import 'package:oya_porter/config/functions.dart';
 import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +46,8 @@ class _AddParcelState extends State<AddParcel> {
 
   @override
   Widget build(BuildContext context) {
+    Locale myLocale = Localizations.localeOf(context);
+    print(myLocale.countryCode);
     return Scaffold(
       body: isLoading
           ? Center(
@@ -52,17 +55,18 @@ class _AddParcelState extends State<AddParcel> {
             )
           : addParcelWidget(
               context: context,
+              locale: myLocale.countryCode,
               onSend: () => _onSave1(
                   descrip: descController.text,
                   name: itemController.text,
                   recName: reciepeintNameController.text,
-                  recPhone: reciepeintPhoneController.text,
+                  recPhone: "+${countryCode + reciepeintPhoneController.text}",
                   recStation: stID,
                   station: stationId,
                   payMode: network,
                   payType: payType,
                   senderName: senderNameController.text,
-                  senderPhone: senderPhoneController.text,
+                  senderPhone: "+${countryCode + senderPhoneController.text}",
                   // img: _image.path,
                   price: priceController.text,
                   context: context),

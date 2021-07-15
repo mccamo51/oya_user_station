@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/passwordField.dart';
+import 'package:oya_porter/components/phoneNumberText.dart';
 import 'package:oya_porter/components/textField.dart';
 
 Widget loginWidget({
@@ -43,12 +44,17 @@ Widget loginWidget({
             key: formKey,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              textFormField(
-                  controller: phoneNumberController,
-                  focusNode: phoneFocusNode,
-                  inputType: TextInputType.number,
-                  hintText: "Phone Number",
-                  labelText: "Phone Number"),
+              newCountrySelect(
+                controller: phoneNumberController,
+                hintText: "Phone Number",
+              ),
+
+              // textFormField(
+              //     controller: phoneNumberController,
+              //     focusNode: phoneFocusNode,
+              //     inputType: TextInputType.number,
+              //     hintText: "Phone Number",
+              //     labelText: "Phone Number"),
               SizedBox(height: 15),
               PasswordField(
                 controller: pinController,

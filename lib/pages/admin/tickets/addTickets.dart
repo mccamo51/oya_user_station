@@ -9,6 +9,7 @@ import 'package:oya_porter/bloc/scheduleBloc.dart';
 import 'package:oya_porter/bloc/pickupBloc.dart';
 import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/components/emptyBox.dart';
+import 'package:oya_porter/components/phoneNumberText.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/functions.dart';
@@ -216,12 +217,15 @@ class _AddTicketState extends State<AddTicket> {
                     SizedBox(
                       height: 10,
                     ),
-                    textFormField(
-                      hintText: "Enter momo number",
-                      controller: reciepeintPhoneController,
-                      inputType: TextInputType.phone,
-                      focusNode: null,
-                    ),
+                    newCountrySelect(
+                        controller: reciepeintPhoneController,
+                        hintText: "Enter momo number"),
+                    // textFormField(
+                    //   hintText: "Enter momo number",
+                    //   controller: reciepeintPhoneController,
+                    //   inputType: TextInputType.phone,
+                    //   focusNode: null,
+                    // ),
                     SizedBox(
                       height: 10,
                     ),
@@ -242,7 +246,8 @@ class _AddTicketState extends State<AddTicket> {
                       busID: schedleId,
                       pickupId: pickupId,
                       phone: userphone,
-                      momoPhone: reciepeintPhoneController.text,
+                      momoPhone:
+                          "+${(countryCode + reciepeintPhoneController.text)}",
                       momoName: reciepeintNameController.text,
                       minor: minorController.text,
                       mapymentMode: network,

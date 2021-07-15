@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
+import 'package:oya_porter/components/phoneNumberText.dart';
 import 'package:oya_porter/config/firebase/firebaseAuth.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
@@ -73,8 +74,9 @@ class _LoginPageState extends State<LoginPage> {
           msg: "Phone and Pin required",
           title: "Fields Required");
     } else {
+      // print("+" + countryCode + _phoneController.text);
       loginApi(
-          phone: _phoneController.text.trim(),
+          phone: ("+" + countryCode + _phoneController.text.trim()),
           password: _passwordController.text.trim());
     }
     // _phoneController.clear();

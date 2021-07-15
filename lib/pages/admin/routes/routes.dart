@@ -12,6 +12,7 @@ import 'package:oya_porter/config/functions.dart';
 import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/pages/admin/routes/editRoute.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:http/http.dart' as http;
@@ -53,7 +54,11 @@ class _RoutesState extends State<Routes> {
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => AddRoute()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddRoute(
+                            stationID: widget.id,
+                          )));
             })
       ]),
       body: RefreshIndicator(
@@ -140,13 +145,23 @@ class _RoutesState extends State<Routes> {
                 children: [
                   for (var x in model.data)
                     _itemTile(
-                        from: x.from.name,
-                        to: x.to.name,
-                        onDelete: () {
-                          deleteRoute(
-                            route_id: x.id.toString(),
-                          );
-                        })
+                      from: x.from.name,
+                      to: x.to.name,
+                      onDelete: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditRoute(
+                            stationID: widget.id,
+                            destination: x.to.name,
+                            region: x.region.name,
+                            desId: x.to.id.toString(),
+                            regId: x.region.id.toString(),
+                            townID: x.from.id.toString(),
+                            town: x.from.name,
+                          ),
+                        ),
+                      ),
+                    )
                 ],
               ),
             ),
@@ -166,13 +181,13 @@ _itemTile({String from, String to, Function onDelete}) {
         child: ListTile(
           leading: Icon(FeatherIcons.mapPin),
           title: Text("From: $from   -   $to"),
-          // trailing: IconButton(
-          //   icon: Icon(
-          //     Icons.delete_forever,
-          //     color: RED,
-          //   ),
-          //   onPressed: onDelete,
-          // ),
+          trailing: IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: PRIMARYCOLOR,
+            ),
+            onPressed: onDelete,
+          ),
         ),
       ),
       Padding(

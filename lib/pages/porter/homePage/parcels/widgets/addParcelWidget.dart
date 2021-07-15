@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/appBar.dart';
+import 'package:oya_porter/components/phoneNumberText.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/spec/colors.dart';
 
@@ -20,6 +21,7 @@ Widget addParcelWidget(
     @required Function onSelectPaymentMode,
     @required Function onSelectPaymentType,
     @required Function onSelectStationSelect,
+    @required String locale,
     @required Function onCapture,
     @required bool showMomo = false,
     @required var img}) {
@@ -62,13 +64,16 @@ Widget addParcelWidget(
             SizedBox(
               height: 10,
             ),
-            textFormField(
-              hintText: "Sender's Phone",
-              controller: senderPhoneController,
-              focusNode: null,
-              labelText: "Sender's Phone",
-              inputType: TextInputType.number,
-            ),
+            newCountrySelect(
+                controller: senderPhoneController,
+                hintText: "Sender's Phone",
+                locale: locale),
+            // textFormField(
+            //   controller: senderPhoneController,
+            //   focusNode: null,
+            //   labelText: "Sender's Phone",
+            //   inputType: TextInputType.number,
+            // ),
             SizedBox(
               height: 10,
             ),
@@ -112,14 +117,17 @@ Widget addParcelWidget(
             SizedBox(
               height: 10,
             ),
-            textFormField(
-              hintText: "Recipient Phone",
+            newCountrySelect(
               controller: reciepeintPhoneController,
-              focusNode: null,
-              labelText: "Recipient Phone",
-              inputType: TextInputType.number,
-
+              hintText: "Recipient Phone",
             ),
+            // textFormField(
+            //   hintText: "Sender's Phone",
+            //   controller: reciepeintPhoneController,
+            //   focusNode: null,
+            //   labelText: "Recipient Phone",
+            //   inputType: TextInputType.number,
+            // ),
             SizedBox(
               height: 10,
             ),
@@ -129,7 +137,6 @@ Widget addParcelWidget(
               focusNode: null,
               labelText: "Price",
               inputType: TextInputType.number,
-
             ),
             SizedBox(
               height: 10,
