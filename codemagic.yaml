@@ -87,8 +87,8 @@ workflows:
         echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
       - cd . && flutter clean
       - cd . && flutter packages pub get
-      - cd . && flutter build appbundle --release --build-name=2.0.8 --build-number=9
-      - cd . && flutter build apk --release --build-name=2.0.8 --build-number=9
+      - cd . && flutter build appbundle --release --build-name=2.1.0 --build-number=11
+      - cd . && flutter build apk --release --build-name=2.1.0 --build-number=11
 
     artifacts:
       - build/**/outputs/**/*.apk
