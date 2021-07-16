@@ -561,14 +561,14 @@ class _AddTicketState extends State<AddTicket> {
             Platform.isIOS
                 ? CupertinoActionSheetAction(
                     child: Text(
-                      '${data.name} - ${data.name}',
+                      '${data.name}',
                       style: TextStyle(color: BLACK),
                     ),
                     onPressed: () {
                       setState(() {
-                        routeID = data.id.toString();
+                        pickupId = data.id.toString();
 
-                        _routeController.text = "${data.name} - ${data.name}";
+                        _pickupController.text = "${data.name}";
                       });
 
                       Navigator.pop(context);
@@ -576,12 +576,12 @@ class _AddTicketState extends State<AddTicket> {
                   )
                 : SimpleDialogOption(
                     onPressed: () {
-                      routeID = data.id.toString();
-                      _routeController.text = "${data.name} - ${data.name}";
+                      pickupId = data.id.toString();
+                      _pickupController.text = "${data.name}";
                       Navigator.pop(context);
                     },
                     child: Text(
-                      "${data.name} - ${data.name}",
+                      "${data.name} ",
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
