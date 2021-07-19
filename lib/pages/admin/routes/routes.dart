@@ -145,23 +145,25 @@ class _RoutesState extends State<Routes> {
                 children: [
                   for (var x in model.data)
                     _itemTile(
-                      from: x.from.name,
-                      to: x.to.name,
-                      onDelete: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditRoute(
-                            stationID: widget.id,
-                            destination: x.to.name,
-                            region: x.region.name,
-                            desId: x.to.id.toString(),
-                            regId: x.region.id.toString(),
-                            townID: x.from.id.toString(),
-                            town: x.from.name,
+                        from: x.from.name,
+                        to: x.to.name,
+                        onDelete: () => 
+
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditRoute(
+                              stationID: widget.id,
+                              destination: x.to.name,
+                              // region: x.region.name,
+                              desId: x.to.id.toString(),
+                              // regId: x.region.id.toString(),
+                              townID: x.from.id.toString(),
+                              town: x.from.name,
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                        )
                 ],
               ),
             ),

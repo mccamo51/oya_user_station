@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
           msg: "Phone and Pin required",
           title: "Fields Required");
     } else {
-      // print("+" + countryCode + _phoneController.text);
+      print("+" + countryCode + _phoneController.text);
       loginApi(
           phone: ("+" + countryCode + _phoneController.text.trim()),
           password: _passwordController.text.trim());
