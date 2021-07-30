@@ -22,9 +22,12 @@ import 'package:oya_porter/spec/styles.dart';
 import 'package:http/http.dart' as http;
 
 class ScaledBusses extends StatefulWidget {
-  String busID, busNo, staionId;
+  String busID, busNo, staionId, scheduleID;
   ScaledBusses(
-      {@required this.busID, @required this.busNo, @required this.staionId});
+      {@required this.busID,
+      @required this.busNo,
+      @required this.staionId,
+      this.scheduleID});
 
   @override
   _ScaledBussesState createState() => _ScaledBussesState();
@@ -46,7 +49,45 @@ class _ScaledBussesState extends State<ScaledBusses> {
     // TODO: implement initState
     scaledBloc.fetchScaledBuses(widget.staionId, context);
     // loadScaledBusOffline();
+
+    const oneSec = const Duration(minutes: 1);
+    new Timer.periodic(
+        oneSec,
+        (Timer t) => _checkInFunction(
+              scheduleId: widget.scheduleID,
+            ));
     super.initState();
+  }
+
+  _checkInFunction({String scheduleId}) async {
+    print("==============$scheduleId");
+    // checkin(context, "Do you want to check all passengers in?");
+    final url = Uri.parse("$BASE_URL/v2/schedules/$scheduleId/tickets");
+    final response = await http.get(
+      url,
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    ).timeout(
+      Duration(seconds: 50),
+    );
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData['data']);
+
+      if (responseData['status'] == 200) {
+        print(responseData['data']);
+        if (responseData['data'].length > 0) {
+          checkin(context, "Do you wnat to check all these passengers in?",
+              onTap: () {
+            _checkPassenger(scheduleID: widget.scheduleID);
+          });
+          print(responseData['data'].length);
+        }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      }
+    }
   }
 
   bool _isLoading = false;
@@ -341,6 +382,34 @@ class _ScaledBussesState extends State<ScaledBusses> {
         _isLoading = false;
       });
       toastContainer(text: "Error has occured");
+    }
+  }
+
+  Future<void> _checkPassenger({
+    @required String scheduleID,
+  }) async {
+    final url = Uri.parse("$BASE_URL/mid-route/checkin");
+    Map<String, dynamic> body = {
+      'bus_schedule_id': '$scheduleID',
+    };
+    try {
+      final response = await http.post(url,
+          body: json.encode(
+            body,
+          ),
+          headers: {
+            "Authorization": "Bearer $accessToken",
+            'Content-Type': 'application/json'
+          }).timeout(
+        Duration(seconds: 50),
+      );
+      if (response.statusCode == 200) {
+        toastContainer(text: "Checking Passenger(s) in is successful");
+      } else {
+        toastContainer(text: "Checking Passenger(s) in is failed");
+      }
+    } catch (e) {
+      print("$e");
     }
   }
 

@@ -41,8 +41,6 @@ class _HomePagePorterState extends State<HomePagePorter> {
     _getLoading();
     super.initState();
 
-    const oneSec = const Duration(minutes: 1);
-    new Timer.periodic(oneSec, (Timer t) => _checkInFunction());
   }
 
   @override
@@ -137,7 +135,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ScaledBusses(
-                                    // scheduleID: scheduleID,
+                                    scheduleID: scheduleID,
                                     busID: busID,
                                     busNo: carNumber,
                                     staionId: stationId,
@@ -310,31 +308,7 @@ class _HomePagePorterState extends State<HomePagePorter> {
     }
   }
 
-  _checkInFunction({String scheduleId}) async {
-    // checkin(context, "Do you want to check all passengers in?");
-    final url = Uri.parse("$BASE_URL/v2/schedules/$scheduleId/tickets");
-    final response = await http.get(
-      url,
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
-    ).timeout(
-      Duration(seconds: 50),
-    );
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      if (responseData['status'] == 200) {
-        print(responseData['data']);
-        if (responseData['data'] > 0) {
-          checkin(context, "Do you wnat to check all these passengers in?");
-          print(responseData['data'].length);
-        }
-      } else if (response.statusCode == 401) {
-        sessionExpired(context);
-      }
-    }
-  }
-}
+ }
 
 _cardItem(BuildContext context,
     {String image, String name, Function onContinue}) {
@@ -377,7 +351,7 @@ _cardItem(BuildContext context,
 //                         ? () => toastContainer(text: "Loading...")
 //                         :
 
-Future<void> checkin(BuildContext context, msg) async {
+Future<void> checkin(BuildContext context, msg,{Function onTap}) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
@@ -410,7 +384,7 @@ Future<void> checkin(BuildContext context, msg) async {
                         backgroundColor:
                             MaterialStateProperty.all<Color>(PRIMARYCOLOR),
                       ),
-                      onPressed: () {},
+                      onPressed: onTap,
                       child: Text("Check In")),
                 ],
               )
