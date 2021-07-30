@@ -64,10 +64,7 @@ Widget _buildDropdownItem(Country country) => Container(
     );
 
 Widget newCountrySelect(
-    {
-    TextEditingController controller,
-    String hintText,
-    String locale}) {
+    {TextEditingController controller, String hintText, String locale}) {
   return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,

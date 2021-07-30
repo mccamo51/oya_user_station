@@ -62,8 +62,11 @@ class _AddRouteState extends State<AddRoute> {
                   );
                 }
               },
-              onAddROute: () =>
-                  _onSave(destId: destId, regID: regionId, souId: townId),
+              onAddROute: () => _onSave(
+                destId: destId,
+                regID: regionId,
+                souId: townId,
+              ),
               onSelectRegion: () => androidSelectRegion(
                 context: context,
                 title: "Select Region",

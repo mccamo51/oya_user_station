@@ -23,6 +23,22 @@ Widget editRouteWidget({
         key: formKey,
         child: Column(
           children: [
+            Visibility(
+              child: GestureDetector(
+                  child: textFormField(
+                    hintText: "Select Source Town",
+                    controller: townController,
+                    // validate: true,
+                    // validateMsg: "Select Destination Town",
+                    focusNode: null,
+                    icon: Icons.arrow_drop_down,
+                    enable: false,
+                  ),
+                  onTap: onSelectTown),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             GestureDetector(
               onTap: onSelectRegion,
               child: textFormField(
@@ -42,7 +58,7 @@ Widget editRouteWidget({
                 child: GestureDetector(
               onTap: onSelectDestination,
               child: textFormField(
-                hintText: "Select Source Town",
+                hintText: "Select Destination Town",
                 // validate: true,
                 // validateMsg: "Select Source Town",
                 controller: destinationController,
@@ -51,33 +67,17 @@ Widget editRouteWidget({
                 enable: false,
               ),
             )),
-            SizedBox(
-              height: 15,
-            ),
-            Visibility(
-              child: GestureDetector(
-                  child: textFormField(
-                    hintText: "Select Destination Town",
-                    controller: townController,
-                    // validate: true,
-                    // validateMsg: "Select Destination Town",
-                    focusNode: null,
-                    icon: Icons.arrow_drop_down,
-                    enable: false,
-                  ),
-                  onTap: onSelectTown),
-            ),
           ],
         ),
       ),
     ),
     bottomNavigationBar: Container(
-      height: 60,
+      height: 70,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: CupertinoButton(
           color: PRIMARYCOLOR,
-          child: Text("Add Route"),
+          child: Text("Update Route"),
           onPressed: onAddROute,
         ),
       ),
