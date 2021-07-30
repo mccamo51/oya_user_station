@@ -85,7 +85,7 @@ class _PriorityBusesState extends State<PriorityBuses> {
   }
 
   Widget _mainContent(PriorityBusModel bussModel) {
-    print("==============${bussModel.data[0]}");
+    // print("==============${bussModel.data[0]}");
     if (bussModel.data != null && bussModel.data.length > 0)
       return SingleChildScrollView(
         physics: BouncingScrollPhysics(),

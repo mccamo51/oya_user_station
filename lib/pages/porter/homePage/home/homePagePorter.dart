@@ -18,7 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:oya_porter/spec/strings.dart';
 import 'package:oya_porter/spec/styles.dart';
 
-  String scheduleID;
+String scheduleID;
 String carNumber = "";
 
 class HomePagePorter extends StatefulWidget {
@@ -41,8 +41,8 @@ class _HomePagePorterState extends State<HomePagePorter> {
     _getLoading();
     super.initState();
 
-    // const oneSec = const Duration(minutes: 1);
-    // new Timer.periodic(oneSec, (Timer t) => _checkInFunction());
+    const oneSec = const Duration(minutes: 1);
+    new Timer.periodic(oneSec, (Timer t) => _checkInFunction());
   }
 
   @override
@@ -310,28 +310,29 @@ class _HomePagePorterState extends State<HomePagePorter> {
     }
   }
 
-   _checkInFunction() async {
-    checkin(context, "Do you want to check all passengers in?");
-    // final url = Uri.parse("$BASE_URL/routes/routeID/schedules/id");
-    // final response = await http.get(
-    //   url,
-    //   headers: {
-    //     "Authorization": "Bearer $accessToken",
-    //   },
-    // ).timeout(
-    //   Duration(seconds: 50),
-    // );
-    // if (response.statusCode == 200) {
-    //   final responseData = json.decode(response.body);
-    //   if (responseData['status'] == 200) {
-    //     // print(responseData['data']);
-    //     if (responseData['data']['tickets'] > 0) {
-    //       checkin(context, "Do you wnat to check all these passengers in?");
-    //     }
-    //   } else if (response.statusCode == 401) {
-    //     sessionExpired(context);
-    //   }
-    // }
+  _checkInFunction({String scheduleId}) async {
+    // checkin(context, "Do you want to check all passengers in?");
+    final url = Uri.parse("$BASE_URL/v2/schedules/$scheduleId/tickets");
+    final response = await http.get(
+      url,
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    ).timeout(
+      Duration(seconds: 50),
+    );
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      if (responseData['status'] == 200) {
+        print(responseData['data']);
+        if (responseData['data'] > 0) {
+          checkin(context, "Do you wnat to check all these passengers in?");
+          print(responseData['data'].length);
+        }
+      } else if (response.statusCode == 401) {
+        sessionExpired(context);
+      }
+    }
   }
 }
 
@@ -372,11 +373,9 @@ _cardItem(BuildContext context,
   );
 }
 
-
 // !isActive
 //                         ? () => toastContainer(text: "Loading...")
 //                         :
-
 
 Future<void> checkin(BuildContext context, msg) async {
   return showDialog<void>(
