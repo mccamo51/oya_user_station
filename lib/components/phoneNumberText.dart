@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:oya_porter/components/textField.dart';
 import 'package:oya_porter/spec/colors.dart';
 
-String countryCode = "", countryName = "GH";
+String countryCode = "233", countryName = "GH";
 // Widget phoneText(
 //     {PhoneNumber number,
 //     TextEditingController controller,
@@ -64,10 +64,7 @@ Widget _buildDropdownItem(Country country) => Container(
     );
 
 Widget newCountrySelect(
-    {
-    TextEditingController controller,
-    String hintText,
-    String locale}) {
+    {TextEditingController controller, String hintText, String locale}) {
   return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
