@@ -405,8 +405,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
       );
       if (response.statusCode == 200) {
         toastContainer(text: "Checking Passenger(s) in is successful");
+        Navigator.pop(context);
       } else {
         toastContainer(text: "Checking Passenger(s) in is failed");
+        Navigator.pop(context);
       }
     } catch (e) {
       print("$e");
