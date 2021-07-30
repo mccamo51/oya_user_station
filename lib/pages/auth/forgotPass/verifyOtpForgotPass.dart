@@ -70,9 +70,9 @@ class _VerifyOtpForgotPasswordState extends State<VerifyOtpForgotPassword> {
         Map<String, dynamic> body = {
           'phone': phone,
           'otp': otp,
-          'new_pin': pin,
+          'pin': pin,
         };
-        final url = Uri.parse("$BASE_URL/account/pin/reset");
+        final url = Uri.parse("$RESETPIN_URL");
 
         final response = await http.put(
           url,

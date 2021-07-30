@@ -40,6 +40,9 @@ class _HomePagePorterState extends State<HomePagePorter> {
   void initState() {
     _getLoading();
     super.initState();
+
+    // const oneSec = const Duration(minutes: 1);
+    // new Timer.periodic(oneSec, (Timer t) => _checkInFunction());
   }
 
   @override
@@ -306,6 +309,30 @@ class _HomePagePorterState extends State<HomePagePorter> {
       });
     }
   }
+
+   _checkInFunction() async {
+    checkin(context, "Do you want to check all passengers in?");
+    // final url = Uri.parse("$BASE_URL/routes/routeID/schedules/id");
+    // final response = await http.get(
+    //   url,
+    //   headers: {
+    //     "Authorization": "Bearer $accessToken",
+    //   },
+    // ).timeout(
+    //   Duration(seconds: 50),
+    // );
+    // if (response.statusCode == 200) {
+    //   final responseData = json.decode(response.body);
+    //   if (responseData['status'] == 200) {
+    //     // print(responseData['data']);
+    //     if (responseData['data']['tickets'] > 0) {
+    //       checkin(context, "Do you wnat to check all these passengers in?");
+    //     }
+    //   } else if (response.statusCode == 401) {
+    //     sessionExpired(context);
+    //   }
+    // }
+  }
 }
 
 _cardItem(BuildContext context,
@@ -349,3 +376,49 @@ _cardItem(BuildContext context,
 // !isActive
 //                         ? () => toastContainer(text: "Loading...")
 //                         :
+
+
+Future<void> checkin(BuildContext context, msg) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        // title: Text('Rewind and remember'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                '$msg',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(PRIMARYCOLOR),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      // style: ButtonStyle(backgroundColor: MaterialColor.),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(PRIMARYCOLOR),
+                      ),
+                      onPressed: () {},
+                      child: Text("Check In")),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

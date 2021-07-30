@@ -509,26 +509,25 @@ class OyaProvider {
   Future<PriorityBusModel> fetchPriorityBus(
       String id, BuildContext context) async {
     try {
-      final url = Uri.parse("$BASE_URL/stations/$id/priority_buses");
+    final url = Uri.parse("$BASE_URL/stations/$id/priority_buses");
 
-      final response = await client.get(
-        url,
-        headers: {
-          "Authorization": "Bearer $accessToken",
-          // 'Content-Type': 'application/json'
-        },
-      ).timeout(Duration(seconds: 30));
-      if (response.statusCode == 200) {
-        print(response.body);
-        saveStringShare(
-            key: "priority_buses",
-            data: json.encode(json.decode(response.body)));
-        return PriorityBusModel.fromJson(json.decode(response.body));
-      } else if (response.statusCode == 401) {
-        sessionExpired(context);
-      } else {
-        toastContainer(text: "Error has occured");
-      }
+    final response = await client.get(
+      url,
+      headers: {
+        "Authorization": "Bearer $accessToken",
+        // 'Content-Type': 'application/json'
+      },
+    ).timeout(Duration(seconds: 30));
+    if (response.statusCode == 200) {
+      print(response.body);
+      saveStringShare(
+          key: "priority_buses", data: json.encode(json.decode(response.body)));
+      return PriorityBusModel.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 401) {
+      sessionExpired(context);
+    } else {
+      toastContainer(text: "Error has occured");
+    }
     } on TimeoutException catch (_) {
       // print("Exception occured: $error stackTrace: $stackTrace");
       throw Exception("Timeout");
@@ -541,7 +540,7 @@ class OyaProvider {
 
   Future<StationsModel> fetchStations(BuildContext context) async {
     try {
-      final url = Uri.parse("$BASE_URL/stations");
+      final url = Uri.parse("$BASE_URL/v2/stations");
 
       final response = await client.get(
         url,

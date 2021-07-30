@@ -18,6 +18,7 @@ import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
 import 'package:oya_porter/pages/porter/homePage/loadBus/loadBus.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/spec/colors.dart';
+import 'package:oya_porter/spec/styles.dart';
 
 int priorityLength = 0, scaledLength = 0;
 
@@ -98,12 +99,26 @@ class _PriorityBusesState extends State<PriorityBuses> {
                 children: [
                   for (int x = 0; x < bussModel.data.length; x++)
                     Card(
+                      // color: PRIMARYCOLOR,
                       child: ListTile(
                           title: Text(
                               "Bus No: ${bussModel.data[x].bus.regNumber} [${bussModel.data[x].code.toString()}]"),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${bussModel.data[x].bus.driver.station.name}",
+                                    style: h3Black,
+                                  ),
+                                  Text(
+                                    "${bussModel.data[x].bus.regNumber}",
+                                    style: h3Black,
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: 8,
                               ),
@@ -121,24 +136,32 @@ class _PriorityBusesState extends State<PriorityBuses> {
                           ),
                           leading: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(FeatherIcons.truck),
+                              Icon(
+                                FeatherIcons.truck,
+                                color: PRIMARYCOLOR,
+                              ),
+                              SizedBox(height: 10),
                               bussModel.data[x].passengersCount > 0
-                                  ? Text("Loading")
-                                  : Text("Priority")
+                                  ? Text("Loading",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: PRIMARYCOLOR))
+                                  : Text("Scaled",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: RED))
                             ],
                           ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                  "${bussModel.data[x].bus.driver.station.name}"),
-                              Text("${bussModel.data[x].bus.regNumber}"),
-                            ],
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
                           ),
                           onTap: () {
-                            print(scaledLength);
-                            if (scaledLength > 0) {
+                            print("========OLD$scheduleID}");
+                            print("========New  ${bussModel.data[x].id}");
+                            if (priorityLength > 0) {
                               exceptionAlert(
                                 context: context,
                                 title: "Confimation",
@@ -146,12 +169,31 @@ class _PriorityBusesState extends State<PriorityBuses> {
                                     "You are already loading bus# $carNumber, Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
                                 onMigrate: () {
                                   _migratePassenger(
+                                      busId: bussModel.data[x].id.toString(),
                                       context: context,
-                                      busId:
-                                          bussModel.data[x].bus.id.toString(),
-                                      scheduleID:
-                                          bussModel.data[x].id.toString());
+                                      scheduleID: scheduleID);
+                                  Navigator.pop(context);
                                 },
+                              );
+                            } else if (widget.busID == null ||
+                                widget.busID == "") {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoadBuses(
+                                    scheduleId: bussModel.data[x].id.toString(),
+                                    minorCount:
+                                        bussModel.data[x].minors.toString(),
+                                    passengerCount: bussModel
+                                        .data[x].passengersCount
+                                        .toString(),
+                                    from: bussModel.data[x].route.from.name,
+                                    to: bussModel.data[x].route.to.name,
+                                    carNo: bussModel.data[x].bus.regNumber,
+                                    company: bussModel
+                                        .data[x].station.busCompany.name,
+                                  ),
+                                ),
                               );
                             } else if (widget.busID ==
                                 bussModel.data[x].bus.id.toString()) {
@@ -174,32 +216,46 @@ class _PriorityBusesState extends State<PriorityBuses> {
                                 ),
                               );
                             } else {
+                              // print("From:${widget.scheduleID}");
+                              // print("To:${bussModel.data[x].id}");
+                              // print("ScheduleID:${bussModel.data[x].id}");
+
                               exceptionAlert(
                                 context: context,
                                 title: "Confimation",
                                 message:
-                                    "You are already loading bus# ${widget.busNo}, Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
+                                    "You are already loading bus# ${widget.busNo} Will you like to migrate to bus# ${bussModel.data[x].bus.regNumber}?",
                                 onMigrate: () {
                                   _migratePassenger(
-                                      context: context,
-                                      busId:
-                                          bussModel.data[x].bus.id.toString(),
-                                      scheduleID:
-                                          bussModel.data[x].id.toString());
+                                    busId: bussModel.data[x].id.toString(),
+                                    context: context,
+                                    scheduleID: scheduleID,
+                                  );
+                                  Navigator.pop(context);
                                 },
                               );
                             }
                           }
-
-                          // _checkMigration(
-                          //     id: x.id.toString(),
-                          //     busCompany: x.bus.driver.station.busCompany.name,
-                          //     regNumber: x.bus.regNumber,
-                          //     passengersCount: x.passengersCount.toString(),
-                          //     minors: x.minors.toString(),
-                          //     from: x.route.from.name,
-                          //     to: x.route.to.name,
-                          //     busId: x.bus.id.toString());
+                          // else {
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => LoadBuses(
+                          //         scheduleId: bussModel.data[x].id.toString(),
+                          //         minorCount:
+                          //             bussModel.data[x].minors.toString(),
+                          //         passengerCount: bussModel
+                          //             .data[x].passengersCount
+                          //             .toString(),
+                          //         from: bussModel.data[x].route.from.name,
+                          //         to: bussModel.data[x].route.to.name,
+                          //         carNo: bussModel.data[x].bus.regNumber,
+                          //         company:
+                          //             bussModel.data[x].station.busCompany.name,
+                          //       ),
+                          //     ),
+                          //   );
+                          // }
                           // },
                           ),
                     )

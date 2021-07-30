@@ -13,7 +13,6 @@ import 'package:oya_porter/pages/auth/forgotPass/verifyOtpForgotPass.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/auth/secreteQuestion/secreteWidget/secreteWidget.dart';
 import 'package:oya_porter/spec/colors.dart';
-import 'package:oya_porter/spec/sharePreference.dart';
 import 'package:oya_porter/spec/strings.dart';
 
 String onTopPhone;
@@ -63,7 +62,7 @@ class _SecreteQuestionState extends State<SecreteQuestion> {
         Map<String, dynamic> body = {
           'phone': phone,
         };
-    final url = Uri.parse("$BASE_URL/account/check_phone");
+        final url = Uri.parse("$BASE_URL_V2_AUTH/reset-password-otp");
 
         final response = await http.post(
           url,

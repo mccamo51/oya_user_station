@@ -47,7 +47,7 @@ class Data {
   Bus bus;
   Route route;
   Station station;
-  // List<Null> tickets;
+  List<Tickets> tickets;
 
   Data({
     this.id,
@@ -69,7 +69,7 @@ class Data {
     this.bus,
     this.route,
     this.station,
-    // this.tickets,
+    this.tickets,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -98,12 +98,12 @@ class Data {
     route = json['route'] != null ? new Route.fromJson(json['route']) : null;
     station =
         json['station'] != null ? new Station.fromJson(json['station']) : null;
-    // if (json['tickets'] != null) {
-    //   tickets = new List<Null>();
-    //   json['tickets'].forEach((v) {
-    //     tickets.add(new Null.fromJson(v));
-    //   });
-    // }
+    if (json['tickets'] != null) {
+      tickets = new List<Tickets>();
+      json['tickets'].forEach((v) {
+        tickets.add(new Tickets.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -135,9 +135,9 @@ class Data {
     if (this.station != null) {
       data['station'] = this.station.toJson();
     }
-    // if (this.tickets != null) {
-    //   data['tickets'] = this.tickets.map((v) => v.toJson()).toList();
-    // }
+    if (this.tickets != null) {
+      data['tickets'] = this.tickets.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -208,6 +208,109 @@ class Bus {
     if (this.busType != null) {
       data['bus_type'] = this.busType.toJson();
     }
+    return data;
+  }
+}
+
+class Tickets {
+  int id;
+  int stationId;
+  String ticketNo;
+  String recipientPhone;
+  String reportingDate;
+  String reportingTime;
+  String pmtStatus;
+  String pickupTime;
+  String boardingType;
+  int status;
+  String price;
+  String updatedBy;
+  String deletedBy;
+  int checkedIn;
+  List<int> multiTickets;
+  String multiType;
+  String insuranceId;
+  User user;
+
+  Tickets({
+    this.id,
+    this.stationId,
+    this.ticketNo,
+    this.recipientPhone,
+    this.reportingDate,
+    this.reportingTime,
+    this.pmtStatus,
+    this.pickupTime,
+    this.boardingType,
+    this.status,
+    this.price,
+    this.updatedBy,
+    this.deletedBy,
+    this.checkedIn,
+    this.multiTickets,
+    this.multiType,
+    this.insuranceId,
+    this.user,
+  });
+
+  Tickets.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    stationId = json['station_id'];
+    ticketNo = json['ticket_no'];
+    recipientPhone = json['recipient_phone'];
+    reportingDate = json['reporting_date'];
+    reportingTime = json['reporting_time'];
+    pmtStatus = json['pmt_status'];
+    pickupTime = json['pickup_time'];
+    boardingType = json['boarding_type'];
+    status = json['status'];
+    price = json['price'];
+    updatedBy = json['updated_by'];
+    deletedBy = json['deleted_by'];
+    checkedIn = json['checked_in'];
+    multiTickets = json['multi_tickets'].cast<int>();
+    multiType = json['multi_type'];
+    insuranceId = json['insurance_id'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    // seat = json['seat'] != null ? new Seat.fromJson(json['seat']) : null;
+    // pickup =
+    //     json['pickup'] != null ? new Pickup.fromJson(json['pickup']) : null;
+    // busSchedule = json['bus_schedule'] != null
+    //     ? new BusSchedule.fromJson(json['bus_schedule'])
+    //     : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['station_id'] = this.stationId;
+    data['ticket_no'] = this.ticketNo;
+    data['recipient_phone'] = this.recipientPhone;
+    data['reporting_date'] = this.reportingDate;
+    data['reporting_time'] = this.reportingTime;
+    data['pmt_status'] = this.pmtStatus;
+    data['pickup_time'] = this.pickupTime;
+    data['boarding_type'] = this.boardingType;
+    data['status'] = this.status;
+    data['price'] = this.price;
+    data['updated_by'] = this.updatedBy;
+    data['deleted_by'] = this.deletedBy;
+    data['checked_in'] = this.checkedIn;
+    data['multi_tickets'] = this.multiTickets;
+    data['multi_type'] = this.multiType;
+    data['insurance_id'] = this.insuranceId;
+    // if (this.user != null) {
+    //   data['user'] = this.user.toJson();
+    // }
+    // if (this.seat != null) {
+    //   data['seat'] = this.seat.toJson();
+    // }
+    // if (this.pickup != null) {
+    //   data['pickup'] = this.pickup.toJson();
+    // }
+    // if (this.busSchedule != null) {
+    //   data['bus_schedule'] = this.busSchedule.toJson();
+    // }
     return data;
   }
 }

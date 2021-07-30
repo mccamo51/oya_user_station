@@ -39,7 +39,7 @@ class Data {
   String arrivalDate;
   String arrivalTime;
   int passengersCount;
-  int minors;
+  String minors;
   String createdAt;
   List<Staffs> staffs;
   String price;
@@ -76,7 +76,7 @@ class Data {
     id = json['id'];
     departureDate = json['departure_date'];
     departureTime = json['departure_time'];
-    code = json['code'];
+    code = json['code'].toString();
     priority = json['priority'];
     scaled = json['scaled'];
     loaded = json['loaded'];
