@@ -701,17 +701,17 @@ class _LoadBusesState extends State<LoadBuses> {
     try {
       values = await platform.invokeMethod("printTest", {
         "ticketNo": "${data['data']['id']}",
-        "from": "${data['data']['id']}",
-        "to":"${data['data']['id']}",
-        "vehicleNo":"${data['data']['id']}",
+        "from": "${data['data']['route']['from']['name']}",
+        "to":"${data['data']['route']['to']['name']}",
+        "vehicleNo":"${data['data']['bus']['reg_number']}",
         "user":"${data['data']['id']}",
         "iceNo":"${data['data']['id']}",
-        "depDate":"${data['data']['id']}",
-        "stationCode":"${data['data']['id']}",
-        "phone":"${data['data']['id']}",
-        "driver":"${data['data']['id']}",
+        "depDate":"${data['data']['departure_date']}",
+        "stationCode":"${data['data']['station']['id']}",
+        "phone":"${data['data']['station']['phone']}",
+        "driver":"${data['data']['bus']['driver']['user']['name']}",
         "conductor":"${data['data']['id']}",
-        "price":"${data['data']['id']}"
+        "price":"${data['data']['price']}"
       });
     } catch (e) {
       print(e);

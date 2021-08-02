@@ -14,6 +14,18 @@ class MainActivity: FlutterActivity() {
 
     private var tag = "MainActivity"
     private val mbThreadFinished = true
+    var trip = " "
+    var amount = " "
+    var vehicleNumber = " "
+    var ticketNumber = " "
+    var stationCode = " "
+    var conductor = " "
+    var tripDate = " "
+    var seatNumber = " "
+    var stationContact = " "
+    var driver = " "
+    var passenger = " "
+    var emergencyContact = " "
 
     //  API  FOR  CALLING THE DATA
     var posApiHelper: PosApiHelper = PosApiHelper.getInstance()
@@ -31,7 +43,34 @@ class MainActivity: FlutterActivity() {
                 posApiHelper.PrintInit(2, 24, 24, 0x33)
                 posApiHelper.PrintStr("   G.P.R.T.U \n\n")
                 posApiHelper.PrintStr("     Ticket \n\n")
-                posApiHelper.PrintBarcode("ticketNumber", 240, 240, BarcodeFormat.QR_CODE)
+                posApiHelper.PrintSetFont(16.toByte(), 16.toByte(), 0x33.toByte())
+                posApiHelper.PrintStr("$trip \n\n")
+                posApiHelper.PrintStr("GHS $amount \n\n")
+                posApiHelper.PrintStr("------------------------\n")
+                posApiHelper.PrintStr("Trip Details \n\n")
+                posApiHelper.PrintSetFont(24.toByte(), 24.toByte(), 0x00.toByte())
+                posApiHelper.PrintStr("Vehicle Number: $vehicleNumber\n\n")
+                posApiHelper.PrintStr("Ticket Number: $ticketNumber\n\n")
+                posApiHelper.PrintStr("Station Code: $stationCode\n\n")
+                posApiHelper.PrintStr("Conductor: $conductor\n\n")
+                posApiHelper.PrintStr("Trip Date: $tripDate\n\n")
+                posApiHelper.PrintStr("Seat Number: $seatNumber\n\n")
+                posApiHelper.PrintStr("Station Contact: $stationContact\n\n")
+                posApiHelper.PrintStr("Driver: $driver\n\n")
+                posApiHelper.PrintSetFont(16.toByte(), 16.toByte(), 0x33.toByte())
+                posApiHelper.PrintStr("------------------------\n")
+                posApiHelper.PrintStr("Passenger Details \n\n")
+                posApiHelper.PrintSetFont(24.toByte(), 24.toByte(), 0x00.toByte())
+                posApiHelper.PrintStr("$passenger\n\n")
+                posApiHelper.PrintStr("Emergency Contact : $emergencyContact\n\n")
+                posApiHelper.PrintStr("------------------------------\n")
+                posApiHelper.PrintStr("        Powered by OYA\n")
+                posApiHelper.PrintBarcode(ticketNumber, 240, 240, BarcodeFormat.QR_CODE)
+                posApiHelper.PrintStr("\n")
+                posApiHelper.PrintStr("\n")
+                posApiHelper.PrintStr("\n")
+                posApiHelper.PrintStr("\n")
+                posApiHelper.PrintStr("\n")
                 posApiHelper.PrintStart()
             } catch (ex: Exception) {
             }
@@ -46,10 +85,19 @@ class MainActivity: FlutterActivity() {
                 call, result ->
 //            val argument = call.arguments<Map<String,Any>>()
             if (call.method == "printTest") {
-                val text = call.argument<String>("ticketNo")
-                val texts = call.argument<String>("from")
-                println(text)
-                println(texts)
+                 ticketNumber = call.argument<String>("ticketNo").toString()
+                 trip = call.argument<String>("from")+ " "+call.argument<String>("to")
+//                val to = call.argument<String>("to")
+                 vehicleNumber = call.argument<String>("vehicleNo").toString()
+                 passenger = call.argument<String>("user").toString()
+                 emergencyContact = call.argument<String>("iceNo").toString()
+                 tripDate = call.argument<String>("depDate").toString()
+                 stationCode = call.argument<String>("stationCode").toString()
+                 stationContact = call.argument<String>("phone").toString()
+                 amount = call.argument<String>("price").toString()
+                 driver = call.argument<String>("driver").toString()
+                 conductor = call.argument<String>("conductor").toString()
+
 
 
 
