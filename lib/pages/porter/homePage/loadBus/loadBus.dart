@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/phoneNumberText.dart';
@@ -79,6 +80,8 @@ class _LoadBusesState extends State<LoadBuses> {
     // TODO: implement initState
     super.initState();
   }
+
+  static const platform = const MethodChannel("samples.flutter.dev/print");
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -677,6 +680,7 @@ class _LoadBusesState extends State<LoadBuses> {
 
         clearTextField();
         toastContainer(text: 'Passenger has been enrolled successfully');
+        printWork(responseData);
       } else if (responseData['status'] == 203) {
         toastContainer(text: 'Please Name and ICE phone is required');
         setState(() {
@@ -690,6 +694,29 @@ class _LoadBusesState extends State<LoadBuses> {
     } else {
       toastContainer(text: "Error has occured");
     }
+  }
+
+  void printWork(Map data) async {
+    String values;
+    try {
+      values = await platform.invokeMethod("printTest", {
+        "ticketNo": "${data['data']['id']}",
+        "from": "${data['data']['id']}",
+        "to":"${data['data']['id']}",
+        "vehicleNo":"${data['data']['id']}",
+        "user":"${data['data']['id']}",
+        "iceNo":"${data['data']['id']}",
+        "depDate":"${data['data']['id']}",
+        "stationCode":"${data['data']['id']}",
+        "phone":"${data['data']['id']}",
+        "driver":"${data['data']['id']}",
+        "conductor":"${data['data']['id']}",
+        "price":"${data['data']['id']}"
+      });
+    } catch (e) {
+      print(e);
+    }
+    print(values);
   }
 
   onSearch({String phoneNo, scheduleId}) async {
