@@ -59,9 +59,15 @@ android {
 flutter {
     source '../..'
 }
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation(name: 'MyApiSdk', ext: 'aar')
     // implementation 'com.google.firebase:firebase-analytics'
 }
 apply plugin: 'com.google.gms.google-services'

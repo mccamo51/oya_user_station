@@ -3,6 +3,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        flatDir {
+            dirs 'lib'
+        }
     }
 
     dependencies {
