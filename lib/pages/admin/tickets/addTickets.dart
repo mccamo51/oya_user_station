@@ -48,6 +48,9 @@ class _AddTicketState extends State<AddTicket> {
   String schedleId, routeID, pickupId;
   bool isLoading = false, selectPickup = false;
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     minorController.text = "0";
@@ -66,170 +69,175 @@ class _AddTicketState extends State<AddTicket> {
           : Padding(
               padding: const EdgeInsets.all(10.0),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () => androidSelectRoute(
-                        context: context,
-                        title: "Select Route",
-                      ),
-                      child: textFormField(
-                          hintText: "Select Route",
-                          controller: _routeController,
-                          focusNode: null,
-                          icon: Icons.arrow_drop_down,
-                          enable: false),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () => androidSelectBusSchedule(
-                          context: context, title: "Select Bus"),
-                      child: textFormField(
-                          hintText: "Select Bus",
-                          controller: _busController,
-                          focusNode: null,
-                          icon: Icons.arrow_drop_down,
-                          enable: false),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text("Select Mid Route Pickup",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                    Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Radio(
-                                activeColor: PRIMARYCOLOR,
-                                value: PickUp.No,
-                                groupValue: _pickUp,
-                                onChanged: (PickUp value) {
-                                  setState(() {
-                                    _pickUp = value;
-                                    selectPickup = false;
-                                  });
-                                },
-                              ),
-                              Text("No"),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 50,
-                          ),
-                          Row(
-                            children: [
-                              Radio(
-                                activeColor: PRIMARYCOLOR,
-                                value: PickUp.Yes,
-                                groupValue: _pickUp,
-                                onChanged: (PickUp value) {
-                                  setState(() {
-                                    _pickUp = value;
-                                    selectPickup = true;
-                                  });
-                                },
-                              ),
-                              Text("Yes"),
-                            ],
-                          ),
-                        ]),
-                    Visibility(
-                      visible: selectPickup,
-                      child: GestureDetector(
-                        onTap: () => androidSelectPickups(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => androidSelectRoute(
                           context: context,
-                          title: "Mid Route Pickup",
+                          title: "Select Route",
                         ),
                         child: textFormField(
-                          hintText: "Mid Route Pickup",
-                          controller: _pickupController,
-                          focusNode: null,
-                          icon: Icons.directions_bus,
-                          enable: false,
+                            hintText: "Select Route",
+                            controller: _routeController,
+                            focusNode: null,
+                            icon: Icons.arrow_drop_down,
+                            enable: false),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () => androidSelectBusSchedule(
+                            context: context, title: "Select Bus"),
+                        child: textFormField(
+                            hintText: "Select Bus",
+                            controller: _busController,
+                            focusNode: null,
+                            icon: Icons.arrow_drop_down,
+                            enable: false),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Select Mid Route Pickup",
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600))
+                        ],
+                      ),
+                      Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Radio(
+                                  activeColor: PRIMARYCOLOR,
+                                  value: PickUp.No,
+                                  groupValue: _pickUp,
+                                  onChanged: (PickUp value) {
+                                    setState(() {
+                                      _pickUp = value;
+                                      selectPickup = false;
+                                    });
+                                  },
+                                ),
+                                Text("No"),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 50,
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                  activeColor: PRIMARYCOLOR,
+                                  value: PickUp.Yes,
+                                  groupValue: _pickUp,
+                                  onChanged: (PickUp value) {
+                                    setState(() {
+                                      _pickUp = value;
+                                      selectPickup = true;
+                                    });
+                                  },
+                                ),
+                                Text("Yes"),
+                              ],
+                            ),
+                          ]),
+                      Visibility(
+                        visible: selectPickup,
+                        child: GestureDetector(
+                          onTap: () => androidSelectPickups(
+                            context: context,
+                            title: "Mid Route Pickup",
+                          ),
+                          child: textFormField(
+                            hintText: "Mid Route Pickup",
+                            controller: _pickupController,
+                            focusNode: null,
+                            icon: Icons.directions_bus,
+                            validate: true,
+                            validateMsg: "Select pickup route",
+                            enable: false,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(
-                      hintText: "Recipient Name",
-                      controller: reciepeintNameController,
-                      focusNode: null,
-                      labelText: "Recipient Name",
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(
-                      hintText: "Minors",
-                      controller: minorController,
-                      inputType: TextInputType.number,
-                      textLength: 1,
-                      focusNode: null,
-                      // initialValue: "0",
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () => _onPaymentType(context),
-                      child: textFormField(
-                        hintText: "Select Payment Type",
-                        controller: paymentTypeController,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      textFormField(
+                        hintText: "Recipient Name",
+                        controller: reciepeintNameController,
                         focusNode: null,
-                        enable: false,
-                        labelText: "Select Payment Type",
-                        icon: Icons.money,
+                        labelText: "Recipient Name",
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Visibility(
-                      visible: showMomo,
-                      child: GestureDetector(
-                        onTap: () => _onNetwork(context),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      textFormField(
+                        hintText: "Minors",
+                        controller: minorController,
+                        inputType: TextInputType.number,
+                        textLength: 1,
+                        focusNode: null,
+                        // initialValue: "0",
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () => _onPaymentType(context),
                         child: textFormField(
-                          hintText: "Select Payment Mode",
-                          controller: paymentModeController,
+                          hintText: "Select Payment Type",
+                          controller: paymentTypeController,
                           focusNode: null,
                           enable: false,
-                          labelText: "Select Payment Mode",
-                          // icon: Icons.calendar_today,
+                          labelText: "Select Payment Type",
+                          icon: Icons.money,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    newCountrySelect(
-                        controller: reciepeintPhoneController,
-                        hintText: "Enter momo number"),
-                    // textFormField(
-                    //   hintText: "Enter momo number",
-                    //   controller: reciepeintPhoneController,
-                    //   inputType: TextInputType.phone,
-                    //   focusNode: null,
-                    // ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Visibility(
+                        visible: showMomo,
+                        child: GestureDetector(
+                          onTap: () => _onNetwork(context),
+                          child: textFormField(
+                            hintText: "Select Payment Mode",
+                            controller: paymentModeController,
+                            focusNode: null,
+                            enable: false,
+                            labelText: "Select Payment Mode",
+                            // icon: Icons.calendar_today,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      newCountrySelect(
+                          controller: reciepeintPhoneController,
+                          hintText: "Enter momo number"),
+                      // textFormField(
+                      //   hintText: "Enter momo number",
+                      //   controller: reciepeintPhoneController,
+                      //   inputType: TextInputType.phone,
+                      //   focusNode: null,
+                      // ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -238,21 +246,24 @@ class _AddTicketState extends State<AddTicket> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CupertinoButton(
-            color: PRIMARYCOLOR,
-            child: Text("Submit"),
-            onPressed: isLoading
-                ? null
-                : () => _onSave(
-                      busID: schedleId,
-                      pickupId: pickupId,
-                      phone: userphone,
-                      momoPhone:
-                          "+${(countryCode + reciepeintPhoneController.text)}",
-                      momoName: reciepeintNameController.text,
-                      minor: minorController.text,
-                      mapymentMode: network,
-                    ),
-          ),
+              color: PRIMARYCOLOR,
+              child: Text("Submit"),
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      if (_formKey.currentState.validate()) {
+                        _onSave(
+                          busID: schedleId,
+                          pickupId: pickupId,
+                          phone: userphone,
+                          momoPhone:
+                              "+${(countryCode + reciepeintPhoneController.text)}",
+                          momoName: reciepeintNameController.text,
+                          minor: minorController.text,
+                          mapymentMode: network,
+                        );
+                      }
+                    }),
         ),
       ),
     );
