@@ -708,15 +708,8 @@ class _LoadBusesState extends State<LoadBuses> {
     String phoneNumber = (data['data']['user']['phone']);
     String iceNo = ("${data['data']['user']['ice1_phone']}");
 
-    // String newNumber = phoneNumber;
-    // String iceNewNo = iceNo;
-    // for (int i = 3; i < phoneNumber.length; i++) {
-    //   newNumber = replaceCharAt(newNumber, i, "*");
-    // }
-
-    // for (int i = 3; i < iceNo.length; i++) {
-    //   iceNewNo = replaceCharAt(iceNewNo, i, "*");
-    // }
+    // var newD = DateFormat.yMMMMEEEEd().format(depDate);
+    // print(newD.);
 
     try {
       await platform.invokeMethod("printTest", {
@@ -740,15 +733,7 @@ class _LoadBusesState extends State<LoadBuses> {
     }
   }
 
-  replaceLastThree(String number) {
-    var newNumber = number;
-
-    for (int i = 3; i < number.length; i++) {
-      newNumber = replaceCharAt(newNumber, i, "*");
-      return newNumber;
-    }
-  }
-
+  
   onSearch({String phoneNo, scheduleId}) async {
     setState(() {
       isLoading = true;

@@ -1,20 +1,14 @@
 package com.oyaghana.oyaapp_admin
 
 
-import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
-import androidx.annotation.RequiresApi
 import com.google.zxing.BarcodeFormat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONObject
 import vpos.apipackage.PosApiHelper
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.ZonedDateTime
-import java.util.*
 
 class MainActivity: FlutterActivity() {
 
@@ -90,19 +84,12 @@ class MainActivity: FlutterActivity() {
 
 
     private val CHANNEL = "samples.flutter.dev/print"
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 call, result ->
             if (call.method == "printTest") {
-                var odt: OffsetDateTime? = OffsetDateTime.parse(call.argument<String>("depDate").toString())
-                val instant: Instant = odt!!.toInstant()
-                val date: Date = Date.from(instant)
-
-
-
-                ticketNumber = call.argument<String>("ticketNo").toString()
+                 ticketNumber = call.argument<String>("ticketNo").toString()
                  trip = call.argument<String>("from")+ " - "+call.argument<String>("to")
                  vehicleNumber = call.argument<String>("vehicleNo").toString()
                  passenger = call.argument<String>("user").toString()
@@ -116,7 +103,7 @@ class MainActivity: FlutterActivity() {
                  driver = call.argument<String>("driver").toString()
                  conductor = call.argument<String>("conductor").toString()
 
-//                println(date.toInstant())
+
                 if (printThread != null && !printThread!!.isThreadFinished())
                 {
                     Log.e(tag, "Thread is still running...")
