@@ -12,13 +12,15 @@ import 'package:http/http.dart' as http;
 
 void hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-// void callLauncher(String url) async {
-//   if (await canLaunch(url)) {
-//     await launch(url);
-//   } else {
-//     throw 'Could not open, try different text';
-//   }
-// }
+// String number = "0541544404";
+
+// String newNumber = number;
+
+String replaceCharAt(String oldString, int index, String newChar) {
+  return oldString.substring(0, index) +
+      newChar +
+      oldString.substring(index + 1);
+}
 
 Future<String> checkSession() async {
   String auth = "not auth";
