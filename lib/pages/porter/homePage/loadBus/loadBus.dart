@@ -665,7 +665,7 @@ class _LoadBusesState extends State<LoadBuses> {
         isLoading = false;
       });
       final responseData = json.decode(response.body);
-      print(responseData);
+      // print(responseData);
 
       if (responseData['status'] == 200) {
         if (responseData['data']['passengers_count'] == null) {
@@ -698,20 +698,21 @@ class _LoadBusesState extends State<LoadBuses> {
 
   void printWork(Map data) async {
     String values;
+    print(data['data']['ticket']);
     try {
       values = await platform.invokeMethod("printTest", {
         "ticketNo": "${data['data']['id']}",
         "from": "${data['data']['route']['from']['name']}",
-        "to":"${data['data']['route']['to']['name']}",
-        "vehicleNo":"${data['data']['bus']['reg_number']}",
-        "user":"${data['data']['id']}",
-        "iceNo":"${data['data']['id']}",
-        "depDate":"${data['data']['departure_date']}",
-        "stationCode":"${data['data']['station']['id']}",
-        "phone":"${data['data']['station']['phone']}",
-        "driver":"${data['data']['bus']['driver']['user']['name']}",
-        "conductor":"${data['data']['id']}",
-        "price":"${data['data']['price']}"
+        "to": "${data['data']['route']['to']['name']}",
+        "vehicleNo": "${data['data']['bus']['reg_number']}",
+        "user": "${data['data']['id']}",
+        "iceNo": "${data['data']['id']}",
+        "depDate": "${data['data']['departure_date']}",
+        "stationCode": "${data['data']['station']['id']}",
+        "phone": "${data['data']['station']['phone']}",
+        "driver": "${data['data']['bus']['driver']['user']['name']}",
+        "conductor": "${data['data']['id']}",
+        "price": "${data['data']['price']}"
       });
     } catch (e) {
       print(e);

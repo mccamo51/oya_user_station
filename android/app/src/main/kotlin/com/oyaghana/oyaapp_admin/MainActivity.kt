@@ -98,6 +98,8 @@ class MainActivity: FlutterActivity() {
                  driver = call.argument<String>("driver").toString()
                  conductor = call.argument<String>("conductor").toString()
 
+                println(conductor)
+
 
 
 
