@@ -702,11 +702,24 @@ class _LoadBusesState extends State<LoadBuses> {
     // DateTime dateTime = formatter.parse(data['data']['departure_date']);
     // var month = dateTime.month.toString().padLeft(2, '0');
     // var day = dateTime.day.toString().padLeft(2, '0');
-    var depDate = data['data']['departure_date']; //'${dateTime.year}-$month-$day ${dateTime.hour}:${dateTime.minute}';
+    var depDate = data['data'][
+        'departure_date']; //'${dateTime.year}-$month-$day ${dateTime.hour}:${dateTime.minute}';
 
-    String phoneNumber = replaceLastThree(data['data']['user']['phone']);
-    String iceNo = replaceLastThree("${data['data']['user']['ice1_phone']}");
+    String phoneNumber = (data['data']['user']['phone']);
+    String iceNo = ("${data['data']['user']['ice1_phone']}");
 
+    String newNumber = phoneNumber;
+    String iceNewNo = iceNo;
+    for (int i = 3; i < phoneNumber.length; i++) {
+      newNumber = replaceCharAt(newNumber, i, "*");
+    }
+
+    for (int i = 3; i < iceNo.length; i++) {
+      iceNewNo = replaceCharAt(iceNewNo, i, "*");
+    }
+
+    print(newNumber);
+    print(iceNewNo);
     try {
       await platform.invokeMethod("printTest", {
         "ticketNo": "${data['data']['manifest']['ticket_no']}",
@@ -714,8 +727,8 @@ class _LoadBusesState extends State<LoadBuses> {
         "to": "${data['data']['route']['to']['name']}",
         "vehicleNo": "${data['data']['bus']['reg_number']}",
         "user": "${data['data']['user']['name']}",
-        "iceNo": iceNo,
-        "phoneNumber": phoneNumber,
+        "iceNo": iceNewNo,
+        "phoneNumber": newNumber,
         "depDate": depDate,
         "stationCode": "${data['data']['station']['code']}",
         "stationName": "${data['data']['station']['name']}",
@@ -728,6 +741,7 @@ class _LoadBusesState extends State<LoadBuses> {
       print(e);
     }
   }
+
   replaceLastThree(String number) {
     var newNumber = number;
 

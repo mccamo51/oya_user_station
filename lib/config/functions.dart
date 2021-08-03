@@ -107,12 +107,3 @@ Future<void> allPost(
     toastContainer(text: "Error has occured");
   }
 }
-
-String replaceCharAt(String oldString, int index, String newChar) {
-  return oldString.substring(0, index) +
-      newChar +
-      oldString.substring(index + 1);
-}
-
-
-
