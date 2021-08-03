@@ -21,6 +21,12 @@ String replaceCharAt(String oldString, int index, String newChar) {
       newChar +
       oldString.substring(index + 1);
 }
+String getPayCardStr(String code) {
+    final int length = code.length;
+    final int replaceLength = length - 3;
+    final String replacement = List<String>.generate((replaceLength / 5).ceil(), (int _) => '***').join('');
+    return code.replaceRange(0, replaceLength, replacement);
+  }
 
 Future<String> checkSession() async {
   String auth = "not auth";

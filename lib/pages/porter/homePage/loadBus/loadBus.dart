@@ -708,18 +708,16 @@ class _LoadBusesState extends State<LoadBuses> {
     String phoneNumber = (data['data']['user']['phone']);
     String iceNo = ("${data['data']['user']['ice1_phone']}");
 
-    String newNumber = phoneNumber;
-    String iceNewNo = iceNo;
-    for (int i = 3; i < phoneNumber.length; i++) {
-      newNumber = replaceCharAt(newNumber, i, "*");
-    }
+    // String newNumber = phoneNumber;
+    // String iceNewNo = iceNo;
+    // for (int i = 3; i < phoneNumber.length; i++) {
+    //   newNumber = replaceCharAt(newNumber, i, "*");
+    // }
 
-    for (int i = 3; i < iceNo.length; i++) {
-      iceNewNo = replaceCharAt(iceNewNo, i, "*");
-    }
+    // for (int i = 3; i < iceNo.length; i++) {
+    //   iceNewNo = replaceCharAt(iceNewNo, i, "*");
+    // }
 
-    print(newNumber);
-    print(iceNewNo);
     try {
       await platform.invokeMethod("printTest", {
         "ticketNo": "${data['data']['manifest']['ticket_no']}",
@@ -727,8 +725,8 @@ class _LoadBusesState extends State<LoadBuses> {
         "to": "${data['data']['route']['to']['name']}",
         "vehicleNo": "${data['data']['bus']['reg_number']}",
         "user": "${data['data']['user']['name']}",
-        "iceNo": iceNewNo,
-        "phoneNumber": newNumber,
+        "iceNo": getPayCardStr(iceNo),
+        "phoneNumber": getPayCardStr(phoneNumber),
         "depDate": depDate,
         "stationCode": "${data['data']['station']['code']}",
         "stationName": "${data['data']['station']['name']}",
