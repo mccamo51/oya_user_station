@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/buttons.dart';
 import 'package:oya_porter/components/phoneNumberText.dart';
@@ -640,8 +641,7 @@ class _LoadBusesState extends State<LoadBuses> {
       'ice1_address': '$iceAddress',
       'type': 'c'
     };
-    print(_character);
-    print(showPhone);
+
     final url = Uri.parse("$BASE_URL/schedules/$scheduleId/manifest");
 
     final response = await http.post(
@@ -665,7 +665,6 @@ class _LoadBusesState extends State<LoadBuses> {
         isLoading = false;
       });
       final responseData = json.decode(response.body);
-      // print(responseData);
 
       if (responseData['status'] == 200) {
         if (responseData['data']['passengers_count'] == null) {
@@ -697,27 +696,45 @@ class _LoadBusesState extends State<LoadBuses> {
   }
 
   void printWork(Map data) async {
-    String values;
-    print(data['data']['ticket']);
+    // print(data['data']['conductor']);
+    // var formatter = new DateFormat('dd-MM-yyyy');
+    //
+    // DateTime dateTime = formatter.parse(data['data']['departure_date']);
+    // var month = dateTime.month.toString().padLeft(2, '0');
+    // var day = dateTime.day.toString().padLeft(2, '0');
+    var depDate = data['data']['departure_date']; //'${dateTime.year}-$month-$day ${dateTime.hour}:${dateTime.minute}';
+
+    String phoneNumber = replaceLastThree(data['data']['user']['phone']);
+    String iceNo = replaceLastThree("${data['data']['user']['ice1_phone']}");
+
     try {
-      values = await platform.invokeMethod("printTest", {
-        "ticketNo": "${data['data']['id']}",
+      await platform.invokeMethod("printTest", {
+        "ticketNo": "${data['data']['manifest']['ticket_no']}",
         "from": "${data['data']['route']['from']['name']}",
         "to": "${data['data']['route']['to']['name']}",
         "vehicleNo": "${data['data']['bus']['reg_number']}",
-        "user": "${data['data']['id']}",
-        "iceNo": "${data['data']['id']}",
-        "depDate": "${data['data']['departure_date']}",
-        "stationCode": "${data['data']['station']['id']}",
+        "user": "${data['data']['user']['name']}",
+        "iceNo": iceNo,
+        "phoneNumber": phoneNumber,
+        "depDate": depDate,
+        "stationCode": "${data['data']['station']['code']}",
+        "stationName": "${data['data']['station']['name']}",
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
-        "conductor": "${data['data']['id']}",
+        "conductor": "${data['data']['bus']['conductor']['user']['name']}",
         "price": "${data['data']['price']}"
       });
     } catch (e) {
       print(e);
     }
-    print(values);
+  }
+  replaceLastThree(String number) {
+    var newNumber = number;
+
+    for (int i = 3; i < number.length; i++) {
+      newNumber = replaceCharAt(newNumber, i, "*");
+      return newNumber;
+    }
   }
 
   onSearch({String phoneNo, scheduleId}) async {
