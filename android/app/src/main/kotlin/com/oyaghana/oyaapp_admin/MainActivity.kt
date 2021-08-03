@@ -19,6 +19,7 @@ class MainActivity: FlutterActivity() {
     var vehicleNumber = " "
     var ticketNumber = " "
     var stationCode = " "
+    var stationName = " "
     var conductor = " "
     var tripDate = " "
     var seatNumber = " "
@@ -26,6 +27,7 @@ class MainActivity: FlutterActivity() {
     var driver = " "
     var passenger = " "
     var emergencyContact = " "
+    var passengerPhoneNumber = " ";
 
     //  API  FOR  CALLING THE DATA
     var posApiHelper: PosApiHelper = PosApiHelper.getInstance()
@@ -41,7 +43,7 @@ class MainActivity: FlutterActivity() {
         override fun run() {
             try {
                 posApiHelper.PrintInit(2, 24, 24, 0x33)
-                posApiHelper.PrintStr("   G.P.R.T.U \n\n")
+                posApiHelper.PrintStr("   $stationName \n\n")
                 posApiHelper.PrintStr("     Ticket \n\n")
                 posApiHelper.PrintSetFont(16.toByte(), 16.toByte(), 0x33.toByte())
                 posApiHelper.PrintStr("$trip \n\n")
@@ -61,8 +63,11 @@ class MainActivity: FlutterActivity() {
                 posApiHelper.PrintStr("------------------------\n")
                 posApiHelper.PrintStr("Passenger Details \n\n")
                 posApiHelper.PrintSetFont(24.toByte(), 24.toByte(), 0x00.toByte())
-                posApiHelper.PrintStr("$passenger\n\n")
-                posApiHelper.PrintStr("Emergency Contact : $emergencyContact\n\n")
+                posApiHelper.PrintStr("Name: $passenger\n\n")
+                posApiHelper.PrintStr("Phone Number: $passengerPhoneNumber\n\n")
+                posApiHelper.PrintStr("Emergency Contact: $emergencyContact\n\n")
+
+
                 posApiHelper.PrintStr("------------------------------\n")
                 posApiHelper.PrintStr("        Powered by OYA\n")
                 posApiHelper.PrintBarcode(ticketNumber, 240, 240, BarcodeFormat.QR_CODE)
@@ -83,32 +88,28 @@ class MainActivity: FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 call, result ->
-//            val argument = call.arguments<Map<String,Any>>()
             if (call.method == "printTest") {
                  ticketNumber = call.argument<String>("ticketNo").toString()
-                 trip = call.argument<String>("from")+ " "+call.argument<String>("to")
-//                val to = call.argument<String>("to")
+                 trip = call.argument<String>("from")+ " - "+call.argument<String>("to")
                  vehicleNumber = call.argument<String>("vehicleNo").toString()
                  passenger = call.argument<String>("user").toString()
+                 passengerPhoneNumber = call.argument<String>("phoneNumber").toString()
                  emergencyContact = call.argument<String>("iceNo").toString()
                  tripDate = call.argument<String>("depDate").toString()
                  stationCode = call.argument<String>("stationCode").toString()
+                 stationName  = call.argument<String>("stationName").toString()
                  stationContact = call.argument<String>("phone").toString()
                  amount = call.argument<String>("price").toString()
                  driver = call.argument<String>("driver").toString()
                  conductor = call.argument<String>("conductor").toString()
 
-                println(conductor)
 
-
-
-
-//                if (printThread != null && !printThread!!.isThreadFinished())
-//                {
-//                    Log.e(tag, "Thread is still running...")
-//                }
-//                printThread = PrintThread()
-//                printThread!!.start()
+                if (printThread != null && !printThread!!.isThreadFinished())
+                {
+                    Log.e(tag, "Thread is still running...")
+                }
+                printThread = PrintThread()
+                printThread!!.start()
 
             }else{
                 result.notImplemented()
