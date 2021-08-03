@@ -708,8 +708,9 @@ class _LoadBusesState extends State<LoadBuses> {
     String phoneNumber = (data['data']['user']['phone']);
     String iceNo = ("${data['data']['user']['ice1_phone']}");
 
-    // var newD = DateFormat.yMMMMEEEEd().format(depDate);
-    // print(newD.);
+    DateTime _date = DateTime.tryParse(depDate);
+    var newD = DateFormat.yMMMMEEEEd().format(_date);
+   
 
     try {
       await platform.invokeMethod("printTest", {
@@ -720,7 +721,7 @@ class _LoadBusesState extends State<LoadBuses> {
         "user": "${data['data']['user']['name']}",
         "iceNo": getPayCardStr(iceNo),
         "phoneNumber": getPayCardStr(phoneNumber),
-        "depDate": depDate,
+        "depDate": newD,
         "stationCode": "${data['data']['station']['code']}",
         "stationName": "${data['data']['station']['name']}",
         "phone": "${data['data']['station']['phone']}",
@@ -733,7 +734,6 @@ class _LoadBusesState extends State<LoadBuses> {
     }
   }
 
-  
   onSearch({String phoneNo, scheduleId}) async {
     setState(() {
       isLoading = true;

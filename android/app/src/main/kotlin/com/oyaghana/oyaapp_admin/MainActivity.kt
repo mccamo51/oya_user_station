@@ -104,12 +104,12 @@ class MainActivity: FlutterActivity() {
                  conductor = call.argument<String>("conductor").toString()
 
 
-                if (printThread != null && !printThread!!.isThreadFinished())
-                {
-                    Log.e(tag, "Thread is still running...")
-                }
-                printThread = PrintThread()
-                printThread!!.start()
+//                if (printThread != null && !printThread!!.isThreadFinished())
+//                {
+//                    Log.e(tag, "Thread is still running...")
+//                }
+//                printThread = PrintThread()
+//                printThread!!.start()
 
             }else{
                 result.notImplemented()
