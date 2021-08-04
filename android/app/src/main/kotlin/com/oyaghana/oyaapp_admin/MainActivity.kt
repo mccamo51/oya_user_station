@@ -21,6 +21,7 @@ class MainActivity: FlutterActivity() {
     var stationCode = " "
     var stationName = " "
     var conductor = " "
+    var conductorNumber = " "
     var tripDate = " "
     var seatNumber = " "
     var stationContact = " "
@@ -56,6 +57,7 @@ class MainActivity: FlutterActivity() {
                 if (userType == "a" || userType =="b")  else posApiHelper.PrintStr("Ticket Number: $ticketNumber\n\n")
                 posApiHelper.PrintStr("Station Code: $stationCode\n\n")
                 posApiHelper.PrintStr("Conductor: $conductor\n\n")
+                posApiHelper.PrintStr("Conductor Number: $conductorNumber\n\n")
                 posApiHelper.PrintStr("Trip Date: $tripDate\n\n")
                 posApiHelper.PrintStr("Seat Number: $seatNumber\n\n")
                 posApiHelper.PrintStr("Station Contact: $stationContact\n\n")
@@ -103,6 +105,7 @@ class MainActivity: FlutterActivity() {
                  amount = call.argument<String>("price").toString()
                  driver = call.argument<String>("driver").toString()
                  conductor = call.argument<String>("conductor").toString()
+                 conductorNumber = call.argument<String>("conductorNumber").toString()
                  userType = call.argument<String>("userType").toString()
 
 

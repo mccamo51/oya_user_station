@@ -724,8 +724,10 @@ class _LoadBusesState extends State<LoadBuses> {
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
+        "conductorNumber":
+            "${data['data']['bus']['conductor']['user']['phone']}",
         "price": "${data['data']['price']}",
-        "userType":"a"
+        "userType": "a"
       });
     } catch (e) {
       print(e);
@@ -755,8 +757,10 @@ class _LoadBusesState extends State<LoadBuses> {
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
+        "conductorNumber":
+            "${data['data']['bus']['conductor']['user']['phone']}",
         "price": "${data['data']['price']}",
-        "userType":"b"
+        "userType": "b"
       });
     } catch (e) {
       print(e);
@@ -786,8 +790,10 @@ class _LoadBusesState extends State<LoadBuses> {
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
+        "conductorNumber":
+            "${data['data']['bus']['conductor']['user']['phone']}",
         "price": "${data['data']['price']}",
-        "userType":"a1"
+        "userType": "a1"
       });
     } catch (e) {
       print(e);
