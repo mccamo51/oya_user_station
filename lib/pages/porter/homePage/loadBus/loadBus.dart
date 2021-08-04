@@ -705,13 +705,14 @@ class _LoadBusesState extends State<LoadBuses> {
     var depDate = data['data']['departure_date'];
     String phoneNumber = (data['data']['user']['phone']);
     String iceNo = ("${data['data']['user']['ice1_phone']}");
+    String conductorNumber =
+        ("${data['data']['bus']['conductor']['user']['phone']}");
 
     DateTime _date = DateTime.tryParse(depDate);
     var newD = DateFormat.yMMMMEEEEd().format(_date);
 
     try {
       await platform.invokeMethod("printTest", {
-        // "ticketNo": "${data['data']['manifest']['ticket_no']}",
         "from": "${data['data']['route']['from']['name']}",
         "to": "${data['data']['route']['to']['name']}",
         "vehicleNo": "${data['data']['bus']['reg_number']}",
@@ -724,8 +725,7 @@ class _LoadBusesState extends State<LoadBuses> {
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
-        "conductorNumber":
-            "${data['data']['bus']['conductor']['user']['phone']}",
+        "conductorNumber": getPayCardStr(conductorNumber),
         "price": "${data['data']['price']}",
         "userType": "a"
       });
@@ -736,29 +736,24 @@ class _LoadBusesState extends State<LoadBuses> {
 
   void printWorkb(Map data) async {
     var depDate = data['data']['departure_date'];
-    String phoneNumber = (data['data']['user']['phone']);
-    String iceNo = ("${data['data']['user']['ice1_phone']}");
+    String conductorNumber =
+        ("${data['data']['bus']['conductor']['user']['phone']}");
 
     DateTime _date = DateTime.tryParse(depDate);
     var newD = DateFormat.yMMMMEEEEd().format(_date);
 
     try {
       await platform.invokeMethod("printTest", {
-        // "ticketNo": "${data['data']['manifest']['ticket_no']}",
         "from": "${data['data']['route']['from']['name']}",
         "to": "${data['data']['route']['to']['name']}",
         "vehicleNo": "${data['data']['bus']['reg_number']}",
-        // "user": "${data['data']['user']['name']}",
-        // "iceNo": getPayCardStr(iceNo),
-        // "phoneNumber": getPayCardStr(phoneNumber),
         "depDate": newD,
         "stationCode": "${data['data']['station']['code']}",
         "stationName": "${data['data']['station']['name']}",
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
-        "conductorNumber":
-            "${data['data']['bus']['conductor']['user']['phone']}",
+        "conductorNumber": getPayCardStr(conductorNumber),
         "price": "${data['data']['price']}",
         "userType": "b"
       });
@@ -771,7 +766,8 @@ class _LoadBusesState extends State<LoadBuses> {
     var depDate = data['data']['departure_date'];
     String phoneNumber = (data['data']['user']['phone']);
     String iceNo = ("${data['data']['user']['ice1_phone']}");
-
+    String conductorNumber =
+        ("${data['data']['bus']['conductor']['user']['phone']}");
     DateTime _date = DateTime.tryParse(depDate);
     var newD = DateFormat.yMMMMEEEEd().format(_date);
 
@@ -790,8 +786,7 @@ class _LoadBusesState extends State<LoadBuses> {
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
-        "conductorNumber":
-            "${data['data']['bus']['conductor']['user']['phone']}",
+        "conductorNumber": getPayCardStr(conductorNumber),
         "price": "${data['data']['price']}",
         "userType": "a1"
       });
