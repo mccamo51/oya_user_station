@@ -27,6 +27,7 @@ class MainActivity: FlutterActivity() {
     var driver = " "
     var passenger = " "
     var emergencyContact = " "
+    var userType = " "
     var passengerPhoneNumber = " ";
 
     //  API  FOR  CALLING THE DATA
@@ -52,7 +53,7 @@ class MainActivity: FlutterActivity() {
                 posApiHelper.PrintStr("Trip Details \n\n")
                 posApiHelper.PrintSetFont(24.toByte(), 24.toByte(), 0x00.toByte())
                 posApiHelper.PrintStr("Vehicle Number: $vehicleNumber\n\n")
-                posApiHelper.PrintStr("Ticket Number: $ticketNumber\n\n")
+                if (userType == "a" || userType =="b")  else posApiHelper.PrintStr("Ticket Number: $ticketNumber\n\n")
                 posApiHelper.PrintStr("Station Code: $stationCode\n\n")
                 posApiHelper.PrintStr("Conductor: $conductor\n\n")
                 posApiHelper.PrintStr("Trip Date: $tripDate\n\n")
@@ -61,11 +62,11 @@ class MainActivity: FlutterActivity() {
                 posApiHelper.PrintStr("Driver: $driver\n\n")
                 posApiHelper.PrintSetFont(16.toByte(), 16.toByte(), 0x33.toByte())
                 posApiHelper.PrintStr("------------------------\n")
-                posApiHelper.PrintStr("Passenger Details \n\n")
-                posApiHelper.PrintSetFont(24.toByte(), 24.toByte(), 0x00.toByte())
-                posApiHelper.PrintStr("Name: $passenger\n\n")
-                posApiHelper.PrintStr("Phone Number: $passengerPhoneNumber\n\n")
-                posApiHelper.PrintStr("Emergency Contact: $emergencyContact\n\n")
+                if ( userType =="b")  else posApiHelper.PrintStr("Passenger Details \n\n")
+                if ( userType =="b")  else posApiHelper.PrintSetFont(24.toByte(), 24.toByte(), 0x00.toByte())
+                if ( userType =="b")  else posApiHelper.PrintStr("Name: $passenger\n\n")
+                if ( userType =="b")  else posApiHelper.PrintStr("Phone Number: $passengerPhoneNumber\n\n")
+                if ( userType =="b")  else posApiHelper.PrintStr("Emergency Contact: $emergencyContact\n\n")
 
 
                 posApiHelper.PrintStr("------------------------------\n")
@@ -102,6 +103,7 @@ class MainActivity: FlutterActivity() {
                  amount = call.argument<String>("price").toString()
                  driver = call.argument<String>("driver").toString()
                  conductor = call.argument<String>("conductor").toString()
+                 userType = call.argument<String>("userType").toString()
 
 
                 if (printThread != null && !printThread!!.isThreadFinished())

@@ -679,7 +679,13 @@ class _LoadBusesState extends State<LoadBuses> {
 
         clearTextField();
         toastContainer(text: 'Passenger has been enrolled successfully');
-        printWork(responseData);
+        showPhone && _character == BusType.Genral
+            ? printWorka(responseData)
+            : _character == BusType.Genral
+                ? printWorka1(responseData)
+                : _character == BusType.NoPhone
+                    ? printWorkb(responseData)
+                    : printWorkb(responseData);
       } else if (responseData['status'] == 203) {
         toastContainer(text: 'Please Name and ICE phone is required');
         setState(() {
@@ -695,22 +701,75 @@ class _LoadBusesState extends State<LoadBuses> {
     }
   }
 
-  void printWork(Map data) async {
-    // print(data['data']['conductor']);
-    // var formatter = new DateFormat('dd-MM-yyyy');
-    //
-    // DateTime dateTime = formatter.parse(data['data']['departure_date']);
-    // var month = dateTime.month.toString().padLeft(2, '0');
-    // var day = dateTime.day.toString().padLeft(2, '0');
-    var depDate = data['data'][
-        'departure_date']; //'${dateTime.year}-$month-$day ${dateTime.hour}:${dateTime.minute}';
-
+  void printWorka(Map data) async {
+    var depDate = data['data']['departure_date'];
     String phoneNumber = (data['data']['user']['phone']);
     String iceNo = ("${data['data']['user']['ice1_phone']}");
 
     DateTime _date = DateTime.tryParse(depDate);
     var newD = DateFormat.yMMMMEEEEd().format(_date);
-   
+
+    try {
+      await platform.invokeMethod("printTest", {
+        // "ticketNo": "${data['data']['manifest']['ticket_no']}",
+        "from": "${data['data']['route']['from']['name']}",
+        "to": "${data['data']['route']['to']['name']}",
+        "vehicleNo": "${data['data']['bus']['reg_number']}",
+        "user": "${data['data']['user']['name']}",
+        "iceNo": getPayCardStr(iceNo),
+        "phoneNumber": getPayCardStr(phoneNumber),
+        "depDate": newD,
+        "stationCode": "${data['data']['station']['code']}",
+        "stationName": "${data['data']['station']['name']}",
+        "phone": "${data['data']['station']['phone']}",
+        "driver": "${data['data']['bus']['driver']['user']['name']}",
+        "conductor": "${data['data']['bus']['conductor']['user']['name']}",
+        "price": "${data['data']['price']}",
+        "userType":"a"
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void printWorkb(Map data) async {
+    var depDate = data['data']['departure_date'];
+    String phoneNumber = (data['data']['user']['phone']);
+    String iceNo = ("${data['data']['user']['ice1_phone']}");
+
+    DateTime _date = DateTime.tryParse(depDate);
+    var newD = DateFormat.yMMMMEEEEd().format(_date);
+
+    try {
+      await platform.invokeMethod("printTest", {
+        // "ticketNo": "${data['data']['manifest']['ticket_no']}",
+        "from": "${data['data']['route']['from']['name']}",
+        "to": "${data['data']['route']['to']['name']}",
+        "vehicleNo": "${data['data']['bus']['reg_number']}",
+        // "user": "${data['data']['user']['name']}",
+        // "iceNo": getPayCardStr(iceNo),
+        // "phoneNumber": getPayCardStr(phoneNumber),
+        "depDate": newD,
+        "stationCode": "${data['data']['station']['code']}",
+        "stationName": "${data['data']['station']['name']}",
+        "phone": "${data['data']['station']['phone']}",
+        "driver": "${data['data']['bus']['driver']['user']['name']}",
+        "conductor": "${data['data']['bus']['conductor']['user']['name']}",
+        "price": "${data['data']['price']}",
+        "userType":"b"
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void printWorka1(Map data) async {
+    var depDate = data['data']['departure_date'];
+    String phoneNumber = (data['data']['user']['phone']);
+    String iceNo = ("${data['data']['user']['ice1_phone']}");
+
+    DateTime _date = DateTime.tryParse(depDate);
+    var newD = DateFormat.yMMMMEEEEd().format(_date);
 
     try {
       await platform.invokeMethod("printTest", {
@@ -727,7 +786,8 @@ class _LoadBusesState extends State<LoadBuses> {
         "phone": "${data['data']['station']['phone']}",
         "driver": "${data['data']['bus']['driver']['user']['name']}",
         "conductor": "${data['data']['bus']['conductor']['user']['name']}",
-        "price": "${data['data']['price']}"
+        "price": "${data['data']['price']}",
+        "userType":"a1"
       });
     } catch (e) {
       print(e);
