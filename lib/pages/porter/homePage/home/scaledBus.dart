@@ -164,7 +164,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                 height: 8,
                               ),
                               Text(
-                                "Quantity: ${bussModel.data[x].bus.busType.maxCapacity}",
+                                "No of Pessengers: ${bussModel.data[x].bus.busType.maxCapacity}",
                                 style: h3Black,
                               ),
                               SizedBox(
