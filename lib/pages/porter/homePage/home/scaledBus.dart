@@ -156,18 +156,16 @@ class _ScaledBussesState extends State<ScaledBusses> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${bussModel.data[x].bus.driver.station.name}",
-                                    style: h3Black,
-                                  ),
-                                  Text(
-                                    "${bussModel.data[x].bus.regNumber}",
-                                    style: h3Black,
-                                  ),
-                                ],
+                              Text(
+                                "${bussModel.data[x].bus.driver.station.name}",
+                                style: h3Black,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                "Quantity: ${bussModel.data[x].bus.busType.maxCapacity}",
+                                style: h3Black,
                               ),
                               SizedBox(
                                 height: 8,

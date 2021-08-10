@@ -282,22 +282,33 @@ class _AddTicketState extends State<AddTicket> {
       isLoading = true;
     });
     try {
-      Map<String, dynamic> body = {
-        'bus_schedule_id': busID,
-        'phone': phone,
-        'pickup_id': pickupId,
-        'minor_count': minor,
-        'payment_type': payType,
-        'payment_mode': mapymentMode,
-        'momo_phone': momoPhone,
-        'momo_name': '$momoName',
+      // Map<String, dynamic> body = {
+      //   'bus_schedule_id': busID,
+      //   'phone': phone,
+      //   'pickup_id': pickupId,
+      //   'minor_count': minor,
+      //   'payment_type': payType,
+      //   'payment_mode': mapymentMode,
+      //   'momo_phone': momoPhone,
+      //   'momo_name': '$momoName',
+      // };
+      Map<String, dynamic> body2 = {
+        "type": "DEBIT",
+        "method": "$mapymentMode",
+        "account_number": momoPhone,
+        "network": "$payType",
+        "description": "Payment for tickets",
+        "services": [
+          {"service_id": busID, "service_code": "TICKET"}
+        ]
       };
       print(busID);
-      final url = Uri.parse("$BASE_URL/stations/$stationId/tickets");
+      final url = Uri.parse("$BASE_URL/v2/payments");
+      // final url = Uri.parse("$BASE_URL/stations/$stationId/tickets");
 
       final response = await http.post(
         url,
-        body: json.encode(body),
+        body: json.encode(body2),
         headers: {
           "Authorization": "Bearer $accessToken",
           'Content-Type': 'application/json'
@@ -375,7 +386,7 @@ class _AddTicketState extends State<AddTicket> {
               Navigator.of(context).pop();
               setState(() {
                 paymentTypeController.text = 'Momo';
-                payType = "momo";
+                payType = "MOMO";
                 showMomo = true;
               });
             },
@@ -398,7 +409,7 @@ class _AddTicketState extends State<AddTicket> {
               Navigator.of(context).pop();
               setState(() {
                 paymentModeController.text = 'AirtelTigo Money';
-                network = "at";
+                network = "AIRTEL";
               });
             },
           ),
@@ -409,7 +420,7 @@ class _AddTicketState extends State<AddTicket> {
               Navigator.of(context).pop();
               setState(() {
                 paymentModeController.text = 'MTN Mobile Money';
-                network = "mtn";
+                network = "MTN";
               });
             },
           ),
@@ -420,7 +431,7 @@ class _AddTicketState extends State<AddTicket> {
               Navigator.of(context).pop();
               setState(() {
                 paymentModeController.text = 'Vodafone Cash';
-                network = "vfc";
+                network = "VODAFONE";
               });
             },
           ),
