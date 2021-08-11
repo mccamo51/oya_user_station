@@ -152,7 +152,7 @@ class _ScaledBussesState extends State<ScaledBusses> {
                       // color: PRIMARYCOLOR,
                       child: ListTile(
                           title: Text(
-                              "Bus No: ${bussModel.data[x].bus.regNumber} [${bussModel.data[x].code.toString()}]"),
+                              "Bus No: ${bussModel.data[x].bus.regNumber}(${bussModel.data[x].bus.busType.maxCapacity}) [${bussModel.data[x].code.toString()}]"),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -160,13 +160,10 @@ class _ScaledBussesState extends State<ScaledBusses> {
                                 "${bussModel.data[x].bus.driver.station.name}",
                                 style: h3Black,
                               ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                "No of Pessengers: ${bussModel.data[x].bus.busType.maxCapacity}",
-                                style: h3Black,
-                              ),
+                              // Text(
+                              //   "${bussModel.data[x].bus.regNumber}(${bussModel.data[x].bus.busType.maxCapacity})",
+                              //   style: h3Black,
+                              // ),
                               SizedBox(
                                 height: 8,
                               ),
