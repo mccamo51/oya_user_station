@@ -92,7 +92,8 @@ class _SeachBusState extends State<SeachBus> {
                       child: SizedBox(
                         width: double.infinity,
                         child: CupertinoActionSheetAction(
-                          child: Text('${data.regNumber}',
+                          child: Text(
+                              '${data.regNumber}(${data.busType.maxCapacity})',
                               style: TextStyle(color: BLACK)),
                           onPressed: () {
                             setState(() {
@@ -132,7 +133,8 @@ class _SeachBusState extends State<SeachBus> {
                               Navigator.pop(context);
                             }
                           },
-                          child: Text("${data.regNumber}",
+                          child: Text(
+                              "${data.regNumber}(${data.busType.maxCapacity}",
                               style: TextStyle(fontSize: 20)),
                         ),
                       ),
@@ -146,7 +148,8 @@ class _SeachBusState extends State<SeachBus> {
                   ? SizedBox(
                       width: double.infinity,
                       child: CupertinoActionSheetAction(
-                        child: Text('${data.regNumber}',
+                        child: Text(
+                            '${data.regNumber}(${data.busType.maxCapacity}',
                             style: TextStyle(color: BLACK)),
                         onPressed: () {
                           setState(() {
@@ -172,7 +175,8 @@ class _SeachBusState extends State<SeachBus> {
                           driverId = data.driver.id.toString();
                           Navigator.pop(context);
                         },
-                        child: Text("${data.regNumber}",
+                        child: Text(
+                            "${data.regNumber}(${data.busType.maxCapacity}",
                             style: TextStyle(fontSize: 20)),
                       ),
                     ),
