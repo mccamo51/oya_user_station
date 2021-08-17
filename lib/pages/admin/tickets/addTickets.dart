@@ -383,6 +383,13 @@ class _AddTicketState extends State<AddTicket> {
                     data['payment']['amount'],
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                   ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    data['payment']['wallet_provider'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  ),
                 ],
               ),
               Row(
