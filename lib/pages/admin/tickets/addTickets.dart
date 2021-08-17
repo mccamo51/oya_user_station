@@ -294,9 +294,9 @@ class _AddTicketState extends State<AddTicket> {
       // };
       Map<String, dynamic> body2 = {
         "type": "DEBIT",
-        "method": "$mapymentMode",
+        "method": "$payType ",
         "account_number": momoPhone,
-        "network": "$payType",
+        "network": "$mapymentMode",
         "description": "Payment for tickets",
         "services": [
           {"service_id": busID, "service_code": "TICKET"}
@@ -319,11 +319,12 @@ class _AddTicketState extends State<AddTicket> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
+        print(responseData);
         setState(() {
           isLoading = false;
         });
         if (responseData['status'] == 200) {
-          paymentDialog(context, responseData["message"]);
+          paymentDialog(context, responseData["data"]);
         } else {
           toastContainer(text: responseData['message']);
         }
@@ -346,7 +347,8 @@ class _AddTicketState extends State<AddTicket> {
   }
   // }
 
-  Future<void> paymentDialog(BuildContext context, msg) async {
+  Future<void> paymentDialog(
+      BuildContext context, Map<String, dynamic> data) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -354,23 +356,87 @@ class _AddTicketState extends State<AddTicket> {
         return AlertDialog(
           title: Text('Alert'),
           content: SingleChildScrollView(
-            child: Text(
-              // 'Your ICE contact is needed for a variety of reasons.',
-              '$msg',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
-          ),
+              child: Column(
+            children: [
+              Text(
+                data['payment']['account_name'],
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+              ),
+              Text(
+                data['payment']['account_number'],
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+              ),
+              Text(
+                data['payment']['status']['name'],
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+              ),
+              Row(
+                children: [
+                  Text(
+                    data['payment']['currency'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    data['payment']['amount'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    data['payment']['reference'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    data['payment']['created_at'],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ],
+          )),
           actions: <Widget>[
             FlatButton(
-              child: Text('Go Home', style: TextStyle(color: PRIMARYCOLOR)),
-              onPressed: () {
-                navigation(context: context, pageName: "home");
-              },
+              child:
+                  Text('Check Status', style: TextStyle(color: PRIMARYCOLOR)),
+              onPressed: () => checkStatus(schedleId),
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> checkStatus(String busID) async {
+    try {
+      final url = Uri.parse("$BASE_URL/v2/payments/$busID");
+      // final url = Uri.parse("$BASE_URL/stations/$stationId/tickets");
+
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json'
+        },
+      ).timeout(
+        Duration(seconds: 50),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        if (responseData['data']['status']['id'] != 1) {
+          Navigator.pop(context);
+        } else {
+          toastContainer(text: responseData['message']);
+        }
+      }
+    } catch (e) {}
   }
 
   _onPaymentType(BuildContext context) {
