@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:oya_porter/pages/admin/tickets/addTickets.dart';
 import 'package:oya_porter/pages/porter/homePage/account/account.dart';
 import 'package:oya_porter/pages/porter/homePage/dashboard.dart';
+import 'package:oya_porter/pages/porter/homePage/graph/graphScreen.dart';
 import 'package:oya_porter/pages/porter/homePage/home/homePagePorter.dart';
 import 'package:oya_porter/pages/porter/homePage/parcels/parcels.dart';
 import 'package:oya_porter/pages/porter/homePage/schedule/porterSchedules.dart';

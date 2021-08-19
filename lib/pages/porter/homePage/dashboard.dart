@@ -9,6 +9,7 @@ import 'package:oya_porter/components/appBar.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:http/http.dart' as http;
 import 'package:oya_porter/pages/auth/login/login.dart';
+import 'package:oya_porter/pages/porter/homePage/graph/graphScreen.dart';
 import 'package:oya_porter/spec/colors.dart';
 
 class DashBoard extends StatefulWidget {
@@ -18,14 +19,20 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   DateTime today = DateTime.now();
-  String passengers, trave, registered, frmDate, beginDte, fromRawDate;
+  String passengers = "0",
+      trave = "0",
+      minor = "0",
+      registered = "0",
+      frmDate,
+      beginDte,
+      fromRawDate;
   bool isLoading = false;
   @override
   void initState() {
     frmDate = DateFormat.MEd().format(today);
-    fromRawDate = "2021-07-19 10:48:19.621169";
+    fromRawDate = "2021-07-01 10:48:19.621169";
     beginDte = DateFormat.MEd().format(
-      DateTime.parse("2021-07-19 10:48:19.621169"),
+      DateTime.parse("2021-07-01 10:48:19.621169"),
     );
     super.initState();
     _getData(
@@ -43,7 +50,21 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(title: 'Metrix'),
+        appBar: appBar(title: 'Dashboard', actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GraphScreen(
+                              passenger: passengers,
+                              minor: (minor),
+                              users: (registered),
+                              traveller: (trave),
+                            )));
+              },
+              icon: Icon(FeatherIcons.barChart2))
+        ]),
         body: Column(children: [
           Padding(
             padding:
@@ -196,13 +217,8 @@ class _DashBoardState extends State<DashBoard> {
         setState(() {
           passengers = responseData['passengers'].toString();
           trave = responseData['minors'].toString();
+          minor = responseData['minors'].toString();
         });
-        _SalesData(
-          'passengers',
-          responseData['total'],
-          responseData['minors'],
-          responseData['passengers'],
-        );
       } else {
         setState(() {
           isLoading = false;

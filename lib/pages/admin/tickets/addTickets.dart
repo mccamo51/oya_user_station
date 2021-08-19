@@ -326,6 +326,7 @@ class _AddTicketState extends State<AddTicket> {
           "occupant_type": "ADULT",
           "passenger": {
             "first_name": "${firstNameController.text}",
+            "name": "${firstNameController.text}",
             "last_name": "${lastNameController.text}",
             "phone": "$phone",
             "ice_phone": "+${countryCode + icePhoneController.text}"
