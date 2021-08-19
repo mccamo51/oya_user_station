@@ -18,6 +18,7 @@ import 'package:oya_porter/config/offlineData.dart';
 import 'package:oya_porter/config/routes.dart';
 import 'package:oya_porter/models/ScheduleModel.dart';
 import 'package:oya_porter/models/myRouteModel.dart';
+import 'package:oya_porter/pages/admin/tickets/seatSelection.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'package:oya_porter/spec/styles.dart';
@@ -39,14 +40,18 @@ class _AddTicketState extends State<AddTicket> {
 
   TextEditingController paymentModeController = TextEditingController();
   TextEditingController paymentTypeController = TextEditingController();
+  TextEditingController seatController = TextEditingController();
+  TextEditingController icePhoneController = TextEditingController();
 
-  TextEditingController reciepeintNameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
   TextEditingController reciepeintPhoneController = TextEditingController();
   TextEditingController minorController = TextEditingController();
   String network, payType;
   bool showMomo = true;
   String schedleId, routeID, pickupId;
   bool isLoading = false, selectPickup = false;
+  String selectedSeatString;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -174,10 +179,19 @@ class _AddTicketState extends State<AddTicket> {
                         height: 10,
                       ),
                       textFormField(
-                        hintText: "Recipient Name",
-                        controller: reciepeintNameController,
+                        hintText: "First Name",
+                        controller: firstNameController,
                         focusNode: null,
-                        labelText: "Recipient Name",
+                        labelText: "First Name",
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      textFormField(
+                        hintText: "Last Name",
+                        controller: lastNameController,
+                        focusNode: null,
+                        labelText: "Last Name",
                       ),
                       SizedBox(
                         height: 10,
@@ -189,6 +203,38 @@ class _AddTicketState extends State<AddTicket> {
                         textLength: 1,
                         focusNode: null,
                         // initialValue: "0",
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      newCountrySelect(
+                          controller: icePhoneController,
+                          hintText: "Enter ICE phone number"),
+
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          var selectedSeat = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SeatSelection(
+                                      busId: "$schedleId", station: null)));
+
+                          setState(() {
+                            seatController.text = "$selectedSeat";
+                          });
+                        },
+                        child: textFormField(
+                          hintText: "Seat number",
+                          controller: seatController,
+                          focusNode: null,
+                          icon: Icons.directions_bus,
+                          validate: true,
+                          validateMsg: "Select seat",
+                          enable: false,
+                        ),
                       ),
                       SizedBox(
                         height: 15,
@@ -252,15 +298,10 @@ class _AddTicketState extends State<AddTicket> {
                   ? null
                   : () {
                       if (_formKey.currentState.validate()) {
-                        _onSave(
-                          busID: schedleId,
+                        _booking(
                           pickupId: pickupId,
-                          phone: userphone,
-                          momoPhone:
-                              "+${(countryCode + reciepeintPhoneController.text)}",
-                          momoName: reciepeintNameController.text,
+                          phone: "$userphone",
                           minor: minorController.text,
-                          mapymentMode: network,
                         );
                       }
                     }),
@@ -269,29 +310,84 @@ class _AddTicketState extends State<AddTicket> {
     );
   }
 
-  _onSave(
-      {String busID,
-      String pickupId,
-      String phone,
-      String minor,
-      String momoName,
-      String mapymentMode,
-      String momoPhone}) async {
+  _booking({
+    String pickupId,
+    String phone,
+    String minor,
+  }) async {
+    final url = Uri.parse("$BASE_URL/v2/schedules/$schedleId/tickets");
     print(phone);
+    Map<String, dynamic> body = {
+      "tickets": [
+        {
+          "seat_id": seatController.text,
+          pickupId == null ? "" : "pickup_id": (pickupId),
+          "minors": minor,
+          "occupant_type": "ADULT",
+          "passenger": {
+            "first_name": "${firstNameController.text}",
+            "last_name": "${lastNameController.text}",
+            "phone": "$phone",
+            "ice_phone": "+${countryCode + icePhoneController.text}"
+          }
+        },
+      ]
+    };
+    // Map<String, dynamic> body2 = {
+    //     'bus_schedule_id': busID,
+    //     'phone': phone,
+    //     'pickup_id': pickupId,
+    //     'minor_count': minor,
+    //     'payment_type': payType,
+    //     'payment_mode': mapymentMode,
+    //     'momo_phone': momoPhone,
+    //     'momo_name': '$momoName',
+    //   };
     setState(() {
       isLoading = true;
     });
+    final response = await http.post(
+      url,
+      body: json.encode(body),
+      headers: {
+        "Authorization": "Bearer $accessToken",
+        'Content-Type': 'application/json'
+      },
+    ).timeout(
+      Duration(seconds: 50),
+    );
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      if (responseData['status'] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        var data = responseData['data'];
+        print(data);
+        // _onSave(
+        //   busID: data['schedule']['id'].toString(),
+        //   mapymentMode: network,
+        //   momoPhone: "+${(countryCode + reciepeintPhoneController.text)}",
+        // );
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        toastContainer(text: responseData['message']);
+      }
+    }
+  }
+
+  _onSave({
+    String busID,
+    // String momoName,
+    String mapymentMode,
+    String momoPhone,
+  }) async {
+    // setState(() {
+    //   isLoading = true;
+    // });
     try {
-      // Map<String, dynamic> body = {
-      //   'bus_schedule_id': busID,
-      //   'phone': phone,
-      //   'pickup_id': pickupId,
-      //   'minor_count': minor,
-      //   'payment_type': payType,
-      //   'payment_mode': mapymentMode,
-      //   'momo_phone': momoPhone,
-      //   'momo_name': '$momoName',
-      // };
       Map<String, dynamic> body2 = {
         "type": "DEBIT",
         "method": "$payType ",
@@ -324,7 +420,6 @@ class _AddTicketState extends State<AddTicket> {
           isLoading = false;
         });
         if (responseData['status'] == 200) {
-          paymentDialog(context, responseData["data"]);
         } else {
           toastContainer(text: responseData['message']);
         }
