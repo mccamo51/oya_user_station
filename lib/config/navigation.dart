@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oya_porter/pages/Users/screens/auth/register/register.dart';
 import 'package:oya_porter/pages/admin/adminPage.dart';
 import 'package:oya_porter/pages/admin/busses/busses.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
@@ -14,10 +15,10 @@ void navigation({
     case "back":
       Navigator.of(context).pop();
       break;
-    // case "registration":
-    //   Navigator.of(context)
-    //       .push(MaterialPageRoute(builder: (context) => Register()));
-    //   break;
+    case "registration":
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Register()));
+      break;
     case "loginpage":
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => LoginPage()));

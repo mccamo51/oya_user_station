@@ -16,3 +16,10 @@ const IMAGELINK =
 const FROMMAP = "assets/images/fromMap.png";
 const TOMAP = "assets/images/toMap.png";
 const LIVEMAP = "assets/images/liveMap.png";
+const UPDATE = "assets/images/ui.png";
+const TICKETIMAGE = "assets/images/address-amico.png";
+
+const RENTALIMAGE = "assets/images/rentals.png";
+const RENTNAVIMAGE = "assets/images/rentabus_nav.png";
+const LICENSESIMAGE = "assets/images/admin/license.png";
+const PRIVACYIMAGE = "assets/images/admin/privacy.png";

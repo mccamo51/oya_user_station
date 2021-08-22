@@ -22,8 +22,8 @@ class _PorterHomePageState extends State<PorterHomePage> {
       isSchedule: true,
     ),
     AddTicket(),
-    // Parcels(),
-    DashBoard(),
+    Parcels(),
+    // DashBoard(),
     Account(),
   ];
 

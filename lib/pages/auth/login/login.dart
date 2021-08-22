@@ -6,20 +6,26 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:oya_porter/components/alerts.dart';
 import 'package:oya_porter/components/phoneNumberText.dart';
+import 'package:oya_porter/components/toast.dart';
 import 'package:oya_porter/config/firebase/firebaseAuth.dart';
 import 'package:oya_porter/config/navigation.dart';
 import 'package:oya_porter/config/routes.dart';
+import 'package:oya_porter/pages/Users/screens/secreteQuestion/secreteQuestion.dart';
 import 'package:oya_porter/pages/mainHome.dart';
 import 'package:oya_porter/spec/sharePreference.dart';
 
 import 'loginWidget/loginWidget.dart';
 
+bool isStaff = false;
 String accessToken,
     stationId,
     userName,
     userId,
     userRole,
     userphone,
+    userPhone,
+    icePrimaryPhone,
+    iceSecondaryPhone,
     userICE1,
     userICE2;
 
@@ -109,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
             if (responseData['data']['staffs'].length > 0) {
               setState(() {
                 _isLoading = false;
+                isStaff = true;
                 accessToken = responseData["data"]["access_token"];
                 userName = responseData["data"]["name"];
                 userphone = responseData["data"]["phone"];
@@ -131,6 +138,44 @@ class _LoginPageState extends State<LoginPage> {
                           MainHomePage(data: responseData['data']['staffs'])),
                   (route) => false);
               print('===============$stationId========true');
+            } else if (responseData["data"]['role_id'] == 10) {
+              if (responseData['data']['verified_at'] != null) {
+                
+                saveStringShare(key: "userDetails", data: response.body);
+                setState(() {
+                  isStaff = false;
+                  userName = responseData["data"]["name"];
+                  userPhone = responseData["data"]["phone"];
+                  icePrimaryPhone = responseData["data"]["ice_primary_phone"];
+                  iceSecondaryPhone =
+                      responseData["data"]["ice_secondary_phone"];
+                  userRole = responseData["data"]["role"];
+                  accessToken = responseData["data"]["access_token"];
+                });
+
+                await _fireAuth.signIn(
+                  email: "$phone@gmail.com",
+                  password: "12345678",
+                  phone: phone,
+                );
+                saveBoolShare(key: "auth", data: true);
+                setState(() {
+                  _isLoading = false;
+                });
+                saveBoolShare(key: "auth", data: true);
+                wrongPasswordToast(
+                    context: context,
+                    title: "Login Successful",
+                    msg: responseData['message']);
+                navigation(context: context, pageName: "home");
+              } else {
+                toastContainer(
+                    text:
+                        "Your account is not verified, please enter number and verify your account");
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => SecreteQuestion()),
+                    (Route<dynamic> route) => false);
+              }
             } else {
               setState(() {
                 _isLoading = false;

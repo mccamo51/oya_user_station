@@ -64,7 +64,7 @@ Widget _buildDropdownItem(Country country) => Container(
     );
 
 Widget newCountrySelect(
-    {TextEditingController controller, String hintText, String locale}) {
+    {TextEditingController controller, String hintText, String locale, FocusNode focus}) {
   return Container(
       padding: EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
@@ -95,7 +95,7 @@ Widget newCountrySelect(
               child: textFormField(
                 hintText: hintText,
                 controller: controller,
-                focusNode: null,
+                focusNode: focus,
                 inputType: TextInputType.phone,
               ),
             ),

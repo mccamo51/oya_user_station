@@ -13,6 +13,7 @@ import 'package:oya_porter/main.dart';
 import 'package:oya_porter/models/checkInModel.dart';
 import 'package:oya_porter/pages/Conductor/conductorHome.dart';
 import 'package:oya_porter/pages/Driver/driverHome.dart';
+import 'package:oya_porter/pages/Users/screens/homepage/homeMap/newHome.dart';
 import 'package:oya_porter/pages/auth/login/login.dart';
 import 'package:oya_porter/pages/generalManager/generalPage.dart';
 import 'package:oya_porter/pages/porter/homePage/homePageWithNav.dart';
@@ -22,6 +23,7 @@ import 'package:oya_porter/spec/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'Users/screens/homepage/homeMap/bookingHome.dart';
 import 'admin/adminPage.dart';
 import 'porter/homePage/home/homePagePorter.dart';
 
@@ -34,7 +36,6 @@ class MainHomePage extends StatefulWidget {
 }
 
 class _MainHomePageState extends State<MainHomePage> {
-
   var data;
   @override
   void initState() {
@@ -45,8 +46,6 @@ class _MainHomePageState extends State<MainHomePage> {
     // TODO: implement initState
     super.initState();
   }
-
- 
 
   // void _getTicketing() {
   // DatabaseReference reference =
@@ -232,13 +231,38 @@ class _MainHomePageState extends State<MainHomePage> {
                     size: 15,
                   ),
                 ),
-              )
+              ),
+          SizedBox(
+            height: 8,
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: ListTile(
+                title: Text("User App"),
+                // subtitle: Text(x['station']['name']),
+                leading: Icon(Icons.person),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ItemMenu1(
+                        isStaff: isStaff,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
         ],
       ),
     );
   }
-
- 
 
   _getLoading(stid) async {
     final url = Uri.parse("$BASE_URL/stations/$stid/loading_bus");

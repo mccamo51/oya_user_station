@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:oya_porter/pages/Users/screens/onboading/splashScreen.dart';
 import 'package:oya_porter/spec/colors.dart';
 import 'pages/auth/authenticationPage.dart';
 
@@ -81,8 +82,8 @@ class MyApp extends StatelessWidget {
       ),
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: AuthenticationPage(),
-      // home: MainHomePage(),
+      // home: AuthenticationPage(),
+      home: SplashScreen(),
     );
   }
 }
